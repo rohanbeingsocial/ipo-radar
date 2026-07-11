@@ -11,13 +11,13 @@
   --surface-1:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
   --grid:#e1e0d9; --baseline:#c3c2b7; --edge:rgba(11,11,11,.1);
   --accent:#2a78d6; --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --critical:#d03b3b;
-  --series-1:#2a78d6; --series-3:#eda100;
+  --series-1:#2a78d6; --series-2:#1baf7a; --series-3:#eda100; --emphasis:#c3c2b7;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --surface-1:#1a1a19; --page:#0d0d0d; --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
     --grid:#2c2c2a; --baseline:#383835; --edge:rgba(255,255,255,.1);
-    --accent:#3987e5; --series-1:#3987e5; --series-3:#c98500;
+    --accent:#3987e5; --series-1:#3987e5; --series-2:#199e70; --series-3:#c98500; --emphasis:#52514e;
   }
 }
 * { box-sizing:border-box; margin:0; }
@@ -75,8 +75,8 @@ main { padding:24px 0 8px; min-height:60vh; }
 .stat .l { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-3); }
 .stat .v { font-size:17px; font-weight:600; font-variant-numeric:tabular-nums; }
 .stat .s { font-size:12px; color:var(--ink-2); }
-.progress { height:6px; flex:1; min-width:60px; max-width:16rem; overflow:hidden; border-radius:99px; background:var(--grid); }
-.progress > div { height:100%; border-radius:99px; transition:width .3s; }
+.progress { height:6px; flex:1; min-width:60px; max-width:16rem; overflow:hidden; border-radius:4px; background:var(--grid); }
+.progress > div { height:100%; border-radius:0 4px 4px 0; transition:width .3s; }
 .btn { border-radius:6px; background:var(--accent); color:#fff; padding:6px 12px; font-size:13.5px; font-weight:500; }
 .btn:hover { opacity:.9; } .btn:disabled { opacity:.5; cursor:default; }
 .txt { display:block; margin-top:4px; width:6rem; border-radius:6px; border:1px solid var(--edge); background:var(--page); color:var(--ink); padding:4px 8px; font-size:13.5px; }
@@ -143,6 +143,24 @@ details.cat .rules { border-top:1px solid var(--edge); padding:16px; display:fle
 .rule .fine { margin-top:8px; display:flex; flex-wrap:wrap; gap:4px 20px; font-size:11px; color:var(--ink-3); }
 .rule .why { margin-top:6px; font-size:12px; line-height:1.6; color:var(--ink-3); }
 
+.viz { position:relative; }
+.viz svg { display:block; width:100%; height:auto; }
+.viz svg:focus { outline:none; }
+.viz svg:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+.viz-tip { position:absolute; pointer-events:none; z-index:30; display:none; min-width:6.5rem; max-width:16rem;
+  background:var(--surface-1); border:1px solid var(--edge); border-radius:6px; padding:7px 10px;
+  font-size:12px; line-height:1.5; box-shadow:0 3px 14px rgba(0,0,0,.14); }
+.viz-tip .tt { color:var(--ink-3); font-size:11px; margin-bottom:3px; }
+.viz-tip .tr { display:flex; align-items:baseline; gap:6px; }
+.viz-tip .tr .k { width:12px; flex:none; border-top:2.5px solid; border-radius:2px; align-self:center; }
+.viz-tip .tr .v { font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink); }
+.viz-tip .tr .n { color:var(--ink-2); }
+.vlegend { display:flex; gap:16px; flex-wrap:wrap; align-items:center; margin-bottom:6px; font-size:12px; color:var(--ink-2); }
+.vlegend .k { display:inline-block; width:14px; border-top:2.5px solid; border-radius:2px; vertical-align:middle; margin-right:5px; }
+.sharebar { display:flex; gap:2px; height:22px; border-radius:5px; overflow:hidden; }
+.sharebar > div { min-width:3px; }
+.sharekey { display:flex; gap:18px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--ink-2); }
+.sharekey .sw { display:inline-block; width:10px; height:10px; border-radius:2px; vertical-align:-1px; margin-right:5px; }
 .helpcard ol { padding-left:20px; font-size:13px; color:var(--ink-2); line-height:1.7; }
 .helpcard code, .helpcard pre { font:12px/1.6 ui-monospace,Consolas,monospace; background:var(--page); border:1px solid var(--edge); border-radius:4px; }
 .helpcard code { padding:1px 5px; }
@@ -212,6 +230,365 @@ const ICONS = {
   grid: svg('<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>'),
   quote: svg('<path d="M10 11H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v7a4 4 0 0 1-4 4"/><path d="M20 11h-4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v7a4 4 0 0 1-4 4"/>'),
 };
+
+/* ---------- charts (inline SVG, theme-aware via CSS vars) ---------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+function sv(tag, attrs) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs || {}) if (attrs[k] != null) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function svText(x, y, s, style, anchor) {
+  const t = sv("text", { x, y, "text-anchor": anchor || "start", style: "font:10.5px system-ui;" + (style || "fill:var(--ink-3)") });
+  t.textContent = s;
+  return t;
+}
+function niceTicks(min, max, n) {
+  const raw = (max - min) / (n || 5), mag = Math.pow(10, Math.floor(Math.log10(Math.abs(raw) || 1)));
+  const norm = raw / mag, step = (norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10) * mag;
+  const out = [];
+  for (let v = Math.ceil(min / step) * step; v <= max + 1e-9; v += step) out.push(Math.round(v * 1000) / 1000);
+  return out;
+}
+function padDomain(vals, includeZero) {
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  if (includeZero) { lo = Math.min(lo, 0); hi = Math.max(hi, 0); }
+  const pad = (hi - lo || 1) * 0.09;
+  return [lo - pad, hi + pad];
+}
+function fmtSigned(v, d) { return (v >= 0 ? "+" : "") + (+v).toFixed(d == null ? 1 : d) + "%"; }
+function makeTip(container) {
+  const t = document.createElement("div");
+  t.className = "viz-tip";
+  container.appendChild(t);
+  return {
+    show(px, py, title, rows) {
+      t.innerHTML = "";
+      if (title) { const h = document.createElement("div"); h.className = "tt"; h.textContent = title; t.appendChild(h); }
+      for (const r of rows || []) {
+        const d = document.createElement("div"); d.className = "tr";
+        if (r.color) { const k = document.createElement("span"); k.className = "k"; k.style.borderTopColor = r.color; d.appendChild(k); }
+        const v = document.createElement("span"); v.className = "v"; v.textContent = r.value; d.appendChild(v);
+        if (r.name) { const n = document.createElement("span"); n.className = "n"; n.textContent = r.name; d.appendChild(n); }
+        t.appendChild(d);
+      }
+      t.style.display = "block";
+      const cw = container.clientWidth, tw = t.offsetWidth, th = t.offsetHeight;
+      t.style.left = Math.max(0, Math.min(px + 14, cw - tw - 2)) + "px";
+      t.style.top = Math.max(0, py - th - 12) + "px";
+    },
+    hide() { t.style.display = "none"; },
+  };
+}
+function smoothPath(P) {
+  if (P.length < 2) return "";
+  let d = `M${P[0].X},${P[0].Y}`;
+  if (P.length === 2) return d + `L${P[1].X},${P[1].Y}`;
+  const cl = (v, a, b) => Math.max(Math.min(a, b), Math.min(Math.max(a, b), v));
+  for (let i = 0; i < P.length - 1; i++) {
+    const p0 = P[Math.max(0, i - 1)], p1 = P[i], p2 = P[i + 1], p3 = P[Math.min(P.length - 1, i + 2)];
+    const c1y = cl(p1.Y + (p2.Y - p0.Y) / 6, p1.Y, p2.Y), c2y = cl(p2.Y - (p3.Y - p1.Y) / 6, p1.Y, p2.Y);
+    d += `C${p1.X + (p2.X - p0.X) / 6},${c1y},${p2.X - (p3.X - p1.X) / 6},${c2y},${p2.X},${p2.Y}`;
+  }
+  return d;
+}
+/* Line chart: series = [{name, color, pts:[{x, v, tag?, big?}]}], band = [{x, lo, hi}] */
+function mountLineChart(box, cfg) {
+  if (!box) return;
+  const W = 720, H = cfg.h || 250, m = { l: 46, r: cfg.mr || 54, t: 16, b: 30 };
+  const xs = cfg.series.flatMap((s) => s.pts.map((p) => p.x));
+  const vals = cfg.series.flatMap((s) => s.pts.map((p) => p.v)).concat((cfg.band || []).flatMap((b) => [b.lo, b.hi]));
+  if (!xs.length) return;
+  const xmax = cfg.xmax || Math.max(...xs), xmin = 0;
+  const [ylo, yhi] = padDomain(vals, true);
+  const X = (x) => m.l + (x - xmin) / (xmax - xmin || 1) * (W - m.l - m.r);
+  const Y = (v) => m.t + (yhi - v) / (yhi - ylo || 1) * (H - m.t - m.b);
+  if (cfg.series.length > 1) {
+    const lg = document.createElement("div"); lg.className = "vlegend";
+    for (const s of cfg.series) {
+      const it = document.createElement("span");
+      const k = document.createElement("span"); k.className = "k"; k.style.borderTopColor = s.colorHex;
+      it.appendChild(k); it.appendChild(document.createTextNode(s.name));
+      lg.appendChild(it);
+    }
+    box.appendChild(lg);
+  }
+  const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, tabindex: 0, role: "img", "aria-label": cfg.label || "chart" });
+  for (const tv of niceTicks(ylo, yhi, 5)) {
+    svg.appendChild(sv("line", { x1: m.l, x2: W - m.r, y1: Y(tv), y2: Y(tv), style: `stroke:${tv === 0 ? "var(--baseline)" : "var(--grid)"};stroke-width:1` }));
+    svg.appendChild(svText(m.l - 7, Y(tv) + 3.5, (cfg.yFmt || ((v) => v + "%"))(tv), "fill:var(--ink-3);font-variant-numeric:tabular-nums", "end"));
+  }
+  if (Y(0) >= m.t && Y(0) <= H - m.b && cfg.zeroLabel) svg.appendChild(svText(W - m.r + 5, Y(0) + 3.5, cfg.zeroLabel, "fill:var(--ink-3)"));
+  for (const tk of cfg.xticks) {
+    svg.appendChild(sv("line", { x1: X(tk.x), x2: X(tk.x), y1: H - m.b, y2: H - m.b + 4, style: "stroke:var(--baseline);stroke-width:1" }));
+    svg.appendChild(svText(X(tk.x), H - m.b + 15, tk.label, "fill:var(--ink-3)", "middle"));
+  }
+  if (cfg.band && cfg.band.length > 1) {
+    const up = cfg.band.map((b) => `${X(b.x)},${Y(b.hi)}`).join(" L");
+    const dn = [...cfg.band].reverse().map((b) => `${X(b.x)},${Y(b.lo)}`).join(" L");
+    svg.appendChild(sv("path", { d: `M${up} L${dn} Z`, style: `fill:${cfg.series[0].colorHex};opacity:.1` }));
+  }
+  for (const s of cfg.series) {
+    const P = s.pts.map((p) => ({ X: X(p.x), Y: Y(p.v) }));
+    svg.appendChild(sv("path", { d: smoothPath(P), style: `stroke:${s.colorHex};stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round` }));
+    s.pts.forEach((p, i) => {
+      svg.appendChild(sv("circle", { cx: X(p.x), cy: Y(p.v), r: p.big ? 5.5 : 4.5, style: `fill:${s.colorHex};stroke:var(--surface-1);stroke-width:2` }));
+      if (p.tag) svg.appendChild(svText(X(p.x), Y(p.v) + (p.v < 0 ? 16 : -10), p.tag, "fill:var(--ink-3)", "middle"));
+      if (i === s.pts.length - 1 && s.endLabel) svg.appendChild(svText(X(p.x) + 9, Y(p.v) + 3.5, s.endLabel, "fill:var(--ink-2);font-weight:600;font-variant-numeric:tabular-nums"));
+    });
+  }
+  const cross = sv("line", { y1: m.t, y2: H - m.b, style: "stroke:var(--baseline);stroke-width:1", visibility: "hidden" });
+  svg.appendChild(cross);
+  box.appendChild(svg);
+  const tip = makeTip(box);
+  const uxs = [...new Set(xs)].sort((a, b) => a - b);
+  let ki = -1;
+  const showAt = (ux) => {
+    cross.setAttribute("x1", X(ux)); cross.setAttribute("x2", X(ux));
+    cross.setAttribute("visibility", "visible");
+    const rows = [];
+    let ty = null;
+    for (const s of cfg.series) {
+      const p = s.pts.find((q) => Math.abs(q.x - ux) < 1);
+      if (p) { rows.push({ color: s.colorHex, value: (cfg.vFmt || fmtSigned)(p.v), name: s.name + (p.tag ? ` (${p.tag})` : "") }); ty = Y(p.v); }
+    }
+    if (!rows.length) { tip.hide(); return; }
+    const r = box.getBoundingClientRect(), sr = svg.getBoundingClientRect();
+    const k = sr.width / W;
+    tip.show((sr.left - r.left) + X(ux) * k, (sr.top - r.top) + (ty ?? m.t) * k, cfg.xTip ? cfg.xTip(ux) : "", rows);
+  };
+  const hide = () => { cross.setAttribute("visibility", "hidden"); tip.hide(); ki = -1; };
+  svg.addEventListener("pointermove", (e) => {
+    const sr = svg.getBoundingClientRect();
+    const px = (e.clientX - sr.left) * (W / sr.width);
+    let best = uxs[0], bd = 1e9;
+    for (const ux of uxs) { const d = Math.abs(X(ux) - px); if (d < bd) { bd = d; best = ux; } }
+    showAt(best);
+  });
+  svg.addEventListener("pointerleave", hide);
+  svg.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      ki = ki < 0 ? 0 : Math.max(0, Math.min(uxs.length - 1, ki + (e.key === "ArrowRight" ? 1 : -1)));
+      showAt(uxs[ki]);
+    } else if (e.key === "Escape") hide();
+  });
+  svg.addEventListener("blur", hide);
+}
+/* Horizontal bars, one hue (nominal categories): items = [{label, value}] */
+function mountBars(box, cfg) {
+  if (!box || !cfg.items.length) return;
+  const W = 720, rowH = 27, barH = 18, m = { l: 56, r: 60, t: 6, b: 22 };
+  const H = m.t + cfg.items.length * rowH + m.b;
+  const vmax = Math.max(...cfg.items.map((i) => i.value)) * 1.06 || 1;
+  const X = (v) => m.l + v / vmax * (W - m.l - m.r);
+  const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": cfg.label || "bar chart" });
+  for (const tv of niceTicks(0, vmax, 5)) {
+    if (tv === 0) continue;
+    svg.appendChild(sv("line", { x1: X(tv), x2: X(tv), y1: m.t, y2: H - m.b, style: "stroke:var(--grid);stroke-width:1" }));
+    svg.appendChild(svText(X(tv), H - m.b + 13, (cfg.tickFmt || ((v) => v + "×"))(tv), "fill:var(--ink-3);font-variant-numeric:tabular-nums", "middle"));
+  }
+  svg.appendChild(sv("line", { x1: m.l, x2: m.l, y1: m.t, y2: H - m.b, style: "stroke:var(--baseline);stroke-width:1" }));
+  const tip = makeTip(box);
+  cfg.items.forEach((it, i) => {
+    const y = m.t + i * rowH + (rowH - barH) / 2;
+    svg.appendChild(svText(m.l - 8, y + barH / 2 + 3.5, it.label, "fill:var(--ink-2)", "end"));
+    const w = Math.max(2, X(it.value) - m.l);
+    const bar = sv("path", {
+      d: `M${m.l},${y} h${Math.max(0, w - 4)} a4,4 0 0 1 4,4 v${barH - 8} a4,4 0 0 1 -4,4 h${-Math.max(0, w - 4)} Z`,
+      style: "fill:var(--series-1)",
+    });
+    svg.appendChild(bar);
+    svg.appendChild(svText(m.l + w + 6, y + barH / 2 + 3.5, (cfg.valFmt || ((v) => f(v, 1) + "×"))(it.value), "fill:var(--ink);font-weight:600;font-variant-numeric:tabular-nums"));
+    const hit = sv("rect", { x: m.l, y: m.t + i * rowH, width: W - m.l - m.r, height: rowH, fill: "transparent" });
+    hit.addEventListener("pointermove", () => {
+      bar.style.opacity = ".82";
+      const sr = svg.getBoundingClientRect(), r = box.getBoundingClientRect(), k = sr.width / W;
+      tip.show((sr.left - r.left) + (m.l + w) * k, (sr.top - r.top) + y * k, "", [{ color: cssVar("--series-1"), value: (cfg.valFmt || ((v) => f(v, 1) + "×"))(it.value), name: it.label }]);
+    });
+    hit.addEventListener("pointerleave", () => { bar.style.opacity = "1"; tip.hide(); });
+    svg.appendChild(hit);
+  });
+  box.appendChild(svg);
+}
+/* Scatter with nearest-point hover: points = [{x, y, name, nav}] */
+function mountScatter(box, cfg) {
+  if (!box || cfg.points.length < 3) return;
+  const W = 720, H = 290, m = { l: 46, r: 18, t: 14, b: 34 };
+  const [xlo, xhi] = padDomain(cfg.points.map((p) => p.x), false);
+  const [ylo, yhi] = padDomain(cfg.points.map((p) => p.y), true);
+  const X = (x) => m.l + (x - xlo) / (xhi - xlo || 1) * (W - m.l - m.r);
+  const Y = (v) => m.t + (yhi - v) / (yhi - ylo || 1) * (H - m.t - m.b);
+  const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, tabindex: 0, role: "img", "aria-label": cfg.label || "scatter" });
+  for (const tv of niceTicks(ylo, yhi, 5)) {
+    svg.appendChild(sv("line", { x1: m.l, x2: W - m.r, y1: Y(tv), y2: Y(tv), style: `stroke:${tv === 0 ? "var(--baseline)" : "var(--grid)"};stroke-width:1` }));
+    svg.appendChild(svText(m.l - 7, Y(tv) + 3.5, tv + "%", "fill:var(--ink-3);font-variant-numeric:tabular-nums", "end"));
+  }
+  for (const tv of niceTicks(xlo, xhi, 6)) {
+    svg.appendChild(svText(X(tv), H - m.b + 15, String(tv), "fill:var(--ink-3);font-variant-numeric:tabular-nums", "middle"));
+  }
+  svg.appendChild(svText((m.l + W - m.r) / 2, H - 3, cfg.xLabel, "fill:var(--ink-3)", "middle"));
+  const dots = cfg.points.map((p) => {
+    const c = sv("circle", { cx: X(p.x), cy: Y(p.y), r: 4.5, style: "fill:var(--series-1);stroke:var(--surface-1);stroke-width:2;opacity:.92" });
+    svg.appendChild(c);
+    return c;
+  });
+  box.appendChild(svg);
+  const tip = makeTip(box);
+  let cur = -1;
+  const setCur = (i) => {
+    if (cur >= 0) { dots[cur].setAttribute("r", 4.5); dots[cur].style.opacity = ".92"; }
+    cur = i;
+    if (i < 0) { tip.hide(); svg.style.cursor = "default"; return; }
+    const p = cfg.points[i];
+    dots[i].setAttribute("r", 6); dots[i].style.opacity = "1";
+    const sr = svg.getBoundingClientRect(), r = box.getBoundingClientRect(), k = sr.width / W;
+    tip.show((sr.left - r.left) + X(p.x) * k, (sr.top - r.top) + Y(p.y) * k, p.name, [
+      { value: fmtSigned(p.y), name: cfg.yName },
+      { value: f(p.x, 1), name: cfg.xName },
+    ]);
+    svg.style.cursor = p.nav ? "pointer" : "default";
+  };
+  svg.addEventListener("pointermove", (e) => {
+    const sr = svg.getBoundingClientRect(), kx = W / sr.width;
+    const px = (e.clientX - sr.left) * kx, py = (e.clientY - sr.top) * kx;
+    let bi = -1, bd = 26 * 26;
+    cfg.points.forEach((p, i) => {
+      const d = (X(p.x) - px) ** 2 + (Y(p.y) - py) ** 2;
+      if (d < bd) { bd = d; bi = i; }
+    });
+    setCur(bi);
+  });
+  svg.addEventListener("pointerleave", () => setCur(-1));
+  svg.addEventListener("click", () => { if (cur >= 0 && cfg.points[cur].nav) location.hash = cfg.points[cur].nav; });
+  svg.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      const order = cfg.points.map((p, i) => i).sort((a, b) => cfg.points[a].x - cfg.points[b].x);
+      const pos = order.indexOf(cur);
+      setCur(order[Math.max(0, Math.min(order.length - 1, (pos < 0 ? 0 : pos + (e.key === "ArrowRight" ? 1 : -1))))]);
+    } else if (e.key === "Enter" && cur >= 0 && cfg.points[cur].nav) location.hash = cfg.points[cur].nav;
+    else if (e.key === "Escape") setCur(-1);
+  });
+  svg.addEventListener("blur", () => setCur(-1));
+}
+/* Emphasis strip: gray context dots + one highlighted value + a median tick */
+function mountStrip(box, cfg) {
+  if (!box) return;
+  const W = 720, H = 104, m = { l: 20, r: 20 }, ay = 64;
+  const vals = cfg.dots.map((d) => d.v).concat(cfg.median != null ? [cfg.median] : []);
+  if (!vals.length) return;
+  const [lo, hi] = padDomain(vals, false);
+  const X = (v) => m.l + (v - lo) / (hi - lo || 1) * (W - m.l - m.r);
+  const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": cfg.label || "strip plot" });
+  svg.appendChild(sv("line", { x1: m.l, x2: W - m.r, y1: ay, y2: ay, style: "stroke:var(--grid);stroke-width:1" }));
+  for (const tv of niceTicks(lo, hi, 6)) {
+    svg.appendChild(sv("line", { x1: X(tv), x2: X(tv), y1: ay, y2: ay + 4, style: "stroke:var(--baseline);stroke-width:1" }));
+    svg.appendChild(svText(X(tv), ay + 17, tv + "×", "fill:var(--ink-3);font-variant-numeric:tabular-nums", "middle"));
+  }
+  if (cfg.median != null) {
+    svg.appendChild(sv("line", { x1: X(cfg.median), x2: X(cfg.median), y1: ay - 16, y2: ay + 8, style: "stroke:var(--ink-3);stroke-width:1.5" }));
+    svg.appendChild(svText(X(cfg.median), ay + 32, `peer median ${f(cfg.median, 1)}×`, "fill:var(--ink-3)", "middle"));
+  }
+  const tip = makeTip(box);
+  const marks = [];
+  for (const d of cfg.dots) {
+    const em = d.emph;
+    const c = sv("circle", { cx: X(d.v), cy: ay - (em ? 0 : 0), r: em ? 6.5 : 5, style: `fill:${em ? "var(--series-1)" : "var(--emphasis)"};stroke:var(--surface-1);stroke-width:2` });
+    svg.appendChild(c);
+    if (em) svg.appendChild(svText(X(d.v), ay - 18, `${d.name} ${f(d.v, 1)}×`, "fill:var(--ink-2);font-weight:600", "middle"));
+    marks.push({ c, d });
+  }
+  box.appendChild(svg);
+  svg.addEventListener("pointermove", (e) => {
+    const sr = svg.getBoundingClientRect(), kx = W / sr.width;
+    const px = (e.clientX - sr.left) * kx;
+    let best = null, bd = 24;
+    for (const mk of marks) { const d = Math.abs(X(mk.d.v) - px); if (d < bd) { bd = d; best = mk; } }
+    if (!best) { tip.hide(); return; }
+    const r = box.getBoundingClientRect(), k = sr.width / W;
+    tip.show((sr.left - r.left) + X(best.d.v) * k, (sr.top - r.top) + (ay - 8) * k, best.d.name,
+      [{ value: f(best.d.v, 1) + "×", name: "P/E" }]);
+  });
+  svg.addEventListener("pointerleave", () => tip.hide());
+}
+/* Share bar (part-to-whole, 2px surface gaps) */
+function mountShare(box, parts, fmtVal) {
+  if (!box) return;
+  const total = parts.reduce((a, p) => a + (p.value || 0), 0);
+  if (!(total > 0)) return;
+  const bar = document.createElement("div"); bar.className = "sharebar";
+  const key = document.createElement("div"); key.className = "sharekey";
+  for (const p of parts) {
+    if (!(p.value > 0)) continue;
+    const seg = document.createElement("div");
+    seg.style.flex = String(p.value / total);
+    seg.style.background = p.color;
+    seg.title = `${p.label}: ${fmtVal(p.value)}`;
+    bar.appendChild(seg);
+    const k = document.createElement("span");
+    const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = p.color;
+    k.appendChild(sw);
+    k.appendChild(document.createTextNode(`${p.label} ${fmtVal(p.value)} (${Math.round(p.value / total * 100)}%)`));
+    key.appendChild(k);
+  }
+  box.appendChild(bar); box.appendChild(key);
+}
+function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function monthTicks(maxS) {
+  return [0, 3, 6, 12, 18, 24].filter((mm) => mm * 21 <= maxS + 12)
+    .map((mm) => ({ x: mm * 21, label: mm === 0 ? "listing" : mm + "m" }));
+}
+/* Build the forecast-path chart into a container from a forecast object (+ optional actuals) */
+function mountForecastPath(box, fc, item) {
+  if (!box || !fc) return;
+  const hz = fc.horizons ? fc : fc.ml_horizons;
+  if (!hz || !hz.horizons) return;
+  const H2S = { "6m": 126, "12m": 252, "24m": 504 };
+  const fpts = [];
+  const rules = fc.rules;
+  if (rules && rules.listing_open_premium_pct && rules.listing_open_premium_pct.point != null)
+    fpts.push({ x: 1, v: rules.listing_open_premium_pct.point });
+  if (hz.entry && hz.entry.expected_bottom_session != null && hz.entry.expected_bottom_depth_pct_vs_offer != null)
+    fpts.push({ x: hz.entry.expected_bottom_session, v: hz.entry.expected_bottom_depth_pct_vs_offer, tag: "expected low" });
+  const band = [];
+  for (const [k, s] of Object.entries(H2S)) {
+    const h = hz.horizons[k];
+    if (h && h.ret_pct_vs_offer != null) {
+      fpts.push({ x: s, v: h.ret_pct_vs_offer });
+      if (h.cv_mae_pp != null) band.push({ x: s, lo: h.ret_pct_vs_offer - h.cv_mae_pp, hi: h.ret_pct_vs_offer + h.cv_mae_pp });
+    }
+  }
+  if (hz.exit && hz.exit.expected_peak_session != null && hz.exit.expected_peak_pct_vs_offer != null)
+    fpts.push({ x: hz.exit.expected_peak_session, v: hz.exit.expected_peak_pct_vs_offer, tag: "expected peak", big: true });
+  fpts.sort((a, b) => a.x - b.x);
+  const dedup = fpts.filter((p, i) => !i || p.x - fpts[i - 1].x > 2);
+  if (dedup.length < 3) return;
+  const series = [{
+    name: "Forecast path", colorHex: cssVar("--series-1"), pts: dedup,
+    endLabel: fmtSigned(dedup[dedup.length - 1].v, 0),
+  }];
+  const a = item && item.actual;
+  if (a) {
+    const apts = [];
+    if (item.day1_gain != null) apts.push({ x: 1, v: item.day1_gain });
+    if (a.bottom_so_far_pct != null && a.bottom_so_far_session != null) apts.push({ x: a.bottom_so_far_session, v: a.bottom_so_far_pct, tag: "low so far" });
+    if (a.ret_6m != null) apts.push({ x: 126, v: a.ret_6m });
+    if (a.ret_12m != null) apts.push({ x: 252, v: a.ret_12m });
+    if (a.current_ret != null && item.listing) {
+      const s = Math.min(520, Math.max(2, Math.round((Date.now() - new Date(item.listing).getTime()) / 864e5 * 5 / 7)));
+      if (!apts.length || s > apts[apts.length - 1].x + 1) apts.push({ x: s, v: a.current_ret, tag: "now" });
+    }
+    apts.sort((q, r) => q.x - r.x);
+    if (apts.length >= 2) series.push({ name: "Actual so far", colorHex: cssVar("--series-2"), pts: apts });
+  }
+  const xmax = Math.max(504, ...series.flatMap((s) => s.pts.map((p) => p.x))) + 8;
+  mountLineChart(box, {
+    series, band, xmax, xticks: monthTicks(xmax), zeroLabel: "offer",
+    label: "Forecast path: expected % vs offer price by month since listing",
+    xTip: (x) => x <= 2 ? "listing day" : `~${(x / 21).toFixed(1)} months (session ${Math.round(x)})`,
+  });
+}
 
 /* ---------- data & engine plumbing ---------- */
 const state = { radar: null, reports: {}, engineOk: null, live: {} };
@@ -307,6 +684,7 @@ async function viewHome() {
   <div class="banner">Automated document analysis for research and education. <b>Not investment advice</b>,
     not a recommendation, not a SEBI-registered research report. Point forecasts carry wide error bars;
     direction and timing bands are the only reads that backtest reliably.</div>
+  <div id="home-viz"></div>
   <input class="filter" id="filter" type="search" placeholder="Filter by company name…" aria-label="Filter IPOs">
   <div id="list"><p class="muted" style="margin-top:12px">loading…</p></div>`;
 
@@ -328,6 +706,20 @@ async function viewHome() {
     };
     render("");
     $("filter").addEventListener("input", (e) => render(e.target.value.trim().toLowerCase()));
+    const pts = d.ipos
+      .filter((x) => x.rhp && x.rhp.score != null && x.day1_gain != null)
+      .map((x) => ({ x: x.rhp.score, y: x.day1_gain, name: x.name, nav: "#/ipo/" + x.cg_ipo_id }));
+    if (pts.length >= 8) {
+      $("home-viz").innerHTML = `<div class="card" style="margin-bottom:14px">
+        <div class="ctitle">RHP score vs listing-day gain — every listed IPO with both on record</div>
+        <div class="viz" id="viz-scatter"></div>
+        <p class="muted" style="margin-top:6px">Each dot is one IPO: hover (or tab + arrow keys) for the name, click to open
+        its report. The zero line is the offer price; exact figures live in each IPO's row below.</p></div>`;
+      mountScatter($("viz-scatter"), {
+        points: pts, xLabel: "RHP score (0–100)", xName: "RHP score", yName: "day-1 close vs offer",
+        label: "Scatter of RHP score against listing-day gain for listed IPOs",
+      });
+    }
   } catch (e) {
     $("list").innerHTML = `<p class="muted">data load failed: ${esc(e.message)}</p>`;
   }
@@ -425,6 +817,12 @@ function tabOverview(report, item) {
       <span class="tabular" style="font-weight:500;flex:none">${o.amount_cr != null ? cr(o.amount_cr) : "—"}</span>
     </li>`).join("");
   const questions = (report.questions || []).map((q) => `<li>${esc(q)}</li>`).join("");
+  window.__afterTab = () => {
+    if (fresh > 0 || ofs > 0) mountShare($("viz-share"), [
+      { label: "Fresh issue (to company)", value: fresh || 0, color: cssVar("--series-1") },
+      { label: "OFS (to sellers)", value: ofs || 0, color: cssVar("--series-3") },
+    ], cr);
+  };
   return `<div class="grid3">
     ${exec ? `<div class="card span2"><div class="ctitle">Executive summary</div>${exec}</div>` : ""}
     <div class="card">
@@ -441,6 +839,7 @@ function tabOverview(report, item) {
         ${item && item.lead ? stat("Lead manager", `<span style="font-size:13.5px">${esc(item.lead)}</span>`) : ""}
         ${item && item.open ? stat("Issue dates", `<span style="font-size:13.5px">${esc(item.open)} → ${esc(item.close || "—")}</span>`) : ""}
       </div>
+      ${fresh > 0 || ofs > 0 ? `<div class="ctitle" style="margin-top:18px">Fresh issue vs offer for sale</div><div class="viz" id="viz-share"></div>` : ""}
     </div>
     ${flags.green ? `<div class="card"><div class="ctitle">Green flags</div>${caseList(flags.green.slice(0, 6), "good")}</div>` : ""}
     ${flags.red ? `<div class="card"><div class="ctitle">Red flags</div>${caseList(flags.red.slice(0, 6), "critical")}</div>` : ""}
@@ -467,6 +866,14 @@ function tabValuation(report) {
   const peers = (v.peers || []).map((p) => `
     <tr><td>${esc(p.name)}</td><td class="num">${f(p.pe)}</td><td class="num">${f(p.eps)}</td><td class="num">${f(p.ronw)}</td></tr>`).join("");
   const callVariant = (v.call || "").includes("over") ? "critical" : /attract|under/.test(v.call || "") ? "good" : "warn";
+  const peDots = (v.peers || []).filter((p) => p.pe != null).map((p) => ({ name: p.name, v: p.pe }));
+  const hasStrip = v.issuer_pe != null && (peDots.length || v.peer_pe_median != null);
+  window.__afterTab = () => {
+    if (hasStrip) mountStrip($("viz-pe"), {
+      dots: peDots.concat([{ name: "This issue", v: v.issuer_pe, emph: true }]),
+      median: v.peer_pe_median, label: "Issuer P/E against listed peers",
+    });
+  };
   return `<div class="grid3">
     <div class="card span2">
       <div class="ctitle">Valuation call</div>
@@ -478,6 +885,7 @@ function tabValuation(report) {
         ${stat("Peer median P/E", f(v.peer_pe_median))}
         ${stat("Relative", v.relative != null ? f(v.relative, 2) + "×" : "—")}
       </div>
+      ${hasStrip ? `<div class="ctitle" style="margin-top:18px">Where the issue prices vs its own peer table</div><div class="viz" id="viz-pe"></div>` : ""}
       <div class="ctitle" style="margin-top:18px">Reasoning</div>
       <ul class="cases">${reasoning || `<li class="muted">No reasoning recorded.</li>`}</ul>
     </div>
@@ -595,9 +1003,9 @@ function tabForecast(item) {
   const subs = item.subs;
   const a = item.actual || {};
   let subsHtml = "";
-  if (subs) subsHtml = `<div class="ctitle" style="margin-top:18px">Final subscription (×)</div><div class="grid2i">${
-    [["QIB", subs.qib], ["bNII", subs.bnii], ["sNII", subs.snii], ["Retail", subs.rii]]
-      .filter(([, v]) => v != null).map(([k, v]) => ibox(k, `${f(v)}×`)).join("")}</div>`;
+  const subItems = subs ? [["QIB", subs.qib], ["bNII", subs.bnii], ["sNII", subs.snii], ["Retail", subs.rii]]
+    .filter(([, v]) => v != null).map(([label, value]) => ({ label, value })) : [];
+  if (subItems.length) subsHtml = `<div class="ctitle" style="margin-top:18px">Final subscription (×)</div><div class="viz" id="viz-subs"></div>`;
   let actualHtml = "";
   if (a.current_ret != null) {
     actualHtml = `<div class="ctitle" style="margin-top:18px">Actuals so far</div><div class="grid2i">${
@@ -606,8 +1014,15 @@ function tabForecast(item) {
       a.ret_6m != null ? ibox("6m actual", pct(a.ret_6m)) : ""}${
       a.ret_12m != null ? ibox("12m actual", pct(a.ret_12m)) : ""}</div>`;
   }
+  window.__afterTab = () => {
+    mountForecastPath($("viz-path"), item.forecast, item);
+    if (subItems.length) mountBars($("viz-subs"), { items: subItems, label: "Final subscription by category" });
+  };
   return `<div class="card">
     <div class="ctitle">Horizon forecast — 6m / 12m / 24m, entry &amp; exit</div>
+    <div class="viz" id="viz-path"></div>
+    <p class="muted" style="margin:4px 0 14px">Expected % vs offer price by month since listing — the shaded wash is the
+    model's cross-validated error band. Exact values below; hover or use arrow keys for point-by-point reads.</p>
     ${forecastBlocks(item.forecast)}
     ${subsHtml}
     ${item.day1_gain != null ? `<div class="grid2i" style="margin-top:12px">${ibox("Day-1 close vs offer", pct(item.day1_gain))}</div>` : ""}
@@ -635,6 +1050,7 @@ function reportShell(titleHtml, tabs, renderTab, disclaimer) {
       b.classList.toggle("on", on);
       b.setAttribute("aria-selected", on);
     });
+    window.__afterTab = null;
     body.innerHTML = renderTab(t);
     if (typeof window.__afterTab === "function") window.__afterTab(t);
   };
@@ -700,9 +1116,27 @@ function tabFinancials(report) {
   const rows = fin.series.map((row) => `<tr>${cols.map((c) =>
     `<td class="${c === cols[0] ? "" : "num"}">${row[c] == null ? "—" : esc(typeof row[c] === "number" ? (+row[c]).toLocaleString("en-IN", { maximumFractionDigits: 1 }) : String(row[c]))}</td>`).join("")}</tr>`).join("");
   const ratios = Object.entries(fin.ratios || {}).map(([k, v]) => ibox(titleCase(k), f(v, 2))).join("");
+  const ms = (fin.margin_series || []).filter((r) => r.net_margin != null || r.operating_margin != null);
+  window.__afterTab = () => {
+    if (ms.length < 2) return;
+    const mk = (key, name, colorVar) => ({
+      name, colorHex: cssVar(colorVar),
+      pts: ms.map((r, i) => r[key] != null ? { x: i, v: r[key] } : null).filter(Boolean),
+    });
+    const series = [mk("net_margin", "Net margin", "--series-1"), mk("operating_margin", "Operating margin", "--series-2")]
+      .filter((s) => s.pts.length >= 2);
+    if (!series.length) return;
+    mountLineChart($("viz-margins"), {
+      series, xmax: ms.length - 1, h: 200, mr: 18,
+      xticks: ms.map((r, i) => ({ x: i, label: String(r.fy) })),
+      vFmt: (v) => f(v, 1) + "%", label: "Margin trend across restated years",
+      xTip: (x) => String((ms[Math.round(x)] || {}).fy || ""),
+    });
+  };
   return `<div class="card">
     <div class="ctitle">Restated financials ${fin.unit_note ? `<span style="text-transform:none">· ${esc(fin.unit_note)}</span>` : ""}</div>
     <div class="tblwrap"><table class="tbl"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>
+    ${ms.length >= 2 ? `<div class="ctitle" style="margin-top:18px">Margin trend</div><div class="viz" id="viz-margins" style="max-width:34rem"></div>` : ""}
     ${ratios ? `<div class="ctitle" style="margin-top:18px">Key ratios</div><div class="grid2i">${ratios}</div>` : ""}
   </div>`;
 }
@@ -747,16 +1181,18 @@ function tabSignals(analysisId, report) {
       try {
         await apiJson(`/api/analyses/${analysisId}/market-signals`, {
           method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-        const fc = await apiJson(`/api/analyses/${analysisId}/listing-forecast`);
-        $("sig-out").innerHTML = forecastBlocks(fc) + (fc.disclaimer ? `<p class="muted" style="margin-top:10px;font-style:italic">${esc(fc.disclaimer)}</p>` : "");
+        renderSigOut(await apiJson(`/api/analyses/${analysisId}/listing-forecast`));
       } catch (e) { $("sig-out").innerHTML = `<p class="muted" style="color:var(--critical)">${esc(e.message)}</p>`; }
       btn.disabled = false; btn.textContent = "Save & forecast";
     });
     if (!$("sig-out").innerHTML) {
-      apiJson(`/api/analyses/${analysisId}/listing-forecast`).then((fc) => {
-        $("sig-out").innerHTML = forecastBlocks(fc) + (fc.disclaimer ? `<p class="muted" style="margin-top:10px;font-style:italic">${esc(fc.disclaimer)}</p>` : "");
-      }).catch(() => {});
+      apiJson(`/api/analyses/${analysisId}/listing-forecast`).then(renderSigOut).catch(() => {});
     }
+  };
+  const renderSigOut = (fc) => {
+    $("sig-out").innerHTML = `<div class="viz" id="viz-livepath"></div>` + forecastBlocks(fc) +
+      (fc.disclaimer ? `<p class="muted" style="margin-top:10px;font-style:italic">${esc(fc.disclaimer)}</p>` : "");
+    mountForecastPath($("viz-livepath"), fc, null);
   };
   return `<div class="card">
     <div class="ctitle">Market signals &amp; forecast (optional, user-supplied)</div>

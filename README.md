@@ -20,10 +20,14 @@ IPO's RHP in SEBI's Red-Herring filings archive, runs the full deterministic ana
 pipeline on it (no server, no keys — `backend/tools/analyze_standalone.py`), refreshes
 real price outcomes from Yahoo, recomputes entry/exit + 6m/12m/24m horizon forecasts,
 rebuilds `ipodata/finalipodata_expanded_20yr.xlsx`, and commits the results.
-**The dashboard** (GitHub Pages, `docs/`) shows every tracked IPO with its RHP score,
-verdict, valuation call, subscription, day-1 gain, forecast horizons, expected bottom
-(entry) and exit read — plus actuals as they accrue. Sources being down never breaks
-the site; the last committed data keeps serving.
+**The dashboard** (GitHub Pages, `docs/`) is the analyzer UI as a static site: every
+tracked IPO gets a full report page — Overview, Forecast (6m/12m/24m horizons, entry/exit,
+subscription, actuals), Valuation, Risks and the rule-by-rule Score trace — rendered from
+precomputed report JSONs (`docs/data/reports/`). The upload drop-zone is live too: run the
+backend locally (or point the page at any hosted engine via "how do I analyze my own RHP?")
+and the same page uploads, polls progress and renders the full live report with market-signal
+forecasts and document Q&A. Sources being down never breaks the site; the last committed
+data keeps serving.
 
 A second workflow (`.github/workflows/kaggle-publish.yml` → `automation/kaggle_publish.py`)
 publishes the refreshed dataset (the expanded Excel + the four canonical CSVs) to

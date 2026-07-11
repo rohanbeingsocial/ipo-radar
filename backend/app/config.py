@@ -34,7 +34,12 @@ CLAUDE_CLI_TIMEOUT = int(os.getenv("CLAUDE_CLI_TIMEOUT", "180"))
 # OCR is opt-in: most mainboard RHPs are born-digital.
 ENABLE_OCR = os.getenv("ENABLE_OCR", "0") == "1"
 
-CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+# The GitHub Pages demo is allowed by default so a locally running engine can
+# power its upload/analyze mode without extra configuration.
+CORS_ORIGINS = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000,https://rohanbeingsocial.github.io",
+).split(",")
 
 DISCLAIMER = (
     "This is an automated document analysis for research and education. It is not "

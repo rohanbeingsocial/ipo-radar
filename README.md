@@ -11,6 +11,8 @@ the page of the PDF that number was read from.
 
 ## IPO Radar (self-updating GitHub Pages dashboard)
 
+**Live dashboard: <https://rohanbeingsocial.github.io/rhp-analyst/>**
+
 The repo runs itself: a daily GitHub Actions job (`.github/workflows/ipo-radar.yml` →
 `automation/update.py`) pulls the latest mainboard IPOs from Chittorgarh's archives
 (issue structure, QIB/bNII/sNII/Retail subscription, listing-day prices), finds each new

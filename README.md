@@ -25,6 +25,12 @@ verdict, valuation call, subscription, day-1 gain, forecast horizons, expected b
 (entry) and exit read — plus actuals as they accrue. Sources being down never breaks
 the site; the last committed data keeps serving.
 
+A second workflow (`.github/workflows/kaggle-publish.yml` → `automation/kaggle_publish.py`)
+publishes the refreshed dataset (the expanded Excel + the four canonical CSVs) to Kaggle
+as a new dataset version on the **1st of each month**. It needs `KAGGLE_USERNAME` and
+`KAGGLE_KEY` repo secrets (token from <https://www.kaggle.com/settings> → API); until
+those are set it skips harmlessly.
+
 ## How it works
 
 ```

@@ -1,0 +1,35 @@
+name: kaggle-publish
+
+on:
+  schedule:
+    - cron: "0 4 1 * *"   # 1st of each month, 09:30 IST — after that morning's ipo-radar refresh
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kaggle-publish
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Publish dataset to Kaggle
+        run: |
+          if [ -z "$KAGGLE_KEY" ] || [ -z "$KAGGLE_USERNAME" ]; then
+            echo "::notice::KAGGLE_USERNAME / KAGGLE_KEY secrets not set — skipping publish."
+            exit 0
+          fi
+          pip install --quiet kaggle
+          python automation/kaggle_publish.py

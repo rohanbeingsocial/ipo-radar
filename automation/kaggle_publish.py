@@ -1,15 +1,17 @@
 """Publish the refreshed IPO dataset to Kaggle as a new dataset version.
 
-Runs monthly in CI (.github/workflows/kaggle-publish.yml). Needs
-KAGGLE_USERNAME and KAGGLE_KEY in the environment (GitHub repo secrets,
-values from kaggle.com/settings -> API -> Create New Token). The dataset
-lives at kaggle.com/datasets/<KAGGLE_USERNAME>/india-mainboard-ipos-20yr
-and is created automatically (public) on the first successful run.
+Runs monthly in CI (.github/workflows/kaggle-publish.yml). Needs a Kaggle
+access token (kaggle.com/settings -> API -> Create New Token) in the
+KAGGLE_API_TOKEN environment variable (GitHub repo secret). The dataset
+lives at kaggle.com/datasets/<token owner>/india-mainboard-ipos-20yr and
+is created automatically on the first run.
+
+Uses kagglehub rather than the kaggle CLI: the CLI's upload endpoints
+reject the newer KGAT_ access tokens (401), kagglehub accepts them and
+derives the username from the token so it never needs hardcoding.
 """
-import json
 import os
 import shutil
-import subprocess
 import sys
 import tempfile
 from datetime import datetime, timezone
@@ -17,7 +19,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SLUG = "india-mainboard-ipos-20yr"
-TITLE = "India Mainboard IPOs: 20 Years of Data"
 
 FILES = [
     ROOT / "ipodata" / "finalipodata_expanded_20yr.xlsx",
@@ -65,17 +66,13 @@ education. It is not investment advice and not a recommendation.**
 """
 
 
-def run(cmd: list[str]) -> subprocess.CompletedProcess:
-    proc = subprocess.run(cmd, capture_output=True, text=True)
-    out = (proc.stdout or "") + (proc.stderr or "")
-    print(out.strip())
-    return proc
-
-
 def main() -> int:
-    user = os.environ.get("KAGGLE_USERNAME", "").strip()
-    if not user or not os.environ.get("KAGGLE_KEY", "").strip():
-        print("KAGGLE_USERNAME / KAGGLE_KEY not set - skipping publish")
+    has_token = os.environ.get("KAGGLE_API_TOKEN", "").strip()
+    has_pair = os.environ.get("KAGGLE_USERNAME", "").strip() and os.environ.get(
+        "KAGGLE_KEY", ""
+    ).strip()
+    if not (has_token or has_pair):
+        print("KAGGLE_API_TOKEN not set - skipping publish")
         return 0
 
     missing = [str(p) for p in FILES if not p.exists()]
@@ -86,26 +83,19 @@ def main() -> int:
     with open(ROOT / "data" / "cg_issue.csv", encoding="utf-8", newline="") as f:
         n_ipos = sum(1 for _ in f) - 1
 
+    import kagglehub  # deferred so the no-credentials skip path needs no install
+
+    user = kagglehub.whoami()["username"]
+
     stage = Path(tempfile.mkdtemp(prefix="kaggle_stage_"))
     for p in FILES:
         shutil.copy2(p, stage / p.name)
     (stage / "README.md").write_text(DATASET_README, encoding="utf-8")
-    meta = {"title": TITLE, "id": f"{user}/{SLUG}", "licenses": [{"name": "other"}]}
-    (stage / "dataset-metadata.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
 
     msg = f"auto refresh {datetime.now(timezone.utc):%Y-%m-%d} ({n_ipos} IPOs)"
-    ver = run(["kaggle", "datasets", "version", "-p", str(stage), "-m", msg])
-    if ver.returncode == 0:
-        print(f"published new version of {user}/{SLUG}: {msg}")
-        return 0
-
-    blob = ((ver.stdout or "") + (ver.stderr or "")).lower()
-    if "404" in blob or "not found" in blob:
-        crt = run(["kaggle", "datasets", "create", "-p", str(stage), "--public"])
-        if crt.returncode == 0:
-            print(f"created dataset kaggle.com/datasets/{user}/{SLUG}")
-            return 0
-    return 1
+    kagglehub.dataset_upload(f"{user}/{SLUG}", str(stage), version_notes=msg)
+    print(f"published kaggle.com/datasets/{user}/{SLUG}: {msg}")
+    return 0
 
 
 if __name__ == "__main__":

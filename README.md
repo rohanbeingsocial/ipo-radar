@@ -26,10 +26,11 @@ verdict, valuation call, subscription, day-1 gain, forecast horizons, expected b
 the site; the last committed data keeps serving.
 
 A second workflow (`.github/workflows/kaggle-publish.yml` → `automation/kaggle_publish.py`)
-publishes the refreshed dataset (the expanded Excel + the four canonical CSVs) to Kaggle
-as a new dataset version on the **1st of each month**. It needs `KAGGLE_USERNAME` and
-`KAGGLE_KEY` repo secrets (token from <https://www.kaggle.com/settings> → API); until
-those are set it skips harmlessly.
+publishes the refreshed dataset (the expanded Excel + the four canonical CSVs) to
+**[Kaggle](https://www.kaggle.com/datasets/rohandeogaonkar/india-mainboard-ipos-20yr)**
+as a new dataset version on the **1st of each month**. It needs a `KAGGLE_API_TOKEN`
+repo secret (access token from <https://www.kaggle.com/settings> → API); until it is
+set the workflow skips harmlessly.
 
 ## How it works
 

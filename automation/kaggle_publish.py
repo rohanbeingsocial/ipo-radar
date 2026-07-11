@@ -1,6 +1,6 @@
 """Publish the refreshed IPO dataset to Kaggle as a new dataset version.
 
-Runs monthly in CI (.github/workflows/kaggle-publish.yml). Needs a Kaggle
+Runs weekly in CI (.github/workflows/kaggle-publish.yml). Needs a Kaggle
 access token (kaggle.com/settings -> API -> Create New Token) in the
 KAGGLE_API_TOKEN environment variable (GitHub repo secret). The dataset
 lives at kaggle.com/datasets/<token owner>/india-mainboard-ipos-20yr and
@@ -33,7 +33,7 @@ DATASET_README = """\
 
 NSE/BSE **mainboard** IPOs from 2004 onward — issue structure, category-wise
 subscription, listing-day prices, and post-listing price paths out to 24 months.
-Refreshed monthly from a self-updating pipeline
+Refreshed weekly from a self-updating pipeline
 (https://github.com/rohanbeingsocial/rhp-analyst) that pulls Chittorgarh's IPO
 archives, SEBI's Red-Herring Prospectus filings, and Yahoo Finance daily and
 commits the results.

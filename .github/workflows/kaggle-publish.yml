@@ -2,7 +2,7 @@ name: kaggle-publish
 
 on:
   schedule:
-    - cron: "0 4 1 * *"   # 1st of each month, 09:30 IST — after that morning's ipo-radar refresh
+    - cron: "0 4 * * 1"   # Mondays 09:30 IST — after that morning's ipo-radar refresh
   workflow_dispatch:
 
 permissions:

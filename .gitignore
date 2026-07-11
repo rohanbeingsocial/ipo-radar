@@ -1,0 +1,19 @@
+# local runtime state — never committed
+backend/rhp.db
+backend/uploads/
+backend/data/
+backend/sample_data/*.pdf
+sebi_rhps_archive/
+test/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# misc
+.env
+*.log

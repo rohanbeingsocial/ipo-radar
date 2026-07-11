@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RHP Analyst — IPO Radar</title>
+<style>
+  :root { --bg:#0b0e14; --card:#131722; --edge:#232a3b; --ink:#e6e9f0; --ink2:#9aa4b8; --ink3:#667089;
+          --good:#34d399; --bad:#f87171; --warn:#fbbf24; --accent:#818cf8; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink); font:14px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif; padding:24px 16px 64px; }
+  .wrap { max-width:1060px; margin:0 auto; }
+  h1 { font-size:22px; letter-spacing:-.02em; }
+  h1 span { color:var(--accent); }
+  .sub { color:var(--ink2); font-size:13px; margin:4px 0 14px; }
+  .banner { background:#1c1407; border:1px solid #4a3b12; color:#e8c46a; border-radius:8px;
+            padding:10px 14px; font-size:12.5px; margin-bottom:22px; }
+  h2 { font-size:15px; color:var(--ink2); text-transform:uppercase; letter-spacing:.08em; margin:26px 0 10px; }
+  .card { background:var(--card); border:1px solid var(--edge); border-radius:10px; padding:14px 16px; margin-bottom:10px; cursor:pointer; }
+  .card:hover { border-color:#33405c; }
+  .row { display:flex; flex-wrap:wrap; gap:8px 18px; align-items:baseline; }
+  .name { font-weight:600; font-size:15px; flex:1 1 260px; }
+  .kv { color:var(--ink2); font-size:12.5px; white-space:nowrap; }
+  .kv b { color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums; }
+  .pos { color:var(--good) } .neg { color:var(--bad) }
+  .chip { display:inline-block; padding:1px 8px; border-radius:99px; font-size:11.5px; font-weight:600; }
+  .chip.score { background:#1d2436; color:var(--accent); }
+  .chip.good { background:#0d2b1e; color:var(--good); } .chip.bad { background:#331416; color:var(--bad); }
+  .chip.warn { background:#31250a; color:var(--warn); }
+  .detail { display:none; margin-top:12px; border-top:1px solid var(--edge); padding-top:12px; }
+  .card.open .detail { display:block; }
+  .grid { display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+  .box { background:var(--bg); border:1px solid var(--edge); border-radius:8px; padding:10px 12px; }
+  .box .t { color:var(--ink3); font-size:11px; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+  .box .v { font-size:16px; font-weight:650; font-variant-numeric:tabular-nums; }
+  .box .s { color:var(--ink3); font-size:11.5px; margin-top:2px; }
+  ul { padding-left:18px; color:var(--ink2); font-size:12.5px; }
+  .foot { color:var(--ink3); font-size:12px; margin-top:34px; }
+  a { color:var(--accent); text-decoration:none; }
+  .muted { color:var(--ink3); font-size:12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>RHP Analyst — <span>IPO Radar</span></h1>
+  <div class="sub" id="meta">loading…</div>
+  <div class="banner">Automated document analysis for research and education. <b>Not investment advice</b>,
+    not a recommendation, not a SEBI-registered research report. Point forecasts carry wide error bars;
+    direction and timing bands are the only reads that backtest reliably. Long-horizon training data skews to survivors.</div>
+  <div id="app"></div>
+  <div class="foot">Pipeline: Chittorgarh archives (issue, subscription, listing) + SEBI Red-Herring filings
+    (analyzed by the deterministic RHP scoring engine) + Yahoo price paths. Forecasts: gradient-boosted models
+    trained on ~20 years of NSE/BSE mainboard IPOs. Auto-updates daily via GitHub Actions.</div>
+</div>
+<script>
+const f = (v, d=1) => v==null ? "—" : (+v).toFixed(d);
+const pct = v => v==null ? "—" : `<span class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${(+v).toFixed(1)}%</span>`;
+const cr = v => v==null ? "—" : "₹"+(+v).toLocaleString("en-IN",{maximumFractionDigits:0})+" cr";
+
+function horizonBoxes(fc){
+  if(!fc || !fc.horizons) return "";
+  return Object.entries(fc.horizons).map(([k,h])=>`
+    <div class="box"><div class="t">${k} vs offer</div>
+      <div class="v">${pct(h.ret_pct_vs_offer)}</div>
+      <div class="s">P(above offer) ${Math.round((h.p_above_offer??0.5)*100)}% · ±${f(h.cv_mae_pp,0)}pp CV</div>
+    </div>`).join("");
+}
+function entryExit(fc){
+  if(!fc) return "";
+  let out="";
+  if(fc.entry && fc.entry.expected_bottom_session!=null)
+    out+=`<div class="box"><div class="t">Entry</div>
+      <div class="v">session ~${Math.round(fc.entry.expected_bottom_session)}</div>
+      <div class="s">expected low ${pct(fc.entry.expected_bottom_depth_pct_vs_offer)} vs offer — ${fc.entry.read||""}</div></div>`;
+  if(fc.exit && fc.exit.call)
+    out+=`<div class="box"><div class="t">Exit</div><div class="v">${fc.exit.call}</div>
+      <div class="s">${fc.exit.expected_ret_pct!=null?`expected ${f(fc.exit.expected_ret_pct)}% · `:""}peak ~${f(fc.exit.expected_peak_pct_vs_offer)}% around session ${f(fc.exit.expected_peak_session,0)}</div></div>`;
+  return out;
+}
+function rulesLine(fc){
+  if(!fc || !fc.rules) return "";
+  const r=fc.rules;
+  return `<div class="muted" style="margin-top:8px">Rules engine: listing premium ~${f(r.listing_open_premium_pct?.point)}%
+    · P(falls below offer) ${Math.round((r.falls_below_offer?.probability??0)*100)}%
+    · bottom window sessions ${r.bottom?.window_sessions?.join("–")??"—"}</div>`;
+}
+function actualLine(a, fc){
+  if(!a || a.current_ret==null) return "";
+  let s=`<div class="muted" style="margin-top:8px">So far: now ${pct(a.current_ret)}`;
+  if(a.bottom_so_far_pct!=null) s+=` · low ${pct(a.bottom_so_far_pct)} at session ${f(a.bottom_so_far_session,0)}`;
+  if(a.ret_6m!=null) s+=` · 6m ${pct(a.ret_6m)}`;
+  if(a.ret_12m!=null) s+=` · 12m ${pct(a.ret_12m)}`;
+  return s+"</div>";
+}
+function card(x){
+  const rhp=x.rhp, fc=x.forecast;
+  const scoreChip = rhp&&rhp.score!=null?`<span class="chip score">RHP ${f(rhp.score,1)}</span>`:`<span class="chip warn">RHP pending</span>`;
+  const valChip = rhp&&rhp.valuation?`<span class="chip ${rhp.valuation.includes("over")?"bad":rhp.valuation.includes("attract")||rhp.valuation.includes("under")?"good":"warn"}">${rhp.valuation.replaceAll("_"," ")}</span>`:"";
+  const subs = x.subs?`QIB <b>${f(x.subs.qib)}x</b>${x.subs.rii!=null?` · Retail <b>${f(x.subs.rii)}x</b>`:""}`:"—";
+  return `<div class="card" onclick="this.classList.toggle('open')">
+    <div class="row">
+      <span class="name">${x.name}</span>
+      ${scoreChip} ${valChip}
+      <span class="kv">${x.listing?`listed <b>${x.listing}</b>`:`opens <b>${x.open??"—"}</b>`}</span>
+      <span class="kv">offer <b>${x.offer_price?"₹"+f(x.offer_price,0):"—"}</b></span>
+      <span class="kv">size <b>${cr(x.issue_cr)}</b></span>
+      <span class="kv">subs ${subs}</span>
+      <span class="kv">day-1 ${pct(x.day1_gain)}</span>
+    </div>
+    <div class="detail">
+      <div class="grid">${horizonBoxes(fc)}${entryExit(fc)}</div>
+      ${rulesLine(fc)}${actualLine(x.actual, fc)}
+      ${rhp?`<div class="grid" style="margin-top:10px">
+        ${rhp.bull&&rhp.bull.length?`<div class="box"><div class="t">Bull</div><ul>${rhp.bull.map(t=>`<li>${t}</li>`).join("")}</ul></div>`:""}
+        ${rhp.bear&&rhp.bear.length?`<div class="box"><div class="t">Bear</div><ul>${rhp.bear.map(t=>`<li>${t}</li>`).join("")}</ul></div>`:""}
+        ${rhp.flags&&rhp.flags.length?`<div class="box"><div class="t">Forensic flags</div><ul>${rhp.flags.map(t=>`<li>${t}</li>`).join("")}</ul></div>`:""}
+      </div>
+      <div class="muted" style="margin-top:8px">${rhp.verdict??""} ${rhp.coverage!=null?`· extraction coverage ${Math.round(rhp.coverage*100)}%`:""}</div>`:""}
+      ${x.url?`<div class="muted" style="margin-top:6px"><a href="${x.url}" target="_blank" rel="noopener">issue details ↗</a></div>`:""}
+    </div>
+  </div>`;
+}
+fetch("data/ipos.json").then(r=>r.json()).then(d=>{
+  document.getElementById("meta").textContent =
+    `${d.count} IPOs tracked · updated ${new Date(d.generated_at).toLocaleString()}`;
+  const today = new Date().toISOString().slice(0,10);
+  const upcoming = d.ipos.filter(x=>!x.listing || x.listing>=today);
+  const listed = d.ipos.filter(x=>x.listing && x.listing<today);
+  let html="";
+  if(upcoming.length) html+=`<h2>Open / upcoming</h2>`+upcoming.map(card).join("");
+  html+=`<h2>Recently listed</h2>`+listed.map(card).join("");
+  document.getElementById("app").innerHTML=html;
+}).catch(e=>{ document.getElementById("app").innerHTML=`<div class="muted">data load failed: ${e}</div>`; });
+</script>
+</body>
+</html>

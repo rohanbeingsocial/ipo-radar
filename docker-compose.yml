@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: rhp
+      POSTGRES_PASSWORD: rhp
+      POSTGRES_DB: rhp
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rhp"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg2://rhp:rhp@db:5432/rhp
+      UPLOAD_DIR: /data/uploads
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      # Optional AI narrative layer + Q&A. Scoring works without it.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      # ENABLE_OCR: "1"   # needs tesseract in the image (see backend/Dockerfile)
+    volumes:
+      - uploads:/data/uploads
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Inlined into the browser bundle at build time; the browser reaches the
+        # backend through the published host port, not the compose network.
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  uploads:

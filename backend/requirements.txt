@@ -1,0 +1,14 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+sqlalchemy>=2.0.30
+pydantic>=2.7
+pymupdf>=1.24
+pdfplumber>=0.11
+python-multipart>=0.0.9
+rapidfuzz>=3.6
+reportlab>=4.1
+anthropic>=0.40
+httpx>=0.27
+pytest>=8.0
+# PostgreSQL driver (optional; SQLite is the zero-config default):
+#   pip install psycopg2-binary

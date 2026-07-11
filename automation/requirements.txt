@@ -1,0 +1,11 @@
+# automation pipeline = analysis engine deps + data tooling
+# sklearn/joblib/numpy pinned to the versions that trained horizon_model.pkl —
+# sklearn pickles are not stable across versions. Bump together with a retrain.
+pdfplumber>=0.11
+pymupdf>=1.24
+rapidfuzz>=3.6
+pandas==2.2.3
+numpy==1.26.4
+scikit-learn==1.6.1
+joblib==1.4.2
+openpyxl>=3.1

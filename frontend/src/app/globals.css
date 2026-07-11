@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/* Reference dataviz palette (validated) — light defaults, dark via media query. */
+:root {
+  --surface-1: #fcfcfb;
+  --page: #f9f9f7;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --series-1: #2a78d6;
+  --series-2: #1baf7a;
+  --series-3: #eda100;
+  --series-4: #008300;
+  --series-5: #4a3aa7;
+  --series-6: #e34948;
+  --seq-250: #86b6ef;
+  --seq-400: #3987e5;
+  --seq-550: #1c5cab;
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+  --delta-good: #006300;
+  --accent: #2a78d6;
+  --emphasis-gray: #c3c2b7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-1: #1a1a19;
+    --page: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.1);
+    --series-1: #3987e5;
+    --series-2: #199e70;
+    --series-3: #c98500;
+    --series-4: #008300;
+    --series-5: #9085e9;
+    --series-6: #e66767;
+    --seq-250: #86b6ef;
+    --seq-400: #3987e5;
+    --seq-550: #1c5cab;
+    --delta-good: #0ca30c;
+    --accent: #3987e5;
+    --emphasis-gray: #52514e;
+  }
+}
+
+@theme inline {
+  --color-surface: var(--surface-1);
+  --color-page: var(--page);
+  --color-ink: var(--text-primary);
+  --color-ink-2: var(--text-secondary);
+  --color-ink-3: var(--text-muted);
+  --color-grid: var(--grid);
+  --color-baseline: var(--baseline);
+  --color-edge: var(--border);
+  --color-accent: var(--accent);
+  --color-good: var(--status-good);
+  --color-warn: var(--status-warning);
+  --color-serious: var(--status-serious);
+  --color-critical: var(--status-critical);
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

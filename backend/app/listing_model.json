@@ -1,0 +1,52 @@
+{
+ "feature_names": [
+  "bias",
+  "overall_score",
+  "risk_score",
+  "ofs_share",
+  "issue_size_cr_log",
+  "overvalued",
+  "forensic_flag_count"
+ ],
+ "n": 11,
+ "lambda": 0.5,
+ "targets": {
+  "listing_open_premium_pct": [
+   3.6845,
+   10.3866,
+   -3.4916,
+   8.7676,
+   -0.9597,
+   3.3383,
+   -4.2916
+  ],
+  "bottom_session": [
+   28.9233,
+   1.3942,
+   14.8589,
+   42.6214,
+   -5.0941,
+   50.3876,
+   6.8311
+  ],
+  "bottom_drawdown_vs_offer_pct": [
+   -9.5435,
+   14.2481,
+   -4.2584,
+   -10.1844,
+   2.8181,
+   -34.1742,
+   -15.2664
+  ]
+ },
+ "loo_mae": {
+  "listing_open_premium_pct": 12.8,
+  "bottom_session": 59.2,
+  "bottom_drawdown_vs_offer_pct": 25.1
+ },
+ "baseline_mae": {
+  "listing_open_premium_pct": 11.6,
+  "bottom_session": 56.0,
+  "bottom_drawdown_vs_offer_pct": 24.5
+ }
+}

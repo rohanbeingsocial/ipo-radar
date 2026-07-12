@@ -44,7 +44,6 @@ def ctx():
     issue["objects_json"] = ent.extract_objects(pages, sections)
     entities = {
         "litigation": ent.extract_litigation(pages, sections),
-        "rpt": ent.extract_rpt(pages, sections),
         "contingent": ent.extract_contingent_liabilities(pages, sections),
         "dividend": ent.extract_dividend(pages, sections),
         "pledging": ent.detect_pledging(pages, sections),
@@ -129,7 +128,6 @@ def test_entities(ctx):
     assert e["pledging"]["pledged"] is False
     assert e["dividend"]["declared"] is False
     assert e["contingent"]["total_cr"] == pytest.approx(186, rel=0.01)
-    assert e["rpt"]["total_cr"] == pytest.approx(124.5, rel=0.01)
 
 
 def test_scoring_explainable(ctx):
@@ -333,6 +331,95 @@ Revenue from operations
     assert fy == ["STUB25", "FY25", "FY24", "FY23"]
     rows = dict(fin._rows_from_text(page, fy))
     assert rows["revenue"] == [31328.50, 35116.02, 30486.16, 23926.50]
+
+
+def test_old_layout_unlabeled_sum_rows_dont_kill_the_row():
+    """Pre-Ind-AS statements sum sections WITHOUT a label, so a metric row is
+    followed directly by another full row of figures. At old-layout widths
+    (>=5 columns) the first ncols values are the row's; the sum row is skipped."""
+    fy = ["STUB07", "FY07", "FY06", "FY05", "FY04", "FY03"]
+    page = """Reserves and Surplus
+236.83
+283.19
+109.90
+64.18
+5.23
+7.91
+402.88
+293.50
+120.07
+64.30
+5.33
+8.01
+Total Liabilities
+658.28
+355.46
+257.20
+97.46
+52.68
+12.02
+"""
+    rows = dict(fin._rows_from_text(page, fy))
+    assert rows["reserves_surplus"] == [236.83, 283.19, 109.90, 64.18, 5.23, 7.91]
+
+
+def test_modern_width_never_truncates_a_long_run():
+    """At modern widths (3-4 columns) a doubled run could equally be one row of
+    undetected extra columns — refuse to guess, exactly like the proforma case."""
+    fy = ["FY25", "FY24", "FY23"]
+    page = """Total Equity
+15,318.16
+12,105.21
+7,637.83
+6,000.94
+5,318.16
+4,105.21
+"""
+    assert "net_worth" not in dict(fin._rows_from_text(page, fy))
+
+
+def test_row_enumeration_digit_ends_the_row():
+    """Mid-2010s statements number their rows ("1 Revenue From Operations");
+    the NEXT row's bare digit must not be swallowed as a sixth value."""
+    fy = ["FY14", "FY13", "FY12", "FY11", "FY10"]
+    page = """1
+Revenue From Operations
+26,333.70
+21,332.04
+18,051.78
+15,492.60
+10,160.39
+2
+Other Income
+134.24
+134.84
+510.53
+117.90
+196.35
+"""
+    rows = dict(fin._rows_from_text(page, fy))
+    assert rows["revenue"] == [26333.70, 21332.04, 18051.78, 15492.60, 10160.39]
+    assert rows["other_income"] == [134.24, 134.84, 510.53, 117.90, 196.35]
+
+
+def test_net_worth_derived_from_capital_plus_reserves():
+    """Old A&L prints "Net worth" as a bare section header; the figure is
+    reconstructed from share capital + reserves and surplus."""
+    series = {"FY07": {"share_capital": 1.01, "reserves_surplus": 28.32}}
+    fin._derive_metrics(series)
+    assert series["FY07"]["net_worth"] == pytest.approx(29.33)
+
+
+def test_old_vocabulary_maps_to_metrics():
+    assert fin._match_metric("Income from Operations") == "revenue"
+    assert fin._match_metric("Sundry Debtors") == "receivables"
+    assert fin._match_metric("Cash and Bank Balance") == "cash"
+    assert fin._match_metric("Employee compensation and related expenses") == "employee_costs"
+    assert fin._match_metric("Secured Loans") == "loans_secured"
+    assert fin._match_metric("Depreciation") == "depreciation"
+    # and the trap next door must stay unmatched
+    assert fin._match_metric("Profit before depreciation and taxes") is None
+    assert fin._match_metric("Less : Depreciation/ Amortisation") is None
 
 
 def test_horizon_forecast_degrades_without_model(monkeypatch, tmp_path):

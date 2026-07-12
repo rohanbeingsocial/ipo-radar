@@ -14,13 +14,16 @@ import pdfplumber
 # metric -> row-label regex (case-insensitive). Order matters: first match wins,
 # and more specific labels come before generic ones.
 ROW_SYNONYMS: list[tuple[str, str]] = [
-    ("revenue", r"revenue\s+from\s+operations?"),
+    # "Income from Operations" is the pre-Ind-AS (roughly pre-2017) P&L wording
+    ("revenue", r"(?:revenue|income)\s+from\s+operations?"),
     ("other_income", r"^other\s+income"),
-    ("total_income", r"^total\s+income"),
+    ("total_income", r"^total\s+(?:income|revenue)"),
     ("cost_of_materials", r"cost\s+of\s+(?:materials|goods)"),
-    ("employee_costs", r"employee\s+benefits?\s+expenses?"),
+    ("employee_costs", r"employee\s+(?:benefits?\s+expenses?|compensation)"),
     ("finance_costs", r"^finance\s+costs?"),
-    ("depreciation", r"depreciation\s+and\s+amorti[sz]ation"),
+    # old statements print the row as just "Depreciation" — anchored both ends so
+    # "Profit before depreciation and taxes" can never match
+    ("depreciation", r"depreciation\s+and\s+amorti[sz]ation|^depreciation$"),
     ("total_expenses", r"^total\s+expenses"),
     ("pbt", r"(?:restated\s+)?profit\s*/?\(?(?:loss)?\)?\s+before\s+tax"),
     ("tax_expense", r"^(?:total\s+)?tax\s+expenses?"),
@@ -30,10 +33,17 @@ ROW_SYNONYMS: list[tuple[str, str]] = [
     ("net_worth", r"(?:^total\s+equity$|^net\s*worth|equity\s+attributable\s+to\s+(?:the\s+)?owners)"),
     ("borrowings_lt", r"(?:long[\s-]?term|non[\s-]?current)\s+borrowings"),
     ("borrowings_st", r"(?:short[\s-]?term|current)\s+borrowings"),
+    # the pre-Ind-AS balance sheet splits debt by security, not by tenure
+    ("loans_secured", r"^secured\s+loans?"),
+    ("loans_unsecured", r"^unsecured\s+loans?"),
     ("total_debt", r"^total\s+(?:borrowings|debt)"),
-    ("receivables", r"trade\s+receivables"),
+    # old A&L prints "Net worth" as a bare section header whose value row is
+    # unlabeled — capture the components so net_worth can be derived
+    ("share_capital", r"^(?:equity\s+)?share\s+capital"),
+    ("reserves_surplus", r"^reserves\s+and\s+surplus|^other\s+equity"),
+    ("receivables", r"trade\s+receivables|^sundry\s+debtors?"),
     ("inventory", r"^inventor(?:y|ies)"),
-    ("cash", r"cash\s+and\s+cash\s+equivalents"),
+    ("cash", r"cash\s+and\s+(?:cash\s+equivalents|bank\s+balances?)"),
     ("current_assets", r"^total\s+current\s+assets"),
     ("current_liabilities", r"^total\s+current\s+liabilities"),
     # "Net cash flow generated from/(used in) operating activities" and other
@@ -44,11 +54,14 @@ ROW_SYNONYMS: list[tuple[str, str]] = [
     ("capex", r"(?:purchase|acquisition)\s+of\s+property,?\s+plant"),
 ]
 
+SUMMARY_ANCHOR = r"summary\s+(?:of\s+)?(?:restated\s+)?financial\s+information"
+
 STATEMENT_ANCHORS = [
     r"restated\s+(?:consolidated\s+|standalone\s+)?statement\s+of\s+profit\s+and\s+loss",
-    r"restated\s+(?:consolidated\s+|standalone\s+)?statement\s+of\s+assets\s+and\s+liabilities",
+    # old docs suffix instead of prefix: "Statement of Assets and Liabilities, As Restated"
+    r"statement\s+of\s+assets\s+and\s+liabilit",
     r"restated\s+(?:consolidated\s+|standalone\s+)?(?:statement\s+of\s+)?cash\s+flows?",
-    r"summary\s+(?:of\s+)?(?:restated\s+)?financial\s+information",
+    SUMMARY_ANCHOR,
     r"balance\s+sheet",
     r"statement\s+of\s+profit\s+and\s+loss",
     r"cash\s+flow\s+statement",
@@ -100,9 +113,10 @@ def parse_number(raw: str) -> float | None:
 
 
 def detect_unit(text: str) -> tuple[str, float] | None:
-    m = re.search(r"(?:₹|rs\.?|rupees|inr)\s*(?:in\s+)?(lakhs?|lacs|crores?|cr|millions?|mn|billions?)", text, re.I)
+    # the ₹ glyph comes out as ` in many Indian PDFs (font-encoding artifact)
+    m = re.search(r"(?:₹|`|rs\.?|rupees|inr)\s*(?:in\s+)?(lakhs?|lacs|crores?|cr|millions?|mn|billions?)", text, re.I)
     if not m:
-        m = re.search(r"\(\s*(?:all\s+amounts?\s+)?(?:₹|rs\.?|inr)?\s*in\s+(lakhs?|lacs|crores?|millions?|mn)", text, re.I)
+        m = re.search(r"\(\s*(?:all\s+amounts?\s+)?(?:₹|`|rs\.?|inr)?\s*in\s+(lakhs?|lacs|crores?|millions?|mn)", text, re.I)
     if m:
         unit = m.group(1).lower()
         return unit, UNIT_FACTORS.get(unit, 1.0)
@@ -152,6 +166,95 @@ def _fy_labels_from_text(page_text: str) -> list[str]:
         if lab not in labels:
             labels.append(lab)
         if len(labels) == 5:
+            break
+    return labels if sum(1 for l in labels if l.startswith("FY")) >= 2 else []
+
+
+_MONTH_WORD_RE = re.compile(
+    r"^(?:january|february|march|april|may|june|july|august|september|october|november|december)$", re.I)
+_DAY_YEAR_RE = re.compile(r"^(\d{1,2})[,.]\s*((?:20)?\d{2})$")
+_DAY_RE = re.compile(r"^(\d{1,2})[,.]?$")
+_YEAR_RE = re.compile(r"^\(?(20\d{2})\)?[,.]?$")
+
+
+def _fy_labels_from_layout(page) -> list[str]:
+    """Column headers for old-layout (pre-Ind-AS) statements, read by position.
+
+    These pages stack each column's header vertically — "March" on one text
+    line, "31, 2007" on the next — and the text-layer line order can even
+    interleave columns: on some pages the stub column's header words print
+    AFTER all the "March"es while its VALUES print first. Regexing the page
+    text therefore finds no dates at all, or worse, finds them in an order
+    that does not match the value columns — which would silently assign a
+    six-month stub figure to a fiscal year. The x-positions still know the
+    truth: pair each month word with the day-and-year printed on or directly
+    below it, then read the columns left to right. Every detected column gets
+    a label — non-March-31 columns become STUBs — because an unlabeled column
+    would shift every value after it."""
+    try:
+        words = page.extract_words()
+    except Exception:                                    # noqa: BLE001
+        return []
+    months = [w for w in words if _MONTH_WORD_RE.match(w["text"].strip(" ,.:"))]
+    if not months:
+        return []
+    cols: list[tuple[float, str]] = []                   # (x_center, label)
+    for mw in months if len(months) >= 2 else []:
+        best: tuple[float, float, str] | None = None     # (top, x_center, label)
+        for w in words:
+            dy = w["top"] - mw["top"]
+            same_line = abs(dy) <= 3 and 0 <= w["x0"] - mw["x1"] <= 30
+            below = 3 < dy <= 40 and w["x0"] <= mw["x1"] + 40 and w["x1"] >= mw["x0"] - 40
+            if not (same_line or below):
+                continue
+            day = year = None
+            m2 = _DAY_YEAR_RE.match(w["text"].strip())
+            if m2:
+                day, year = int(m2.group(1)), int(m2.group(2)) % 100
+            elif _DAY_RE.match(w["text"].strip()):
+                for w2 in words:                         # year follows the day on its line
+                    if abs(w2["top"] - w["top"]) <= 3 and 0 <= w2["x0"] - w["x1"] <= 60:
+                        my = _YEAR_RE.match(w2["text"].strip())
+                        if my:
+                            day, year = int(_DAY_RE.match(w["text"].strip()).group(1)), int(my.group(1)) % 100
+                            break
+            if day is None or not 1 <= day <= 31:
+                continue
+            is_fy = mw["text"].strip(" ,.:").lower() == "march" and day == 31
+            if best is None or w["top"] < best[0]:
+                best = (w["top"], (mw["x0"] + mw["x1"]) / 2, f"FY{year:02d}" if is_fy else f"STUB{year:02d}")
+        if best:
+            cols.append((best[1], best[2]))
+    if sum(1 for _, lab in cols if lab.startswith("FY")) < 2:
+        # Mid-2010s layout: one centered "As on March 31" phrase and bare years
+        # below it, one per column — no complete date exists anywhere on the page.
+        # Pair the topmost such phrase with every year word beneath it. Same-line
+        # years are excluded on purpose: those are prose ("...March 31, 2014,
+        # 2013 and 2012"), not column headers.
+        for mw in sorted((w for w in months if w["text"].strip(" ,.:").lower() == "march"),
+                         key=lambda w: w["top"]):
+            day_adjacent = any(
+                abs(w["top"] - mw["top"]) <= 3
+                and (0 <= w["x0"] - mw["x1"] <= 30 or 0 <= mw["x0"] - w["x1"] <= 30)
+                and re.match(r"^31(?:st)?[,.]?$", w["text"].strip())
+                for w in words)
+            if not day_adjacent:
+                continue
+            yrs = [w for w in words if 3 < w["top"] - mw["top"] <= 60
+                   and re.fullmatch(r"20\d{2}", w["text"].strip(" ,."))]
+            if len(yrs) >= 2:
+                cols = [((w["x0"] + w["x1"]) / 2, f"FY{int(w['text'].strip(' ,.')) % 100:02d}")
+                        for w in yrs]
+                break
+    cols.sort()
+    labels: list[str] = []
+    last_x = None
+    for x, lab in cols:
+        if last_x is not None and x - last_x < 20:       # same column found twice
+            continue
+        last_x = x
+        labels.append(lab)
+        if len(labels) == 8:
             break
     return labels if sum(1 for l in labels if l.startswith("FY")) >= 2 else []
 
@@ -208,7 +311,13 @@ def _rows_from_text(page_text: str, fy_labels: list[str]) -> list[tuple[str, lis
         first_tok: str | None = None
         junk_skips = 2  # stray artifacts ("Total A") between label and figures
         j = i + 1
-        while j < len(lines) and len(vals) < ncols + 2:
+        # Collect the WHOLE run of consecutive value lines before deciding: the run
+        # length is what separates a row followed by unlabeled sum rows (old-layout
+        # statements sum sections without a label — run is a multiple of ncols, the
+        # first ncols are the row's) from a row with an undetected extra column
+        # (proforma sharing the year header — run is ncols+k, alignment unknowable,
+        # drop rather than guess).
+        while j < len(lines) and len(vals) < 3 * ncols + 2:
             s = lines[j].strip()
             if not s:
                 j += 1
@@ -216,6 +325,8 @@ def _rows_from_text(page_text: str, fy_labels: list[str]) -> list[tuple[str, lis
             if s.strip("().").lower() in _DASH_CELLS:
                 vals.append(None)  # placeholder cell consumes a column
             else:
+                if len(vals) >= ncols and re.fullmatch(r"\d{1,3}", s):
+                    break  # bare small integer once the row is full = next row's enumeration
                 v = parse_number(s)
                 if v is None:
                     if (not vals and junk_skips and len(s) < 12
@@ -230,6 +341,11 @@ def _rows_from_text(page_text: str, fy_labels: list[str]) -> list[tuple[str, lis
             j += 1
         if len(vals) == ncols + 1 and first_tok and re.fullmatch(r"\d{1,3}", first_tok):
             vals = vals[1:]  # leading Notes-column reference
+        elif len(vals) >= 2 * ncols and len(vals) % ncols == 0 and ncols >= 5:
+            # only in the wide old layout (5-6 columns): trailing unlabeled sum rows.
+            # Never applied at modern widths (3-4), where 2*ncols could equally be a
+            # single row of doubled undetected columns.
+            vals = vals[:ncols]
         if len(vals) == ncols and any(v is not None for v in vals):
             rows.append((metric, vals))
             i = j
@@ -253,6 +369,12 @@ def find_statement_pages(pages: list[dict], sections: dict) -> list[int]:
             head = p["text"][:2500].lower()
             if any(re.search(a, head) for a in STATEMENT_ANCHORS):
                 candidates.append(p["n"])
+    # Old-layout docs put a clean "SUMMARY OF FINANCIAL INFORMATION" chapter in
+    # the first ~40 pages, and their offer_summary section is rarely detected —
+    # so the front of the document is always worth a look.
+    for p in pages[:50]:
+        if re.search(SUMMARY_ANCHOR, p["text"][:2500].lower()):
+            candidates.append(p["n"])
     return sorted(set(candidates))
 
 
@@ -296,7 +418,7 @@ def extract_financials(pdf_path: str, pages: list[dict], sections: dict) -> dict
             if prev_n is not None and n != prev_n + 1:
                 carried_fy = []
             prev_n = n
-            page_fy = _fy_labels_from_text(page_text)
+            page_fy = _fy_labels_from_text(page_text) or _fy_labels_from_layout(page)
             if page_fy:
                 carried_fy = page_fy
             try:
@@ -349,6 +471,17 @@ def extract_financials(pdf_path: str, pages: list[dict], sections: dict) -> dict
                             source_pages.setdefault(metric, n)
                             confidence.setdefault(metric, 0.7)
 
+    # A stray fiscal label from a notes/adjustments table stores a value or two
+    # under a year the statements never had — and a phantom LATEST year hijacks
+    # fiscal_order, so every "latest" ratio would read junk. A real statement
+    # year carries several metrics; drop years that carry almost none.
+    if series:
+        best = max(len(m) for m in series.values())
+        if best >= 3:
+            floor = max(2, round(best * 0.3))
+            for fy in [fy for fy, m in series.items() if len(m) < floor]:
+                del series[fy]
+
     _derive_metrics(series)
     fiscal_order = sorted(series.keys(), key=lambda l: int(l[2:]), reverse=True)
     return {"series": series, "fiscal_order": fiscal_order, "unit": unit_name,
@@ -360,10 +493,17 @@ def _derive_metrics(series: dict[str, dict[str, float]]) -> None:
     for fy, m in series.items():
         if "total_debt" not in m and ("borrowings_lt" in m or "borrowings_st" in m):
             m["total_debt"] = round(m.get("borrowings_lt", 0) + m.get("borrowings_st", 0), 2)
+        if "total_debt" not in m and ("loans_secured" in m or "loans_unsecured" in m):
+            m["total_debt"] = round(m.get("loans_secured", 0) + m.get("loans_unsecured", 0), 2)
         if "ebitda" not in m and all(k in m for k in ("pbt", "finance_costs", "depreciation")):
             m["ebitda"] = round(m["pbt"] + m["finance_costs"] + m["depreciation"], 2)
         if "revenue" not in m and "total_income" in m:
             m["revenue"] = round(m["total_income"] - m.get("other_income", 0), 2)
+        if "net_worth" not in m and "share_capital" in m and "reserves_surplus" in m:
+            # the old A&L's "Net worth" is a bare section header with an unlabeled
+            # value row; capital + reserves is the same figure minus small items
+            # (stock options outstanding), close enough for the ratio bands
+            m["net_worth"] = round(m["share_capital"] + m["reserves_surplus"], 2)
 
 
 def get_metric(fin: dict, metric: str, rank: int = 0) -> float | None:

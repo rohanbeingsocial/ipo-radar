@@ -220,19 +220,9 @@ def build_rubric(ctx: dict) -> Rubric:
               rationale="Large step-downs at listing warrant a why.")
 
     # ---------------- governance ----------------
-    rpt = ents.get("rpt") or {}
-    if rpt.get("total_cr") is not None and rev:
-        intensity = rpt["total_cr"] / rev * 100
-        R.add("governance", "rpt_intensity", _band(intensity, [(10, 0), (2, 6), (-1, 10)], ascending=True),
-              10, intensity, "≤2% of revenue→10 · ≤10→6 · >10→0",
-              f"Related-party transactions ₹{rpt['total_cr']:,.0f} cr = {intensity:.1f}% of revenue",
-              [rpt.get("source_page")],
-              rationale="High RPT intensity is a top forensic governance marker.")
-    else:
-        R.add("governance", "rpt_intensity", None, 10, None, "",
-              "RPT aggregate not extracted" + (" (note located)" if rpt.get("found") else ""),
-              [rpt.get("source_page")])
-
+    # No rpt_intensity rule: the RPT disclosure is a multi-page transaction schedule with
+    # no single total to read, so every extracted "total" was a number from the wrong
+    # table (see 971a0c6). A wrong number is worse than no number.
     lit = ents.get("litigation") or {}
     crim = (lit.get("counts") or {}).get("criminal")
     R.add("governance", "criminal_proceedings",

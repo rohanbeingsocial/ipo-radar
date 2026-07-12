@@ -84,7 +84,6 @@ def run_analysis(analysis_id: str) -> None:
         issue["objects_json"] = _safe(lambda: ent.extract_objects(pages, sections), [])
         entities = {
             "litigation": _safe(lambda: ent.extract_litigation(pages, sections), {"found": False, "counts": {}}),
-            "rpt": _safe(lambda: ent.extract_rpt(pages, sections, document.stored_path), {"found": False}),
             "contingent": _safe(lambda: ent.extract_contingent_liabilities(pages, sections, document.stored_path), {"found": False}),
             "dividend": _safe(lambda: ent.extract_dividend(pages, sections), {"found": False}),
             "pledging": _safe(lambda: ent.detect_pledging(pages, sections), {"pledged": False}),

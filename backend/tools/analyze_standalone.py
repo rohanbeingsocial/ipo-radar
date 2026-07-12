@@ -73,7 +73,6 @@ def analyze_pdf(pdf_path: str, doc_type: str = "RHP", use_llm: bool = False,
     issue["objects_json"] = _safe(lambda: ent.extract_objects(pages, sections), [])
     entities = {
         "litigation": _safe(lambda: ent.extract_litigation(pages, sections), {"found": False, "counts": {}}),
-        "rpt": _safe(lambda: ent.extract_rpt(pages, sections, pdf_path), {"found": False}),
         "contingent": _safe(lambda: ent.extract_contingent_liabilities(pages, sections, pdf_path), {"found": False}),
         "dividend": _safe(lambda: ent.extract_dividend(pages, sections), {"found": False}),
         "pledging": _safe(lambda: ent.detect_pledging(pages, sections), {"pledged": False}),

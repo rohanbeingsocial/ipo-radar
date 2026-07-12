@@ -1,5 +1,5 @@
 """Stage 4: issue details, peer table, objects of the offer, promoters,
-litigation summary, RPT / contingent liabilities, dividend history.
+litigation summary, contingent liabilities, dividend history.
 
 Everything keeps a source page for citation.
 """
@@ -448,28 +448,10 @@ def _note_pages(pages: list[dict], sections: dict, phrase: str) -> list[int]:
     return list(reversed(hits))[:12]
 
 
-def extract_rpt(pages: list[dict], sections: dict, pdf_path: str | None = None) -> dict:
-    out = {"found": False, "total_cr": None, "source_page": None}
-    by_n = {p["n"]: p for p in pages}
-    for n in _note_pages(pages, sections, r"related\s+party\s+(?:transactions?|disclosures?)"):
-        text = by_n[n]["text"]
-        if not out["found"]:
-            out["found"], out["source_page"] = True, n
-        m = re.search(rf"(?:total|aggregate)[^\n]{{0,80}}related\s+party[^\n]{{0,80}}?{STRICT_AMOUNT_RE}", text, re.I) \
-            or re.search(rf"related\s+party\s+transactions?[^\n]{{0,120}}?(?:aggregat\w+|total\w*)[^\n]{{0,60}}?{STRICT_AMOUNT_RE}", text, re.I)
-        val = _to_crore(m.group(1), m.group(2)) if m else (
-            _scaled(_total_from_tables(
-                pdf_path, n, r"^\s*total",
-                # an RPT schedule names parties and transaction types; a page of generic
-                # "Total" rows does not qualify
-                must_contain=r"related\s+part|key\s+manage|holding\s+compan|subsidiar"),
-                _page_unit(text)) if pdf_path else None)
-        if val is not None:
-            out["total_cr"], out["source_page"] = val, n
-            break
-    return out
-
-
+# There is deliberately no extract_rpt() here. The related-party disclosure in a real RHP
+# is a multi-page transaction schedule with NO single aggregate to read; on 6 real SEBI
+# filings every "total" the table walk returned came from a different table on the same
+# page (see 971a0c6). The rpt_intensity rule went with it.
 def extract_contingent_liabilities(pages: list[dict], sections: dict,
                                    pdf_path: str | None = None) -> dict:
     out = {"found": False, "total_cr": None, "source_page": None}

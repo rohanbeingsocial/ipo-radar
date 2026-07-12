@@ -8,14 +8,12 @@ numbers — those don't exist inside an RHP):
      "optimal entry" heuristic, anchored on SEBI lock-in expiries,
   4. when it recovers above the offer and listing prices.
 
-Three engines:
+Two engines:
   rules — transparent bands from the score/valuation/risk/OFS profile plus
           the market-structure calendar (anchor lock-ins end at 30 and 90
           days ≈ sessions 20 and 60; pre-IPO/promoter lock-in at 6 months
           ≈ session 125).
   llm   — same features, anonymized (no names), sent to the AI layer.
-  ml    — optional ridge model (tools/train_listing_model.py) if trained
-          coefficients exist.
 
 All outputs are research heuristics with wide error bars, not trade advice.
 """
@@ -28,7 +26,6 @@ from pathlib import Path
 
 from . import llm_layer
 
-MODEL_PATH = Path(__file__).resolve().parent.parent / "listing_model.json"
 SIGNALS_MODEL_PATH = Path(__file__).resolve().parent.parent / "listing_model_signals.json"
 HORIZON_MODEL_PATH = Path(__file__).resolve().parent.parent / "horizon_model.pkl"
 _horizon_cache: dict = {}
@@ -186,31 +183,6 @@ def llm_forecast(f: dict) -> dict | None:
         return out
     except (json.JSONDecodeError, AttributeError):
         return None
-
-
-def ml_forecast(f: dict) -> dict | None:
-    """Linear model trained by tools/train_listing_model.py (if present)."""
-    if not MODEL_PATH.exists():
-        return None
-    model = json.loads(MODEL_PATH.read_text())
-    x = _ml_vector(f, model["feature_names"])
-    out = {"engine": "ml", "trained_on_n": model.get("n"), "loo_mae": model.get("loo_mae")}
-    for target, coefs in model["targets"].items():
-        out[target] = round(sum(c * v for c, v in zip(coefs, x)), 1)
-    return out
-
-
-def _ml_vector(f: dict, names: list[str]) -> list[float]:
-    base = {
-        "bias": 1.0,
-        "overall_score": (f.get("overall_score") or 50) / 100,
-        "risk_score": (f.get("risk_score") or 50) / 100,
-        "ofs_share": f.get("ofs_share") if f.get("ofs_share") is not None else 0.5,
-        "issue_size_cr_log": (f.get("issue_size_cr_log") or 3.0) / 4,
-        "overvalued": 1.0 if f.get("valuation_call") in ("overvalued", "fairly_valued_expensive") else 0.0,
-        "forensic_flag_count": min(f.get("forensic_flag_count") or 0, 4) / 4,
-    }
-    return [base.get(n, 0.0) for n in names]
 
 
 def signals_forecast(report: dict, signals: dict | None = None) -> dict | None:
@@ -473,9 +445,6 @@ def forecast(report: dict, use_llm: bool = False, signals: dict | None = None) -
     f = features_from_report(report)
     out = {"features": f, "rules": rule_forecast(f),
            "disclaimer": "Heuristic research output with wide error bars; not investment advice."}
-    ml = ml_forecast(f)
-    if ml:
-        out["ml"] = ml
     sig = signals_forecast(report, signals)
     if sig:
         out["ml_signals"] = sig

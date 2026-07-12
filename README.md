@@ -67,7 +67,7 @@ text and answers document Q&A — always constrained to extracted evidence with 
 (listing-open premium, break-below-offer odds and window, bottom window anchored on SEBI
 lock-in expiries, recovery windows) from RHP-only features — no GMP or subscription data.
 `?llm=1` adds the AI engine's view from the same **anonymized** features. Heuristic research
-output with wide error bars; backtest tooling lives in `tools/train_listing_model.py`.
+output with wide error bars; model training lives in `automation/retrain.py`.
 
 **Horizon forecasts (the "drop in an RHP, add day-1 signals" workflow):** upload the RHP,
 then `POST /api/analyses/{id}/market-signals` with whatever is knowable in the first 2–3

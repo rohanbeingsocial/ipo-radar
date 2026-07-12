@@ -31,6 +31,13 @@ jobs:
       - name: Run update pipeline
         run: python automation/update.py
 
+      # Record the frozen rule's call on every new IPO BEFORE the outcome exists, and score
+      # the ones that have since matured. A pattern found by searching history is only worth
+      # anything if it survives on IPOs it has never seen — this is what makes that testable
+      # instead of assertable. The ledger is append-only; a call is never rewritten.
+      - name: Score the frozen hypothesis forward
+        run: python automation/track_rule.py
+
       - name: Commit refreshed data
         run: |
           git config user.name "ipo-radar-bot"

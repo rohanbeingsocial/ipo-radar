@@ -1055,11 +1055,29 @@ function tabForecast(item) {
   if (subItems.length) subsHtml = `<div class="ctitle" style="margin-top:18px">Final subscription (×)</div><div class="viz" id="viz-subs"></div>`;
   let actualHtml = "";
   if (a.current_ret != null) {
-    actualHtml = `<div class="ctitle" style="margin-top:18px">Actuals so far</div><div class="grid2i">${
+    actualHtml = `<div class="ctitle" style="margin-top:18px">Actuals so far — if you got allotment</div><div class="grid2i">${
       ibox("Now vs offer", pct(a.current_ret))}${
       a.bottom_so_far_pct != null ? ibox("Low so far", pct(a.bottom_so_far_pct), `at session ${f(a.bottom_so_far_session, 0)}`) : ""}${
       a.ret_6m != null ? ibox("6m actual", pct(a.ret_6m)) : ""}${
       a.ret_12m != null ? ibox("12m actual", pct(a.ret_12m)) : ""}</div>`;
+
+    // The vs-offer numbers above are the ALLOTTEE's. Allotment is a lottery; most people
+    // buy the listed stock, and their return excludes the day-1 pop entirely. Across ~600
+    // IPOs the median buyer is DOWN 4.8% at 6m and 8.3% at 12m — the opposite sign to the
+    // vs-offer series. Showing only the flattering one would be the single most misleading
+    // thing on this page.
+    const fl = a.from_listing;
+    if (fl) {
+      actualHtml += `<div class="ctitle" style="margin-top:18px">…and if you bought it on listing day</div><div class="grid2i">${
+        fl.current_ret != null ? ibox("Now vs listing price", pct(fl.current_ret)) : ""}${
+        fl.ret_6m != null ? ibox("6m from listing", pct(fl.ret_6m)) : ""}${
+        fl.ret_12m != null ? ibox("12m from listing", pct(fl.ret_12m)) : ""}${
+        fl.ret_24m != null ? ibox("24m from listing", pct(fl.ret_24m)) : ""}</div>
+        <p class="muted" style="margin-top:8px">Allotment is a lottery — most investors buy the listed stock, and their
+        return starts at the listing price, not the offer price. Across ~600 mainboard IPOs the median buyer is
+        <strong>down 4.8% at 6 months and 8.3% at 12 months</strong>, and beats the Nifty only ~42% of the time,
+        even though the same IPOs look positive measured against the offer. Research, not advice.</p>`;
+    }
   }
   window.__afterTab = () => {
     mountForecastPath($("viz-path"), item.forecast, item);

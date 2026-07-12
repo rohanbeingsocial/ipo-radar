@@ -624,6 +624,22 @@ def parse_ipowatch(html):
     return out
 
 
+def from_listing(o, day1):
+    """Returns rebased from the LISTING price — what a buyer actually earns.
+
+    r_offer = P/offer - 1 and day1 = L/offer - 1, so P/L - 1 = (1+r_offer)/(1+day1) - 1.
+    A stock that pops 50% on listing and then flatlines still shows +50% "vs offer", which
+    is why the vs-offer series flatters an IPO to anyone who did not get allotment."""
+    if day1 is None or not np.isfinite(day1) or day1 <= -95:
+        return None
+    out = {}
+    for k in ("current_ret", "ret_6m", "ret_12m", "ret_24m"):
+        v = num(o.get(k))
+        if np.isfinite(v):
+            out[k] = round(((1 + v / 100) / (1 + day1 / 100) - 1) * 100, 1)
+    return out or None
+
+
 def refresh_gmp():
     issue = pd.read_csv(DATA / "cg_issue.csv")
     issue["cg_ipo_id"] = sid_col(issue["cg_ipo_id"])
@@ -755,7 +771,13 @@ def build_site():
             "actual": ({"current_ret": num(o.get("current_ret")),
                         "ret_6m": num(o.get("ret_6m")), "ret_12m": num(o.get("ret_12m")),
                         "bottom_so_far_pct": num(o.get("bottom_so_far_pct")),
-                        "bottom_so_far_session": num(o.get("bottom_so_far_session"))}
+                        "bottom_so_far_session": num(o.get("bottom_so_far_session")),
+                        # Every return above is measured against the OFFER price, which only
+                        # an allottee ever paid — and allotment is a lottery. Someone who
+                        # bought the listed stock earns this instead, and the two are very
+                        # different animals: from the offer the median IPO is up, from the
+                        # listing price the median IPO is DOWN 4.8% at 6m and 8.3% at 12m.
+                        "from_listing": from_listing(o, day1)}
                        if o is not None else None),
         }
         ipos.append(row)

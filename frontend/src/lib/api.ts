@@ -149,9 +149,17 @@ export interface ListingForecast {
     bottom: { window_sessions: [number, number]; depth_vs_offer_pct: [number, number]; note?: string };
     recovery: { above_offer_sessions: [number, number] | null; above_listing_sessions: [number, number] | null; note?: string };
   };
+  /**
+   * The pre-listing call. Normally carries only `p_lists_above_offer`: which way an IPO
+   * lists is predictable (~76% vs a ~71% baseline), how far it pops is not — so the
+   * point estimate is usually absent by design and `no_magnitude` explains why.
+   */
   ml_signals?: {
-    forecast_listing_gain_pct_vs_offer: number;
-    cv_mae_pp: number; baseline_mae_pp?: number; cv_direction_acc: number;
+    p_lists_above_offer?: number;
+    cv_direction_acc?: number; cv_direction_baseline?: number;
+    forecast_listing_gain_pct_vs_offer?: number;
+    cv_mae_pp?: number; baseline_mae_pp?: number;
+    no_magnitude?: string;
     cv?: string; inputs_used: string[]; note: string;
   };
   ml_horizons?: HorizonForecast;

@@ -1,0 +1,928 @@
+cg_ipo_id,symbol,yahoo_sector,yahoo_industry,sector,instrument,is_financial,is_realestate,source
+2949,,,,Financials,equity,1,0,rhp
+2675,,,,Energy,equity,0,0,rhp
+2654,,,,Energy,equity,0,0,name
+2670,,,,Other,equity,0,0,unknown
+2592,,,,Industrials,equity,0,0,rhp
+2678,,,,Industrials,equity,0,0,rhp
+2641,,,,Technology,equity,0,0,name
+2686,,,,Consumer Discretionary,equity,0,0,name
+2474,,,,Consumer Discretionary,equity,0,0,name
+2601,,,,Financials,equity,1,0,name
+2658,,,,Healthcare,equity,0,0,name
+2586,,,,Technology,equity,0,0,name
+2576,,,,Technology,equity,0,0,name
+2676,,,,Energy,equity,0,0,name
+2570,,,,Energy,equity,0,0,name
+2681,,,,Healthcare,equity,0,0,name
+2501,,,,Other,equity,0,0,unknown
+2456,,,,Other,equity,0,0,unknown
+2031,,,,Healthcare,equity,0,0,name
+2039,,,,Other,equity,0,0,unknown
+2067,,,,Materials,equity,0,0,name
+2794,,,,Industrials,equity,0,0,name
+2479,,,,Industrials,equity,0,0,name
+2475,,,,Consumer Discretionary,equity,0,0,name
+2573,,,,Energy,equity,0,0,name
+2502,,,,Consumer Discretionary,equity,0,0,name
+2019,,,,Healthcare,equity,0,0,name
+2569,,,,Technology,equity,0,0,name
+2026,,,,Financials,equity,1,0,name
+2526,,,,Technology,equity,0,0,name
+2549,,,,Technology,equity,0,0,rhp
+2462,,,,Energy,equity,0,0,name
+2289,,,,Healthcare,equity,0,0,name
+2454,,,,Other,equity,0,0,unknown
+2525,,,,Financials,equity,1,0,name
+2297,,,,Healthcare,equity,0,0,name
+2548,,,,Healthcare,equity,0,0,name
+2433,,,,Healthcare,equity,0,0,rhp
+2488,,,,Consumer Discretionary,equity,0,0,name
+2005,,,,Materials,equity,0,0,name
+2465,,,,Consumer Discretionary,equity,0,0,rhp
+2516,,,,Technology,equity,0,0,rhp
+2484,,,,Healthcare,equity,0,0,rhp
+2148,,,,Technology,equity,0,0,name
+2476,,,,Technology,equity,0,0,rhp
+2025,,,,Energy,equity,0,0,rhp
+2509,,,,Other,equity,0,0,unknown
+2266,,,,Other,equity,0,0,unknown
+2518,,,,Energy,equity,0,0,rhp
+2487,,,,Healthcare,equity,0,0,name
+2453,,,,Other,equity,0,0,unknown
+2551,,,,Consumer Discretionary,equity,0,0,rhp
+2259,,,,Consumer Discretionary,equity,0,0,name
+2470,,,,Consumer Discretionary,equity,0,0,rhp
+2150,,,,Industrials,equity,0,0,rhp
+2429,,,,Financials,equity,1,0,rhp
+2254,,,,Healthcare,equity,0,0,rhp
+2428,,,,Financials,equity,1,0,rhp
+2064,,,,Consumer Discretionary,equity,0,0,rhp
+2317,,,,Financials,equity,1,0,rhp
+2014,,,,Real Estate,equity,0,1,rhp
+2290,,,,Industrials,equity,0,0,rhp
+2407,,,,Industrials,equity,0,0,name
+1998,,,,Other,equity,0,0,unknown
+2624,,,,Healthcare,equity,0,0,rhp
+2306,,,,Energy,equity,0,0,rhp
+2231,,,,Energy,equity,0,0,name
+2432,,,,Energy,equity,0,0,rhp
+2023,,,,Technology,equity,0,0,name
+2212,,,,Other,equity,0,0,unknown
+2345,,,,Other,equity,0,0,unknown
+2028,,,,Other,equity,0,0,unknown
+2048,,,,Technology,equity,0,0,name
+2075,,,,Healthcare,equity,0,0,name
+2174,,,,Energy,equity,0,0,rhp
+2011,,,,Energy,equity,0,0,name
+2045,,,,Consumer Discretionary,equity,0,0,rhp
+2042,,,,Energy,equity,0,0,rhp
+2082,,,,Energy,equity,0,0,rhp
+2227,,,,Other,equity,0,0,unknown
+2161,,,,Other,equity,0,0,unknown
+2015,,,,Other,equity,0,0,unknown
+2003,,,,Other,equity,0,0,unknown
+2117,,,,Other,equity,0,0,unknown
+2425,,,,Other,equity,0,0,unknown
+2001,,,,Healthcare,equity,0,0,name
+2053,,,,Healthcare,equity,0,0,name
+2126,,,,Industrials,equity,0,0,name
+2069,,,,Energy,equity,0,0,rhp
+2018,,,,Industrials,equity,0,0,name
+2032,,,,Other,equity,0,0,unknown
+2152,,,,Energy,equity,0,0,rhp
+2318,,,,Consumer Discretionary,equity,0,0,name
+2035,,,,Other,equity,0,0,unknown
+2059,,,,Consumer Discretionary,equity,0,0,name
+2125,,,,Materials,equity,0,0,name
+2230,,,,Materials,equity,0,0,name
+2180,,,,Energy,equity,0,0,rhp
+2027,,,,Real Estate,equity,0,1,name
+2049,,,,Industrials,equity,0,0,name
+2448,,,,Financials,equity,1,0,name
+2030,,,,Financials,equity,1,0,rhp
+2036,,,,Technology,equity,0,0,name
+2008,,,,Other,equity,0,0,unknown
+2094,,,,Consumer Discretionary,equity,0,0,name
+2038,,,,Real Estate,equity,0,1,rhp
+2046,,,,Technology,equity,0,0,name
+2029,,,,Other,equity,0,0,unknown
+2034,,,,Real Estate,equity,0,1,rhp
+2054,,,,Consumer Discretionary,equity,0,0,name
+2096,,,,Other,equity,0,0,unknown
+2074,,,,Healthcare,equity,0,0,name
+2073,,,,Materials,equity,0,0,name
+2110,,,,Financials,equity,1,0,name
+2149,,,,Energy,equity,0,0,rhp
+2189,,,,Energy,equity,0,0,name
+2229,,,,Real Estate,equity,0,1,rhp
+1971,,,,Energy,equity,0,0,rhp
+2202,,,,Energy,equity,0,0,rhp
+2172,,,,Other,equity,0,0,unknown
+2016,,,,Energy,equity,0,0,rhp
+2080,,,,Industrials,equity,0,0,rhp
+2182,,,,Healthcare,equity,0,0,rhp
+2083,,,,Industrials,equity,0,0,name
+2099,,,,Other,equity,0,0,unknown
+2357,,,,Energy,equity,0,0,name
+1988,,,,Energy,equity,0,0,rhp
+1985,,,,Technology,equity,0,0,name
+1983,,,,Industrials,equity,0,0,name
+1975,,,,Healthcare,equity,0,0,name
+1970,,,,Industrials,equity,0,0,name
+1967,,,,Industrials,equity,0,0,rhp
+1961,,,,Other,equity,0,0,unknown
+1954,,,,Other,equity,0,0,unknown
+1951,,,,Consumer Discretionary,equity,0,0,rhp
+3079,,,,Other,equity,0,0,unknown
+3077,EDUCOMP.BO,Consumer Defensive,Education & Training Services,Consumer Discretionary,equity,0,0,yahoo
+3076,CELEBRITY.NS,Consumer Cyclical,Apparel Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+3074,,,,Other,equity,0,0,unknown
+3073,,,,Other,equity,0,0,unknown
+3072,,,,Technology,equity,0,0,name
+3071,PVRINOX.NS,Communication Services,Entertainment,Technology,equity,0,0,yahoo
+3068,KERNEX.NS,Technology,Software - Application,Technology,equity,0,0,yahoo
+3069,REPRO.NS,Industrials,Specialty Business Services,Industrials,equity,0,0,yahoo
+3067,,,,Other,equity,0,0,unknown
+3066,EKC.NS,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+3064,,,,Other,equity,0,0,unknown
+3063,AIAENG.NS,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+3062,,,,Other,equity,0,0,unknown
+3061,,,,Consumer Discretionary,equity,0,0,name
+3060,,,,Other,equity,0,0,unknown
+3059,,,,Energy,equity,0,0,name
+3058,532676.BO,,,Industrials,equity,0,0,name
+3057,BASML.NS,Consumer Cyclical,Textile Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+3056,KMSUGAR.BO,Consumer Defensive,Confectioners,Consumer Discretionary,equity,0,0,yahoo
+3054,RENUKA.NS,Consumer Defensive,Confectioners,Consumer Discretionary,equity,0,0,yahoo
+3053,,,,Technology,equity,0,0,name
+3052,AURIONPRO.NS,Technology,Software - Application,Technology,equity,0,0,yahoo
+3051,SUZLON.NS,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+3047,,,,Healthcare,equity,0,0,name
+3046,FCSSOFT.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+3045,,,,Technology,equity,0,0,name
+3044,HTMEDIA.NS,Communication Services,Publishing,Technology,equity,0,0,yahoo
+3043,,,,Financials,equity,1,0,name
+3042,VIVIMEDLAB.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+3041,,,,Materials,equity,0,0,name
+3039,,,,Other,equity,0,0,unknown
+3037,SPLIL.NS,Consumer Cyclical,Apparel Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+3035,NECLIFE.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+3034,MSPL.NS,Basic Materials,Steel,Materials,equity,0,0,yahoo
+3033,YESBANK.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+3032,,,,Other,equity,0,0,unknown
+3030,,,,Industrials,equity,0,0,name
+3028,,,,Other,equity,0,0,unknown
+3027,532641.BO,,,Other,equity,0,0,unknown
+3026,CYBERMEDIA.NS,Communication Services,Publishing,Technology,equity,0,0,yahoo
+3025,SHOPERSTOP.NS,Consumer Cyclical,Department Stores,Consumer Discretionary,equity,0,0,yahoo
+3023,532636.BO,,,Other,equity,0,0,unknown
+3022,MANGALAM.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+3021,,,,Technology,equity,0,0,name
+3019,,,,Other,equity,0,0,unknown
+3016,SAKSOFT.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+3017,GOKEX.NS,Consumer Cyclical,Apparel Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+3018,3IINFOLTD.BO,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+3015,532627.BO,,,Energy,equity,0,0,name
+3013,,,,Other,equity,0,0,unknown
+3010,,,,Technology,equity,0,0,name
+3009,,,,Other,equity,0,0,unknown
+36,CTE.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+33,LUMAXTECH.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+35,,,,Other,equity,0,0,unknown
+34,,,,Other,equity,0,0,unknown
+29,,,,Other,equity,0,0,unknown
+32,,,,Materials,equity,0,0,name
+30,,,,Materials,equity,0,0,name
+28,532788.BO,,,Other,equity,0,0,unknown
+26,,,,Other,equity,0,0,unknown
+25,RUCHIRA.NS,Basic Materials,Paper & Paper Products,Materials,equity,0,0,yahoo
+22,,,,Real Estate,equity,0,1,name
+23,,,,Other,equity,0,0,unknown
+21,,,,Real Estate,equity,0,1,name
+20,PARSVNATH.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+19,NAUKRI.NS,Communication Services,Internet Content & Information,Technology,equity,0,0,yahoo
+17,532772.BO,,,Financials,equity,1,0,name
+16,GLOBALVECT.NS,Industrials,Airports & Air Services,Industrials,equity,0,0,yahoo
+15,,,,Other,equity,0,0,unknown
+14,,,,Consumer Discretionary,equity,0,0,name
+13,JHS.NS,Consumer Defensive,Household & Personal Products,Consumer Discretionary,equity,0,0,yahoo
+11,GAYAPROJ.BO,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+10,FIEMIND.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+9,532766.BO,,,Other,equity,0,0,unknown
+8,532764.BO,,,Materials,equity,0,0,name
+7,,,,Consumer Discretionary,equity,0,0,name
+6,,,,Other,equity,0,0,unknown
+4,ACE.BO,Industrials,Farm & Heavy Construction Machinery,Industrials,equity,0,0,yahoo
+5,,,,Other,equity,0,0,unknown
+2,,,,Industrials,equity,0,0,name
+3,,,,Industrials,equity,0,0,name
+1,VOLTAMP.NS,Industrials,Electrical Equipment & Parts,Industrials,equity,0,0,yahoo
+2929,TECHM.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+2928,,,,Industrials,equity,0,0,name
+2927,,,,Industrials,equity,0,0,name
+2926,PFOCUS.NS,Communication Services,Entertainment,Technology,equity,0,0,yahoo
+2925,,,,Industrials,equity,0,0,name
+2923,,,,Other,equity,0,0,unknown
+2919,532745.BO,,,Financials,equity,1,0,name
+2918,,,,Energy,equity,0,0,name
+2917,,,,Healthcare,equity,0,0,name
+2916,LOKESHMACH.NS,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+2914,,,,Other,equity,0,0,unknown
+2915,SUNTV.NS,Communication Services,Broadcasting,Technology,equity,0,0,yahoo
+2912,,,,Other,equity,0,0,unknown
+2910,GPIL.BO,Basic Materials,Steel,Materials,equity,0,0,yahoo
+2911,RSYSTEMS.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+2906,KKCL.NS,Consumer Cyclical,Apparel Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+2905,532729.BO,,,Other,equity,0,0,unknown
+2904,,,,Materials,equity,0,0,name
+2902,,,,Other,equity,0,0,unknown
+2903,532725.BO,,,Energy,equity,0,0,name
+2901,,,,Technology,equity,0,0,name
+2900,MALUPAPER.NS,Basic Materials,Paper & Paper Products,Materials,equity,0,0,yahoo
+2899,,,,Materials,equity,0,0,name
+2898,,,,Materials,equity,0,0,name
+2897,,,,Other,equity,0,0,unknown
+2895,M&MFIN.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+2894,,,,Other,equity,0,0,unknown
+2893,,,,Industrials,equity,0,0,name
+2891,532715.BO,,,Other,equity,0,0,unknown
+2889,532717.BO,,,Technology,equity,0,0,name
+2887,SAKUMA.NS,Consumer Defensive,Farm Products,Consumer Discretionary,equity,0,0,yahoo
+2886,SADBHAV.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+2885,GVKPIL.NS,Utilities,Utilities - Independent Power Producers,Energy,equity,0,0,yahoo
+2884,,,,Other,equity,0,0,unknown
+2883,,,,Consumer Discretionary,equity,0,0,name
+2882,JAGRAN.NS,Communication Services,Publishing,Technology,equity,0,0,yahoo
+2881,,,,Energy,equity,0,0,name
+2880,ENIL.NS,Communication Services,Broadcasting,Technology,equity,0,0,yahoo
+2879,DYNPRO.BO,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+2878,532701.BO,,,Materials,equity,0,0,name
+2875,ROHLTD.NS,Consumer Cyclical,Lodging,Consumer Discretionary,equity,0,0,yahoo
+2873,NITINSPIN.NS,Consumer Cyclical,Textile Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+149,,,,Other,equity,0,0,unknown
+146,ARIES.NS,Basic Materials,Agricultural Inputs,Materials,equity,0,0,yahoo
+145,BRIGADE.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+144,,,,Other,equity,0,0,unknown
+142,BGRENERGY.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+143,ECLERX.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+141,,,,Materials,equity,0,0,name
+139,,,,Healthcare,equity,0,0,name
+140,KAUSHALYA.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+137,532924.BO,,,Real Estate,equity,0,1,name
+138,,,,Consumer Discretionary,equity,0,0,name
+136,532922.BO,,,Financials,equity,1,0,name
+132,532921.BO,,,Other,equity,0,0,unknown
+135,,,,Consumer Discretionary,equity,0,0,name
+134,BVCL.NS,Basic Materials,Building Materials,Materials,equity,0,0,yahoo
+131,RELIGARE.BO,Financial Services,Insurance - Life,Financials,equity,1,0,yahoo
+133,,,,Industrials,equity,0,0,name
+119,,,,Technology,equity,0,0,name
+129,532918.BO,,,Other,equity,0,0,unknown
+124,,,,Other,equity,0,0,unknown
+127,532907.BO,,,Industrials,equity,0,0,name
+126,,,,Healthcare,equity,0,0,name
+125,SUPREMEINF.BO,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+122,,,,Consumer Discretionary,equity,0,0,name
+123,CCCL.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+118,,,,Energy,equity,0,0,name
+121,,,,Technology,equity,0,0,name
+120,KSCL.BO,Basic Materials,Agricultural Inputs,Materials,equity,0,0,yahoo
+116,532896.BO,,,Other,equity,0,0,unknown
+115,INDOWIND.BO,Utilities,Utilities - Renewable,Energy,equity,0,0,yahoo
+114,532892.BO,,,Financials,equity,1,0,name
+112,KPRMILL.BO,Consumer Cyclical,Textile Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+111,TAKE.NS,Healthcare,Health Information Services,Healthcare,equity,0,0,yahoo
+110,,,,Other,equity,0,0,unknown
+108,ASIANTILES.NS,Industrials,Building Products & Equipment,Industrials,equity,0,0,yahoo
+109,SELMC.NS,Consumer Cyclical,Textile Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+104,CENTRALBK.BO,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+107,,,,Real Estate,equity,0,1,name
+105,,,,Other,equity,0,0,unknown
+106,,,,Other,equity,0,0,unknown
+103,,,,Other,equity,0,0,unknown
+100,OMAXE.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+101,ALPA.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+102,,,,Other,equity,0,0,unknown
+98,,,,Other,equity,0,0,unknown
+99,ADSL.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+97,,,,Real Estate,equity,0,1,name
+95,,,,Energy,equity,0,0,name
+96,,,,Other,equity,0,0,unknown
+92,532870.BO,,,Energy,equity,0,0,name
+91,,,,Healthcare,equity,0,0,name
+89,532869.BO,,,Other,equity,0,0,unknown
+86,DLF.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+90,532867.BO,,,Consumer Discretionary,equity,0,0,name
+88,NELCAST.NS,Industrials,Metal Fabrication,Industrials,equity,0,0,yahoo
+87,,,,Other,equity,0,0,unknown
+85,,,,Materials,equity,0,0,name
+84,532856.BO,,,Technology,equity,0,0,name
+83,,,,Industrials,equity,0,0,name
+82,,,,Other,equity,0,0,unknown
+81,532853.BO,,,Other,equity,0,0,unknown
+80,532851.BO,,,Other,equity,0,0,unknown
+79,,,,Materials,equity,0,0,name
+78,MICEL.NS,Technology,Electronic Components,Technology,equity,0,0,yahoo
+77,532845.BO,,,Consumer Discretionary,equity,0,0,name
+75,HILTON.BO,Industrials,Metal Fabrication,Industrials,equity,0,0,yahoo
+76,FORTIS.BO,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+73,,,,Other,equity,0,0,unknown
+72,,,,Other,equity,0,0,unknown
+71,ICRA.NS,Financial Services,Financial Data & Stock Exchanges,Financials,equity,1,0,yahoo
+70,,,,Industrials,equity,0,0,name
+69,PAGEIND.NS,Consumer Cyclical,Apparel Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+66,532831.BO,,,Other,equity,0,0,unknown
+59,532825.BO,,,Consumer Discretionary,equity,0,0,name
+64,532828.BO,,,Other,equity,0,0,unknown
+65,RAJTV.NS,Communication Services,Broadcasting,Technology,equity,0,0,yahoo
+62,,,,Other,equity,0,0,unknown
+58,,,,Consumer Discretionary,equity,0,0,name
+50,,,,Other,equity,0,0,unknown
+63,,,,Other,equity,0,0,unknown
+61,,,,Other,equity,0,0,unknown
+60,,,,Other,equity,0,0,unknown
+57,532817.BO,,,Other,equity,0,0,unknown
+55,532820.BO,,,Other,equity,0,0,unknown
+54,,,,Materials,equity,0,0,name
+53,,,,Industrials,equity,0,0,name
+48,SOUTHBANK.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+52,532829.BO,,,Materials,equity,0,0,name
+51,SMSPHARMA.NS,Healthcare,Drug Manufacturers - General,Healthcare,equity,0,0,yahoo
+45,PFC.BO,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+49,FSL.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+47,TFL.NS,Financial Services,Mortgage Finance,Financials,equity,1,0,yahoo
+46,,,,Other,equity,0,0,unknown
+42,532807.BO,,,Other,equity,0,0,unknown
+44,TIIL.BO,Industrials,Tools & Accessories,Industrials,equity,0,0,yahoo
+38,532808.BO,,,Other,equity,0,0,unknown
+43,532799.BO,,,Other,equity,0,0,unknown
+39,,,,Other,equity,0,0,unknown
+40,,,,Industrials,equity,0,0,name
+37,AUTOIND.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+192,533029.BO,,,Materials,equity,0,0,name
+191,,,,Technology,equity,0,0,name
+190,,,,Other,equity,0,0,unknown
+189,533017.BO,,,Materials,equity,0,0,name
+188,,,,Other,equity,0,0,unknown
+187,,,,Other,equity,0,0,unknown
+186,,,,Technology,equity,0,0,name
+185,,,,Other,equity,0,0,unknown
+183,SOMICONVEY.BO,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+184,,,,Energy,equity,0,0,name
+182,,,,Healthcare,equity,0,0,name
+181,ARCHIDPLY.BO,Basic Materials,Lumber & Wood Production,Materials,equity,0,0,yahoo
+180,,,,Industrials,equity,0,0,name
+179,532993.BO,,,Materials,equity,0,0,name
+178,,,,Other,equity,0,0,unknown
+176,532989.BO,,,Healthcare,equity,0,0,name
+175,NIRAJ.BO,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+174,,,,Healthcare,equity,0,0,name
+173,GOKUL.BO,Consumer Defensive,Packaged Foods,Consumer Discretionary,equity,0,0,yahoo
+172,532975.BO,,,Other,equity,0,0,unknown
+170,532967.BO,,,Materials,equity,0,0,name
+171,532966.BO,,,Other,equity,0,0,unknown
+169,,,,Consumer Discretionary,equity,0,0,name
+168,532959.BO,,,Industrials,equity,0,0,name
+167,,,,Other,equity,0,0,unknown
+165,VGUARD.NS,Industrials,Electrical Equipment & Parts,Industrials,equity,0,0,yahoo
+166,532951.BO,,,Technology,equity,0,0,name
+163,,,,Other,equity,0,0,unknown
+156,IRB.BO,Industrials,Infrastructure Operations,Industrials,equity,0,0,yahoo
+162,,,,Other,equity,0,0,unknown
+159,BANG.NS,Consumer Cyclical,Apparel Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+158,KNRCON.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+155,ONMOBILE.BO,Communication Services,Telecom Services,Technology,equity,0,0,yahoo
+154,532941.BO,,,Industrials,equity,0,0,name
+153,JKIL.BO,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+128,RPOWER.BO,Utilities,Utilities - Independent Power Producers,Energy,equity,0,0,yahoo
+151,,,,Financials,equity,1,0,name
+213,533151.BO,,,Other,equity,0,0,unknown
+212,GODREJPROP.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+211,533148.BO,,,Energy,equity,0,0,name
+210,533152.BO,,,Industrials,equity,0,0,name
+209,,,,Other,equity,0,0,unknown
+208,533138.BO,,,Healthcare,equity,0,0,name
+207,533137.BO,,,Other,equity,0,0,unknown
+206,533122.BO,,,Energy,equity,0,0,name
+205,533121.BO,,,Other,equity,0,0,unknown
+204,533109.BO,,,Other,equity,0,0,unknown
+203,533107.BO,,,Other,equity,0,0,unknown
+201,OIL.NS,Energy,Oil & Gas Integrated,Energy,equity,0,0,yahoo
+161,533104.BO,,,Other,equity,0,0,unknown
+202,,,,Other,equity,0,0,unknown
+200,533098.BO,,,Other,equity,0,0,unknown
+199,533096.BO,,,Energy,equity,0,0,name
+198,533093.BO,,,Energy,equity,0,0,name
+197,533090.BO,,,Other,equity,0,0,unknown
+196,533088.BO,,,Other,equity,0,0,unknown
+194,,,,Other,equity,0,0,unknown
+290,,,,Other,equity,0,0,unknown
+289,533301.BO,,,Other,equity,0,0,unknown
+288,533295.BO,,,Financials,equity,1,0,name
+287,533292.BO,,,Industrials,equity,0,0,name
+286,533294.BO,,,Consumer Discretionary,equity,0,0,name
+282,533286.BO,,,Other,equity,0,0,unknown
+284,,,,Healthcare,equity,0,0,name
+281,533284.BO,,,Industrials,equity,0,0,name
+280,533282.BO,,,Other,equity,0,0,unknown
+258,533278.BO,,,Energy,equity,0,0,name
+278,533275.BO,,,Materials,equity,0,0,name
+277,533274.BO,,,Real Estate,equity,0,1,name
+276,,,,Other,equity,0,0,unknown
+275,533273.BO,,,Real Estate,equity,0,1,name
+274,533272.BO,,,Real Estate,equity,0,1,name
+273,533270.BO,,,Industrials,equity,0,0,name
+272,533268.BO,,,Other,equity,0,0,unknown
+270,533271.BO,,,Other,equity,0,0,unknown
+269,,,,Other,equity,0,0,unknown
+271,533267.BO,,,Consumer Discretionary,equity,0,0,name
+259,533269.BO,,,Technology,equity,0,0,name
+268,GALLANTT.NS,Basic Materials,Steel,Materials,equity,0,0,yahoo
+267,,,,Materials,equity,0,0,name
+266,533263.BO,,,Energy,equity,0,0,name
+265,533262.BO,,,Industrials,equity,0,0,name
+264,533259.BO,,,Financials,equity,1,0,name
+261,533261.BO,,,Consumer Discretionary,equity,0,0,name
+263,533260.BO,,,Technology,equity,0,0,name
+260,533257.BO,,,Other,equity,0,0,unknown
+256,533248.BO,,,Other,equity,0,0,unknown
+255,533239.BO,,,Materials,equity,0,0,name
+254,533229.BO,,,Other,equity,0,0,unknown
+253,,,,Financials,equity,1,0,name
+251,,,,Industrials,equity,0,0,name
+250,533217.BO,,,Consumer Discretionary,equity,0,0,name
+248,533216.BO,,,Technology,equity,0,0,name
+249,,,,Other,equity,0,0,unknown
+247,,,,Healthcare,equity,0,0,name
+243,,,,Real Estate,equity,0,1,name
+241,533206.BO,,,Other,equity,0,0,unknown
+242,533204.BO,,,Industrials,equity,0,0,name
+239,533203.BO,,,Other,equity,0,0,unknown
+240,533202.BO,,,Real Estate,equity,0,1,name
+238,533200.BO,,,Other,equity,0,0,unknown
+237,533189.BO,,,Consumer Discretionary,equity,0,0,name
+236,533181.BO,,,Technology,equity,0,0,name
+235,,,,Consumer Discretionary,equity,0,0,name
+234,PERSISTENT.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+233,533177.BO,,,Industrials,equity,0,0,name
+232,,,,Other,equity,0,0,unknown
+231,533176.BO,,,Consumer Discretionary,equity,0,0,name
+229,,,,Financials,equity,1,0,name
+228,MANINFRA.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+227,533164.BO,,,Other,equity,0,0,unknown
+225,533162.BO,,,Other,equity,0,0,unknown
+226,533163.BO,,,Industrials,equity,0,0,name
+222,533161.BO,,,Other,equity,0,0,unknown
+224,533160.BO,,,Real Estate,equity,0,1,name
+221,533156.BO,,,Other,equity,0,0,unknown
+220,,,,Healthcare,equity,0,0,name
+219,533158.BO,,,Consumer Discretionary,equity,0,0,name
+216,,,,Industrials,equity,0,0,name
+218,533155.BO,,,Consumer Discretionary,equity,0,0,name
+214,,,,Technology,equity,0,0,name
+333,533676.BO,,,Financials,equity,1,0,name
+329,533638.BO,,,Other,equity,0,0,unknown
+326,,,,Other,equity,0,0,unknown
+330,533644.BO,,,Other,equity,0,0,unknown
+332,533632.BO,,,Financials,equity,1,0,name
+327,533629.BO,,,Other,equity,0,0,unknown
+328,533608.BO,,,Other,equity,0,0,unknown
+325,533605.BO,,,Other,equity,0,0,unknown
+324,533581.BO,,,Other,equity,0,0,unknown
+323,533553.BO,,,Energy,equity,0,0,name
+320,,,,Other,equity,0,0,unknown
+322,533543.BO,,,Healthcare,equity,0,0,name
+321,533540.BO,,,Consumer Discretionary,equity,0,0,name
+318,533519.BO,,,Financials,equity,1,0,name
+319,533506.BO,,,Financials,equity,1,0,name
+317,533499.BO,,,Other,equity,0,0,unknown
+316,533482.BO,,,Materials,equity,0,0,name
+314,,,,Other,equity,0,0,unknown
+315,533470.BO,,,Other,equity,0,0,unknown
+313,533427.BO,,,Industrials,equity,0,0,name
+312,,,,Other,equity,0,0,unknown
+308,,,,Other,equity,0,0,unknown
+307,,,,Industrials,equity,0,0,name
+305,,,,Industrials,equity,0,0,name
+301,,,,Materials,equity,0,0,name
+303,,,,Industrials,equity,0,0,name
+304,533400.BO,,,Other,equity,0,0,unknown
+302,,,,Other,equity,0,0,unknown
+300,533398.BO,,,Financials,equity,1,0,name
+299,,,,Technology,equity,0,0,name
+298,533344.BO,,,Financials,equity,1,0,name
+297,533343.BO,,,Other,equity,0,0,unknown
+294,533333.BO,,,Materials,equity,0,0,name
+296,,,,Technology,equity,0,0,name
+295,,,,Consumer Discretionary,equity,0,0,name
+293,533317.BO,,,Healthcare,equity,0,0,name
+291,,,,Consumer Discretionary,equity,0,0,name
+360,534816.BO,,,Industrials,equity,0,0,name
+359,534809.BO,,,Consumer Discretionary,equity,0,0,name
+358,534804.BO,,,Financials,equity,1,0,name
+356,534756.BO,,,Consumer Discretionary,equity,0,0,name
+345,,,,Other,equity,0,0,unknown
+342,534425.BO,,,Healthcare,equity,0,0,name
+339,534369.BO,,,Other,equity,0,0,unknown
+338,534312.BO,,,Other,equity,0,0,unknown
+337,534309.BO,,,Industrials,equity,0,0,name
+336,534190.BO,,,Other,equity,0,0,unknown
+177,534091.BO,,,Other,equity,0,0,unknown
+377,535648.BO,,,Other,equity,0,0,unknown
+369,535322.BO,,,Financials,equity,1,0,name
+363,534976.BO,,,Consumer Discretionary,equity,0,0,name
+437,538836.BO,,,Other,equity,0,0,unknown
+431,538685.BO,,,Consumer Discretionary,equity,0,0,name
+430,538666.BO,,,Other,equity,0,0,unknown
+428,538635.BO,,,Industrials,equity,0,0,name
+418,538268.BO,,,Other,equity,0,0,unknown
+513,539551.BO,,,Other,equity,0,0,unknown
+512,539523.BO,,,Healthcare,equity,0,0,name
+511,539524.BO,,,Other,equity,0,0,unknown
+508,539450.BO,,,Other,equity,0,0,unknown
+492,539448.BO,,,Other,equity,0,0,unknown
+507,539436.BO,,,Consumer Discretionary,equity,0,0,name
+494,539346.BO,,,Industrials,equity,0,0,name
+491,539351.BO,,,Consumer Discretionary,equity,0,0,name
+493,539334.BO,,,Materials,equity,0,0,name
+490,,,,Other,equity,0,0,unknown
+488,539332.BO,,,Other,equity,0,0,unknown
+486,539302.BO,,,Energy,equity,0,0,name
+481,539268.BO,,,Other,equity,0,0,unknown
+472,539207.BO,,,Consumer Discretionary,equity,0,0,name
+469,539150.BO,,,Real Estate,equity,0,1,name
+468,539141.BO,,,Other,equity,0,0,unknown
+467,539126.BO,,,Real Estate,equity,0,1,name
+466,539118.BO,,,Industrials,equity,0,0,name
+438,539083.BO,,,Energy,equity,0,0,name
+456,539056.BO,,,Consumer Discretionary,equity,0,0,name
+455,539015.BO,,,Other,equity,0,0,unknown
+606,540222.BO,,,Healthcare,equity,0,0,name
+602,540203.BO,,,Other,equity,0,0,unknown
+598,540180.BO,,,Consumer Discretionary,equity,0,0,name
+599,540173.BO,,,Financials,equity,1,0,name
+593,540153.BO,,,Technology,equity,0,0,name
+579,540136.BO,,,Energy,equity,0,0,name
+571,540133.BO,,,Financials,equity,1,0,name
+574,540124.BO,,,Other,equity,0,0,unknown
+573,540115.BO,,,Technology,equity,0,0,name
+564,540065.BO,,,Financials,equity,1,0,name
+563,540048.BO,,,Consumer Discretionary,equity,0,0,name
+562,540047.BO,,,Other,equity,0,0,unknown
+560,540025.BO,,,Technology,equity,0,0,name
+555,540005.BO,,,Technology,equity,0,0,name
+552,539978.BO,,,Other,equity,0,0,unknown
+551,539957.BO,,,Energy,equity,0,0,name
+545,539889.BO,,,Consumer Discretionary,equity,0,0,name
+543,539874.BO,,,Financials,equity,1,0,name
+541,539871.BO,,,Technology,equity,0,0,name
+536,539844.BO,,,Other,equity,0,0,unknown
+532,539807.BO,,,Other,equity,0,0,unknown
+530,539799.BO,,,Materials,equity,0,0,name
+529,HCG.NS,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+521,539678.BO,,,Technology,equity,0,0,name
+520,539658.BO,,,Other,equity,0,0,unknown
+517,539636.BO,,,Other,equity,0,0,unknown
+757,ASTRON.BO,Basic Materials,Paper & Paper Products,Materials,equity,0,0,yahoo
+771,,,,Other,equity,0,0,unknown
+772,SHALBY.NS,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+756,540777.BO,,,Financials,equity,1,0,name
+755,KHADIM.NS,Consumer Cyclical,Footwear & Accessories,Consumer Discretionary,equity,0,0,yahoo
+754,540769.BO,,,Financials,equity,1,0,name
+753,540768.BO,,,Industrials,equity,0,0,name
+752,,,,Financials,equity,1,0,name
+748,540755.BO,,,Financials,equity,1,0,name
+746,540750.BO,,,Energy,equity,0,0,name
+739,540749.BO,,,Financials,equity,1,0,name
+734,540743.BO,,,Consumer Discretionary,equity,0,0,name
+707,540724.BO,,,Other,equity,0,0,unknown
+713,540719.BO,,,Financials,equity,1,0,name
+714,540716.BO,,,Financials,equity,1,0,name
+711,540710.BO,,,Industrials,equity,0,0,name
+710,540704.BO,,,Other,equity,0,0,unknown
+705,540699.BO,,,Technology,equity,0,0,name
+703,540700.BO,,,Other,equity,0,0,unknown
+698,540692.BO,,,Consumer Discretionary,equity,0,0,name
+684,540678.BO,,,Other,equity,0,0,unknown
+690,540673.BO,,,Financials,equity,1,0,name
+683,540642.BO,,,Technology,equity,0,0,name
+672,540611.BO,,,Financials,equity,1,0,name
+669,540602.BO,,,Other,equity,0,0,unknown
+620,CDSL.NS,Financial Services,Capital Markets,Financials,equity,1,0,yahoo
+668,540596.BO,,,Healthcare,equity,0,0,name
+667,540595.BO,,,Other,equity,0,0,unknown
+660,540544.BO,,,Other,equity,0,0,unknown
+645,540530.BO,,,Real Estate,equity,0,1,name
+651,540497.BO,,,Other,equity,0,0,unknown
+635,SHANKARA.NS,Consumer Cyclical,Home Improvement Retail,Consumer Discretionary,equity,0,0,yahoo
+631,540403.BO,,,Consumer Discretionary,equity,0,0,name
+615,540376.BO,,,Other,equity,0,0,unknown
+623,540366.BO,,,Other,equity,0,0,unknown
+611,,,,Other,equity,0,0,unknown
+925,AAVAS.NS,Financial Services,Mortgage Finance,Financials,equity,1,0,yahoo
+921,GRSE.NS,Industrials,Aerospace & Defense,Industrials,equity,0,0,yahoo
+922,IRCON.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+900,CREDITACC.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+897,HDFCAMC.NS,Financial Services,Asset Management,Financials,equity,1,0,yahoo
+904,,,,Other,equity,0,0,unknown
+891,VARROC.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+887,FINEORG.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+886,RITES.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+866,INDOSTAR.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+846,LEMONTREE.NS,Consumer Cyclical,Lodging,Consumer Discretionary,equity,0,0,yahoo
+839,,,,Financials,equity,1,0,name
+835,MIDHANI.BO,Basic Materials,Steel,Materials,equity,0,0,yahoo
+834,SANDHAR.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+832,,,,Industrials,equity,0,0,name
+831,HAL.NS,Industrials,Aerospace & Defense,Industrials,equity,0,0,yahoo
+822,BANDHANBNK.BO,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+827,541143.BO,,,Other,equity,0,0,unknown
+816,HGINFRA.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+810,ASTERDM.BO,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+798,GALAXYSURF.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+792,AMBER.NS,Consumer Cyclical,"Furnishings, Fixtures & Appliances",Consumer Discretionary,equity,0,0,yahoo
+791,NEWGEN.NS,Technology,Software - Infrastructure,Technology,equity,0,0,yahoo
+788,APOLLO.BO,Industrials,Aerospace & Defense,Industrials,equity,0,0,yahoo
+1027,PRINCEPIPE.NS,Industrials,Building Products & Equipment,Industrials,equity,0,0,yahoo
+1023,UJJIVANSFB.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1021,CSBBANK.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1016,VISHWARAJ.NS,Consumer Defensive,Confectioners,Consumer Discretionary,equity,0,0,yahoo
+1018,IRCTC.NS,Consumer Cyclical,Travel Services,Consumer Discretionary,equity,0,0,yahoo
+1007,,,,Energy,equity,0,0,name
+1006,SPANDANA.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+1005,AFFLE.NS,Communication Services,Advertising Agencies,Technology,equity,0,0,yahoo
+998,INDIAMART.NS,Communication Services,Internet Content & Information,Technology,equity,0,0,yahoo
+984,NEOGEN.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+979,POLYCAB.NS,Industrials,Electrical Equipment & Parts,Industrials,equity,0,0,yahoo
+978,METROPOLIS.NS,Healthcare,Diagnostics & Research,Healthcare,equity,0,0,yahoo
+980,RVNL.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+969,MSTCLTD.BO,Industrials,Conglomerates,Industrials,equity,0,0,yahoo
+917,CHALET.NS,Consumer Cyclical,Lodging,Consumer Discretionary,equity,0,0,yahoo
+936,XELPMOC.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+1078,AWHCL.BO,Industrials,Waste Management,Industrials,equity,0,0,yahoo
+1077,BECTORFOOD.NS,Consumer Defensive,Packaged Foods,Consumer Discretionary,equity,0,0,yahoo
+1075,,,,Other,equity,0,0,unknown
+1072,GLAND.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+1040,EQUITASBNK.BO,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1062,LIKHITHA.NS,Energy,Oil & Gas Equipment & Services,Energy,equity,0,0,yahoo
+1052,UTIAMC.NS,Financial Services,Asset Management,Financials,equity,1,0,yahoo
+1064,MAZDOCK.NS,Industrials,Aerospace & Defense,Industrials,equity,0,0,yahoo
+1057,,,,Financials,equity,1,0,name
+1055,CAMS.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+1060,CHEMCON.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1058,ROUTE.NS,Communication Services,Telecom Services,Technology,equity,0,0,yahoo
+1056,HAPPSTMNDS.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+1049,ROSSARI.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1025,,,,Other,equity,0,0,unknown
+1203,CMSINFO.NS,Industrials,Specialty Business Services,Industrials,equity,0,0,yahoo
+1197,SUPRIYA.NS,Healthcare,Biotechnology,Healthcare,equity,0,0,yahoo
+1194,HPAL.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1190,DATAPATTNS.NS,Industrials,Aerospace & Defense,Industrials,equity,0,0,yahoo
+1195,MEDPLUS.NS,Healthcare,Pharmaceutical Retailers,Healthcare,equity,0,0,yahoo
+1193,METROBRAND.NS,Consumer Cyclical,Apparel Retail,Consumer Discretionary,equity,0,0,yahoo
+1187,MAPMYINDIA.NS,Technology,Software - Infrastructure,Technology,equity,0,0,yahoo
+1191,SHRIRAMPPS.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+1189,RATEGAIN.NS,Technology,Software - Application,Technology,equity,0,0,yahoo
+1186,ANANDRATHI.BO,Financial Services,Asset Management,Financials,equity,1,0,yahoo
+1185,TEGA.NS,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+1184,STARHEALTH.NS,Financial Services,Insurance - Life,Financials,equity,1,0,yahoo
+1181,GOCOLORS.NS,Consumer Cyclical,Apparel Retail,Consumer Discretionary,equity,0,0,yahoo
+1179,TARSONS.NS,Healthcare,Medical Instruments & Supplies,Healthcare,equity,0,0,yahoo
+1178,LATENTVIEW.NS,Industrials,Consulting Services,Industrials,equity,0,0,yahoo
+1177,SAPPHIRE.NS,Consumer Cyclical,Restaurants,Consumer Discretionary,equity,0,0,yahoo
+1128,PAYTM.NS,Technology,Software - Infrastructure,Technology,equity,0,0,yahoo
+1175,SIGACHI.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+1172,POLICYBZR.NS,Financial Services,Insurance Brokers,Financials,equity,1,0,yahoo
+1168,SJS.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+1166,FINOPB.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1170,NYKAA.NS,Consumer Cyclical,Internet Retail,Consumer Discretionary,equity,0,0,yahoo
+1151,ABSLAMC.NS,Financial Services,Asset Management,Financials,equity,1,0,yahoo
+1153,,,,Technology,equity,0,0,name
+1149,SANSERA.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+1145,VIJAYA.NS,Healthcare,Diagnostics & Research,Healthcare,equity,0,0,yahoo
+1143,,,,Other,equity,0,0,unknown
+1141,CHEMPLASTS.BO,Basic Materials,Chemicals,Materials,equity,0,0,yahoo
+1140,APTUS.NS,Financial Services,Mortgage Finance,Financials,equity,1,0,yahoo
+1137,CARTRADE.NS,Consumer Cyclical,Auto & Truck Dealerships,Consumer Discretionary,equity,0,0,yahoo
+1133,NUVOCO.NS,Basic Materials,Building Materials,Materials,equity,0,0,yahoo
+1138,KRSNAA.NS,Healthcare,Diagnostics & Research,Healthcare,equity,0,0,yahoo
+1136,DEVYANI.NS,Consumer Cyclical,Restaurants,Consumer Discretionary,equity,0,0,yahoo
+1135,WINDLAS.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+1134,EXXARO.NS,Industrials,Building Products & Equipment,Industrials,equity,0,0,yahoo
+1129,ROLEXRINGS.NS,Industrials,Metal Fabrication,Industrials,equity,0,0,yahoo
+1124,,,,Healthcare,equity,0,0,name
+1127,TATVA.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1126,,,,Other,equity,0,0,unknown
+1123,CLEAN.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1122,GRINFRA.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+1119,IPL.NS,Basic Materials,Agricultural Inputs,Materials,equity,0,0,yahoo
+1115,KIMS.NS,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+1114,DODLA.NS,Consumer Defensive,Food Distribution,Consumer Discretionary,equity,0,0,yahoo
+1112,SONACOMS.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+1109,,,,Energy,equity,0,0,name
+1107,LODHA.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+1102,,,,Healthcare,equity,0,0,name
+1099,SURYODAY.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1092,NAZARA.NS,Communication Services,Electronic Gaming & Multimedia,Technology,equity,0,0,yahoo
+1098,KALYANKJIL.NS,Consumer Cyclical,Luxury Goods,Consumer Discretionary,equity,0,0,yahoo
+1096,LXCHEM.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1095,CRAFTSMAN.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+1097,ANURAS.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1089,EASEMYTRIP.NS,Consumer Cyclical,Travel Services,Consumer Discretionary,equity,0,0,yahoo
+1088,MTARTECH.BO,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+1085,HERANBA.NS,Basic Materials,Agricultural Inputs,Materials,equity,0,0,yahoo
+1073,RAILTEL.NS,Communication Services,Telecom Services,Technology,equity,0,0,yahoo
+1084,NURECA.NS,Healthcare,Medical Devices,Healthcare,equity,0,0,yahoo
+1081,STOVEKRAFT.NS,Consumer Cyclical,"Furnishings, Fixtures & Appliances",Consumer Discretionary,equity,0,0,yahoo
+1080,HOMEFIRST.NS,Financial Services,Mortgage Finance,Financials,equity,1,0,yahoo
+1079,INDIGOPNTS.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1076,IRFC.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+1347,,,,Materials,equity,0,0,name
+1355,RADIANTCMS.NS,Industrials,Specialty Business Services,Industrials,equity,0,0,yahoo
+1346,ELIN.NS,Industrials,Electrical Equipment & Parts,Industrials,equity,0,0,yahoo
+1354,KFINTECH.NS,Technology,Software - Application,Technology,equity,0,0,yahoo
+1338,LANDMARK.NS,Consumer Cyclical,Auto & Truck Dealerships,Consumer Discretionary,equity,0,0,yahoo
+1350,,,,Other,equity,0,0,unknown
+1345,SULA.NS,Consumer Defensive,Beverages - Wineries & Distilleries,Consumer Discretionary,equity,0,0,yahoo
+1324,UNIPARTS.NS,Industrials,Farm & Heavy Construction Machinery,Industrials,equity,0,0,yahoo
+1339,DHARMAJ.NS,Basic Materials,Agricultural Inputs,Materials,equity,0,0,yahoo
+1336,RUSTOMJEE.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+1335,INOXGREEN.NS,Utilities,Utilities - Renewable,Energy,equity,0,0,yahoo
+1321,KAYNES.NS,Technology,Electronic Components,Technology,equity,0,0,yahoo
+1334,ACI.NS,Basic Materials,Chemicals,Materials,equity,0,0,yahoo
+1327,FIVESTAR.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+1332,BIKAJI.NS,Consumer Defensive,Packaged Foods,Consumer Discretionary,equity,0,0,yahoo
+1330,MEDANTA.NS,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+1331,FUSION.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+1316,DCXINDIA.NS,Industrials,Aerospace & Defense,Industrials,equity,0,0,yahoo
+1199,TRACXN.NS,Technology,Software - Application,Technology,equity,0,0,yahoo
+1318,EMIL.NS,Consumer Cyclical,Specialty Retail,Consumer Discretionary,equity,0,0,yahoo
+1283,HARSHA.NS,Industrials,Tools & Accessories,Industrials,equity,0,0,yahoo
+1287,TMB.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1281,DREAMFOLKS.NS,Industrials,Airports & Air Services,Industrials,equity,0,0,yahoo
+1276,SYRMA.NS,Technology,Electronic Components,Technology,equity,0,0,yahoo
+1257,AETHER.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1254,EMUDHRA.NS,Technology,Software - Application,Technology,equity,0,0,yahoo
+1247,ETHOSLTD.NS,Consumer Cyclical,Luxury Goods,Consumer Discretionary,equity,0,0,yahoo
+1253,PARADEEP.NS,Basic Materials,Agricultural Inputs,Materials,equity,0,0,yahoo
+1213,DELHIVERY.NS,Industrials,Integrated Freight & Logistics,Industrials,equity,0,0,yahoo
+1248,VENUSPIPES.NS,Basic Materials,Steel,Materials,equity,0,0,yahoo
+1252,PRUDENT.NS,Financial Services,Asset Management,Financials,equity,1,0,yahoo
+1221,LICI.NS,Financial Services,Insurance - Life,Financials,equity,1,0,yahoo
+1250,RAINBOW.NS,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+1249,CAMPUS.NS,Consumer Cyclical,Footwear & Accessories,Consumer Discretionary,equity,0,0,yahoo
+1240,HARIOMPIPE.BO,Basic Materials,Steel,Materials,equity,0,0,yahoo
+1236,VERANDA.NS,Consumer Defensive,Education & Training Services,Consumer Discretionary,equity,0,0,yahoo
+1235,UMAEXPORTS.NS,Consumer Defensive,Farm Products,Consumer Discretionary,equity,0,0,yahoo
+1217,MANYAVAR.NS,Consumer Cyclical,Apparel Manufacturing,Consumer Discretionary,equity,0,0,yahoo
+1173,AWL.NS,Consumer Defensive,Packaged Foods,Consumer Discretionary,equity,0,0,yahoo
+1209,AGSTRA.NS,Technology,Software - Infrastructure,Technology,equity,0,0,yahoo
+1599,INNOVACAP.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+1597,AZAD.NS,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+1595,MUFTI.NS,Consumer Cyclical,Apparel Retail,Consumer Discretionary,equity,0,0,yahoo
+1588,RBZJEWEL.NS,Consumer Cyclical,Luxury Goods,Consumer Discretionary,equity,0,0,yahoo
+1585,HAPPYFORGE.NS,Industrials,Metal Fabrication,Industrials,equity,0,0,yahoo
+1589,SURAJEST.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+1587,MOTISONS.NS,Consumer Cyclical,Luxury Goods,Consumer Discretionary,equity,0,0,yahoo
+1582,MUTHOOTMF.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+1593,INOXINDIA.NS,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+1581,DOMS.NS,Industrials,Business Equipment & Supplies,Industrials,equity,0,0,yahoo
+1477,INDIASHLTR.NS,Financial Services,Mortgage Finance,Financials,equity,1,0,yahoo
+1567,GANDHAR.NS,Energy,Oil & Gas Refining & Marketing,Energy,equity,0,0,yahoo
+1418,TATATECH.NS,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+1568,FEDFINA.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+1571,FLAIR.NS,Industrials,Business Equipment & Supplies,Industrials,equity,0,0,yahoo
+1569,IREDA.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+1563,ASKAUTOLTD.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+1545,PROTEAN.BO,Technology,Information Technology Services,Technology,equity,0,0,yahoo
+1553,ESAFSFB.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1551,HONASA.NS,Consumer Defensive,Household & Personal Products,Consumer Discretionary,equity,0,0,yahoo
+1552,CELLO.NS,Consumer Cyclical,"Furnishings, Fixtures & Appliances",Consumer Discretionary,equity,0,0,yahoo
+1547,BLUEJET.NS,Healthcare,Biotechnology,Healthcare,equity,0,0,yahoo
+1543,IRMENERGY.NS,Utilities,Utilities - Regulated Gas,Energy,equity,0,0,yahoo
+1539,PLAZACABLE.NS,Industrials,Electrical Equipment & Parts,Industrials,equity,0,0,yahoo
+1525,VALIANTLAB.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+1528,UDS.NS,Industrials,Specialty Business Services,Industrials,equity,0,0,yahoo
+1512,JSWINFRA.NS,Industrials,Marine Shipping,Industrials,equity,0,0,yahoo
+1513,MVGJL.NS,Consumer Cyclical,Luxury Goods,Consumer Discretionary,equity,0,0,yahoo
+1508,KALAMANDIR.NS,Consumer Cyclical,Apparel Retail,Consumer Discretionary,equity,0,0,yahoo
+1382,SIGNATURE.NS,Real Estate,Real Estate - Development,Real Estate,equity,0,1,yahoo
+1507,YATRA.NS,Consumer Cyclical,Travel Services,Consumer Discretionary,equity,0,0,yahoo
+1505,ZAGGLE.NS,Technology,Software - Infrastructure,Technology,equity,0,0,yahoo
+1502,SAMHI.NS,Consumer Cyclical,Lodging,Consumer Discretionary,equity,0,0,yahoo
+1503,RRKABEL.NS,Industrials,Electrical Equipment & Parts,Industrials,equity,0,0,yahoo
+1496,EMSLIMITED.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+1494,JLHL.NS,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+1488,RATNAVEER.NS,Basic Materials,Steel,Materials,equity,0,0,yahoo
+1490,RISHABH.NS,Technology,Scientific & Technical Instruments,Technology,equity,0,0,yahoo
+1485,VPRPL.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+1482,AEROFLEX.NS,Industrials,Metal Fabrication,Industrials,equity,0,0,yahoo
+1479,PYRAMID.NS,Consumer Cyclical,Packaging & Containers,Consumer Discretionary,equity,0,0,yahoo
+1475,TVSSCS.NS,Industrials,Integrated Freight & Logistics,Industrials,equity,0,0,yahoo
+1472,CONCORDBIO.NS,Healthcare,Biotechnology,Healthcare,equity,0,0,yahoo
+1470,SBFC.NS,Financial Services,Credit Services,Financials,equity,1,0,yahoo
+1464,YATHARTH.NS,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+1459,NETWEB.NS,Technology,Computer Hardware,Technology,equity,0,0,yahoo
+1456,UTKARSHBNK.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1452,SENCO.NS,Consumer Cyclical,Luxury Goods,Consumer Discretionary,equity,0,0,yahoo
+1446,CYIENTDLM.NS,Industrials,Aerospace & Defense,Industrials,equity,0,0,yahoo
+1442,IDEAFORGE.NS,Technology,Computer Hardware,Technology,equity,0,0,yahoo
+1435,HMAAGRO.BO,Consumer Defensive,Packaged Foods,Consumer Discretionary,equity,0,0,yahoo
+1430,IKIO.NS,Technology,Electronic Components,Technology,equity,0,0,yahoo
+1412,MANKIND.NS,Healthcare,Drug Manufacturers - Specialty & Generic,Healthcare,equity,0,0,yahoo
+1405,AVALON.NS,Technology,Electronic Components,Technology,equity,0,0,yahoo
+1398,USK.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+1390,GSLSU.NS,Basic Materials,Building Materials,Materials,equity,0,0,yahoo
+1383,DIVGIITTS.NS,Consumer Cyclical,Auto Parts,Consumer Discretionary,equity,0,0,yahoo
+1934,,,,Industrials,equity,0,0,name
+1942,,,,Industrials,equity,0,0,name
+1945,,,,Energy,equity,0,0,rhp
+1943,,,,Healthcare,equity,0,0,name
+1939,,,,Healthcare,equity,0,0,rhp
+1941,,,,Other,equity,0,0,unknown
+1940,,,,Industrials,equity,0,0,rhp
+1937,,,,Industrials,equity,0,0,rhp
+1936,,,,Financials,equity,1,0,name
+1933,,,,Energy,equity,0,0,rhp
+1930,,,,Other,equity,0,0,unknown
+1926,,,,Other,equity,0,0,unknown
+1928,,,,Financials,equity,1,0,rhp
+1925,,,,Healthcare,equity,0,0,name
+1924,,,,Consumer Discretionary,equity,0,0,rhp
+1918,,,,Healthcare,equity,0,0,name
+1911,,,,Industrials,equity,0,0,name
+1902,,,,Energy,equity,0,0,rhp
+1904,,,,Industrials,equity,0,0,name
+1899,,,,Financials,equity,1,0,rhp
+1897,,,,Energy,equity,0,0,rhp
+1896,,,,Other,equity,0,0,unknown
+1898,,,,Other,equity,0,0,unknown
+1881,,,,Energy,equity,0,0,rhp
+1895,,,,Industrials,equity,0,0,rhp
+1890,,,,Energy,equity,0,0,rhp
+1888,,,,Other,equity,0,0,unknown
+1879,,,,Industrials,equity,0,0,name
+1883,,,,Energy,equity,0,0,rhp
+1874,,,,Industrials,equity,0,0,rhp
+1864,,,,Other,equity,0,0,unknown
+1866,,,,Financials,equity,1,0,rhp
+1849,,,,Real Estate,equity,0,1,name
+1855,,,,Financials,equity,1,0,name
+1844,,,,Other,equity,0,0,unknown
+1841,,,,Consumer Discretionary,equity,0,0,name
+1839,,,,Other,equity,0,0,unknown
+1837,,,,Other,equity,0,0,unknown
+1822,,,,Financials,equity,1,0,name
+1835,,,,Industrials,equity,0,0,rhp
+1829,,,,Industrials,equity,0,0,rhp
+1825,,,,Consumer Discretionary,equity,0,0,name
+1820,,,,Healthcare,equity,0,0,name
+1818,,,,Energy,equity,0,0,rhp
+1809,,,,Technology,equity,0,0,name
+1811,,,,Other,equity,0,0,unknown
+1542,,,,Consumer Discretionary,equity,0,0,rhp
+1802,,,,Other,equity,0,0,unknown
+1801,,,,Other,equity,0,0,unknown
+1765,,,,Consumer Discretionary,equity,0,0,rhp
+1798,,,,Energy,equity,0,0,rhp
+1794,,,,Industrials,equity,0,0,rhp
+1779,,,,Other,equity,0,0,unknown
+1767,,,,Materials,equity,0,0,name
+1766,,,,Healthcare,equity,0,0,rhp
+1758,,,,Materials,equity,0,0,name
+1580,,,,Consumer Discretionary,equity,0,0,name
+1749,,,,Other,equity,0,0,unknown
+1751,,,,Financials,equity,1,0,rhp
+1746,,,,Other,equity,0,0,unknown
+1742,,,,Technology,equity,0,0,name
+1738,KRONOX.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1730,AWFIS.NS,Industrials,Rental & Leasing Services,Industrials,equity,0,0,yahoo
+1727,GODIGIT.NS,Financial Services,Insurance - Property & Casualty,Financials,equity,1,1,yahoo
+1717,AADHARHFC.NS,Financial Services,Mortgage Finance,Financials,equity,1,0,yahoo
+1716,TBOTEK.NS,Consumer Cyclical,Travel Services,Consumer Discretionary,equity,0,0,yahoo
+1713,INDGN.NS,Healthcare,Health Information Services,Healthcare,equity,0,0,yahoo
+1704,JNKINDIA.NS,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo
+1694,BHARTIHEXA.NS,Communication Services,Telecom Services,Technology,equity,0,0,yahoo
+1682,SRM.NS,Industrials,Engineering & Construction,Industrials,equity,0,0,yahoo
+1665,KRYSTAL.NS,Industrials,Specialty Business Services,Industrials,equity,0,0,yahoo
+1672,PVSL.NS,Consumer Cyclical,Auto & Truck Dealerships,Consumer Discretionary,equity,0,0,yahoo
+1667,GOPAL.BO,Consumer Defensive,Packaged Foods,Consumer Discretionary,equity,0,0,yahoo
+1663,JGCHEM.NS,Basic Materials,Other Industrial Metals & Mining,Materials,equity,0,0,yahoo
+1620,RKSWAMY.NS,Communication Services,Advertising Agencies,Technology,equity,0,0,yahoo
+1586,MUKKA.NS,Consumer Defensive,Packaged Foods,Consumer Discretionary,equity,0,0,yahoo
+1642,EXICOM.NS,Industrials,Electrical Equipment & Parts,Industrials,equity,0,0,yahoo
+1638,PLATIND.NS,Basic Materials,Specialty Chemicals,Materials,equity,0,0,yahoo
+1655,GPTHEALTH.NS,Healthcare,Medical Care Facilities,Healthcare,equity,0,0,yahoo
+1654,JUNIPER.NS,Consumer Cyclical,Lodging,Consumer Discretionary,equity,0,0,yahoo
+1646,VSTL.NS,Basic Materials,Steel,Materials,equity,0,0,yahoo
+1643,ENTERO.NS,Healthcare,Medical Distribution,Healthcare,equity,0,0,yahoo
+1641,CAPITALSFB.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1640,JSFB.NS,Financial Services,Banks - Regional,Financials,equity,1,0,yahoo
+1634,RPTECH.NS,Technology,Electronics & Computer Distribution,Technology,equity,0,0,yahoo
+1635,PARKHOTELS.NS,Consumer Cyclical,Lodging,Consumer Discretionary,equity,0,0,yahoo
+1632,BLSE.NS,Industrials,Specialty Business Services,Industrials,equity,0,0,yahoo
+1616,NOVAAGRI.NS,Basic Materials,Agricultural Inputs,Materials,equity,0,0,yahoo
+1619,EPACK.NS,Consumer Cyclical,"Furnishings, Fixtures & Appliances",Consumer Discretionary,equity,0,0,yahoo
+1612,MEDIASSIST.NS,Healthcare,Healthcare Plans,Healthcare,equity,0,0,yahoo
+1611,JYOTICNC.NS,Industrials,Specialty Industrial Machinery,Industrials,equity,0,0,yahoo

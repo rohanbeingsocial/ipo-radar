@@ -33,12 +33,32 @@ SIGNALS_MODEL_PATH = Path(__file__).resolve().parent.parent / "listing_model_sig
 HORIZON_MODEL_PATH = Path(__file__).resolve().parent.parent / "horizon_model.pkl"
 _horizon_cache: dict = {}
 
-# app sector bucket -> training-sheet sector dummy
-_SHEET_SECTOR = {"insurance": "sec_Financials", "asset_management": "sec_Financials",
-                 "fin_services": "sec_Financials", "consumer": "sec_Consumer Discretionary",
-                 "pharma_health": "sec_Healthcare", "energy_infra": "sec_Energy",
-                 "industrial": "sec_Industrials", "workspace_realty": "sec_Real Estate",
-                 "tech_platform": "sec_Technology"}
+# The RHP bucket (all we can know before a company lists — there is no Yahoo profile yet)
+# mapped into the ONE sector vocabulary both models are trained on. automation/
+# backfill_sectors.py labels the training rows through this same map, so train and serve
+# agree. Sector is the strongest single signal in the data: median 24-month return runs
+# from +42% (Technology) to -20% (Real Estate).
+_SHEET_SECTOR = {"insurance": "Financials", "asset_management": "Financials",
+                 "fin_services": "Financials", "consumer": "Consumer Discretionary",
+                 "pharma_health": "Healthcare", "energy_infra": "Energy",
+                 "industrial": "Industrials", "workspace_realty": "Real Estate",
+                 "tech_platform": "Technology"}
+
+
+def sector_of(report: dict) -> str:
+    """The report's sector in the models' vocabulary ('Other' if the RHP gives us nothing)."""
+    return _SHEET_SECTOR.get(features_from_report(report).get("sector"), "Other")
+
+
+def structure_of(sector: str) -> dict:
+    """What KIND of company, which is not the same question as which sector.
+
+    Lenders and property companies read differently on the same numbers — leverage IS a
+    bank's business model, and P/B rather than P/E is what prices it — so the models get
+    an explicit flag instead of having to infer it from ratios that mean opposite things
+    in different structures."""
+    return {"is_financial": 1.0 if sector == "Financials" else 0.0,
+            "is_realestate": 1.0 if sector == "Real Estate" else 0.0}
 
 SECTOR_BUCKETS = [
     ("insurance", r"insurance|policyholder"),
@@ -194,16 +214,16 @@ def _ml_vector(f: dict, names: list[str]) -> list[float]:
 
 
 def signals_forecast(report: dict, signals: dict | None = None) -> dict | None:
-    """LISTING-DAY gain forecast from the ridge (GMP + subscription multiples +
-    fundamentals + sector). Missing inputs fall back to training medians, so it
-    degrades gracefully — but it is only worth reading once real market signals
-    have been posted.
+    """The pre-listing call, from GMP + subscription + fundamentals + structure.
 
-    This used to forecast LTP gain (today's price vs offer). That target folds in
-    years of market drift, so it was unlearnable from IPO-day inputs and the model
-    lost to predicting the mean. Listing-day gain is what oversubscription and GMP
-    actually predict, and it is the only pre-listing number this system can call
-    with demonstrated skill."""
+    Two heads, and normally only one of them exists. DIRECTION — will it list above the
+    offer price — is a real call: ~76% right against a ~71% majority baseline, correct in
+    every fold. MAGNITUDE — how big the pop will be — is not: it barely beats predicting
+    the average and sits well inside the noise, so the trainer does not ship it and this
+    function returns no number for it. Which way, not how far.
+
+    Missing inputs fall back to training medians, so it degrades gracefully — but it is
+    only worth reading once real subscription/GMP numbers have been posted."""
     if not SIGNALS_MODEL_PATH.exists():
         return None
     model = json.loads(SIGNALS_MODEL_PATH.read_text())
@@ -230,22 +250,45 @@ def signals_forecast(report: dict, signals: dict | None = None) -> dict | None:
     if pe:
         x["Post IPO P/E"] = pe
         used.append("issuer_pe")
-    sector = features_from_report(report).get("sector")
+    sector = sector_of(report)
     for k in x:
         if k.startswith("sec_"):
             x[k] = 0.0
-    if _SHEET_SECTOR.get(sector) in x:
-        x[_SHEET_SECTOR[sector]] = 1.0
-    pred = model["intercept"] + sum(model["coef"][k] * v for k, v in x.items())
-    return {"engine": "ml_signals", "forecast_listing_gain_pct_vs_offer": round(pred, 1),
-            "trained_on_n": model["n"], "cv_mae_pp": round(model["cv_mae"], 1),
-            "baseline_mae_pp": round(model.get("baseline_mae", 0), 1),
-            "cv_direction_acc": round(model["cv_direction_acc"], 2),
-            "cv": model.get("cv", "time-ordered"),
-            "inputs_used": used or ["training medians only — post market-signals to sharpen"],
-            "note": "Cross-validated forward in time (trained only on IPOs that listed "
-                    "before the ones it is scored on). Direction (above/below offer) is "
-                    "the reliable read; the point estimate carries the CV MAE shown."}
+    if f"sec_{sector}" in x:                    # older artifacts carried sector dummies
+        x[f"sec_{sector}"] = 1.0
+    for k, v in structure_of(sector).items():
+        if k in x:
+            x[k] = v
+            used.append("company_structure")
+
+    def score(head):
+        return head["intercept"] + sum(head["coef"].get(k, 0.0) * v for k, v in x.items())
+
+    out = {"engine": "ml_signals", "trained_on_n": model["n"],
+           "cv": model.get("cv", "time-ordered"),
+           "inputs_used": sorted(set(used)) or ["training medians only — post market-signals to sharpen"]}
+
+    direction = model.get("direction")
+    if direction:
+        p = 1.0 / (1.0 + math.exp(-max(-30.0, min(30.0, score(direction)))))
+        out["p_lists_above_offer"] = round(p, 2)
+        out["cv_direction_acc"] = round(direction["cv_acc"], 2)
+        out["cv_direction_baseline"] = round(direction["baseline_acc"], 2)
+
+    magnitude = model.get("magnitude")
+    if magnitude:
+        out["forecast_listing_gain_pct_vs_offer"] = round(score(magnitude), 1)
+        out["cv_mae_pp"] = round(magnitude["cv_mae"], 1)
+        out["baseline_mae_pp"] = round(magnitude["baseline_mae"], 1)
+    else:
+        out["no_magnitude"] = (
+            "No point estimate: the SIZE of a listing pop does not beat a mean baseline "
+            "out-of-sample, so we do not print a number for it. The direction call is the "
+            "one that survived validation.")
+
+    out["note"] = ("Cross-validated forward in time — trained only on IPOs that listed "
+                   "before the ones it was scored on.")
+    return out if (direction or magnitude) else None
 
 
 def _load_horizon_model():
@@ -329,8 +372,12 @@ def horizon_forecast(report: dict, signals: dict | None = None) -> dict | None:
         if v is not None:
             x[k] = float(v)
     used.append("rhp_features")
+    sector = sector_of(report)
     for sec in model.get("sectors", []):
-        x[f"sec_{sec}"] = 1.0 if f.get("sector") == sec else 0.0
+        x[f"sec_{sec}"] = 1.0 if sector == sec else 0.0
+    x.update(structure_of(sector))
+    if sector != "Other":
+        used.append(f"sector:{sector}")
 
     import pandas as pd
     names = var["feature_names"]

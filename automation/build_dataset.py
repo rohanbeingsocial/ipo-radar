@@ -77,8 +77,14 @@ def auto_enrichment(ids):
                 if pd.notna(v) and v != "" and out[i].get(col) is None:
                     out[i][col] = num(v) if col != "Sector" else str(v)
 
-    # 1. Chittorgarh detail page — sector, reserved split, and the KPI block.
-    #    Already in sheet units (ROE/margins %, D-E and P/B ratios), so no scaling.
+    # 0. Sector first, from the dedicated backfill (Yahoo GICS -> RHP bucket -> company
+    #    name). It reaches ~77% of rows where the detail-page sector reached ~36%, and
+    #    sector turns out to be the strongest signal in the dataset — the median 24-month
+    #    return spans 62pp between Technology and Real Estate.
+    _pull(DATA / "cg_sector.csv", {"sector": "Sector"})
+
+    # 1. Chittorgarh detail page — reserved split and the KPI block (and sector for any
+    #    row the backfill missed). Already in sheet units, so no scaling.
     _pull(DATA / "cg_details.csv", {
         "sector": "Sector", "pct_qib": "% QIB", "pct_retail": "% Retail",
         "pct_anchor": "% anchor", "kpi_roe": "ROE", "kpi_roce": "ROCE",

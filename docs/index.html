@@ -991,10 +991,19 @@ function forecastBlocks(fc) {
   const rules = fc.rules || null;
   let html = "";
   const lg = fc.listing_gain;
-  if (lg && lg.pct != null)
-    html += `<div class="grid2i">` + ibox("Listing-day gain (model)", pct(lg.pct),
-      `direction called right ${Math.round((lg.direction_acc ?? 0) * 100)}% of the time out-of-sample`
-      + `${lg.cv_mae_pp != null ? ` · ±${f(lg.cv_mae_pp, 0)}pp typical error vs ±${f(lg.baseline_mae_pp, 0)}pp for guessing the average` : ""}`) + `</div>`;
+  if (lg && (lg.p_above_offer != null || lg.pct != null)) {
+    let boxes = "";
+    if (lg.p_above_offer != null)
+      boxes += ibox("Lists above offer?", `${Math.round(lg.p_above_offer * 100)}%`,
+        `chance of listing above the offer price — ${Math.round((lg.direction_acc ?? 0) * 100)}% accurate out-of-sample`
+        + `${lg.direction_baseline != null ? `, vs ${Math.round(lg.direction_baseline * 100)}% for always guessing the common case` : ""}`);
+    if (lg.pct != null)
+      boxes += ibox("Listing-day gain", pct(lg.pct),
+        lg.cv_mae_pp != null ? `±${f(lg.cv_mae_pp, 0)}pp typical error vs ±${f(lg.baseline_mae_pp, 0)}pp for guessing the average` : "");
+    html += `<div class="grid2i">${boxes}</div>`;
+    if (lg.no_magnitude)
+      html += `<p class="muted" style="margin-top:8px">${esc(lg.no_magnitude)}</p>`;
+  }
 
   if (hz && hz.horizons && Object.keys(hz.horizons).length) {
     // a horizon box shows only what that horizon actually has skill on: sometimes a

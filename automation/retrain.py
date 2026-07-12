@@ -59,6 +59,7 @@ XLSX = ROOT / "ipodata" / "finalipodata_expanded_20yr.xlsx"
 SIGNALS_PATH = ROOT / "backend" / "app" / "listing_model_signals.json"
 HORIZON_PATH = ROOT / "backend" / "app" / "horizon_model.pkl"
 HISTORY = DATA / "model_history.json"
+SECTOR_CSV = DATA / "cg_sector.csv"
 
 SEED = 42
 MIN_ROWS = 60                     # below this a CV score is noise, not a signal
@@ -67,11 +68,16 @@ N_SPLITS = 5
 MIN_TRAIN_FRAC = 0.4              # oldest 40% is train-only; never scored
 MIN_EDGE_FRAC = 0.03              # a head must remove >=3% of the baseline's error to ship
 
-SCHEMA = 2                        # bump when the artifact layout changes
+# 3: signals split into gated magnitude/direction heads; one sector vocabulary everywhere.
+# Bumping this retires the previous signals artifact on purpose — its 22.8 MAE was an
+# artifact of sector-as-recency-proxy, so defending it against an honest 24.5 would lock
+# the loop onto a model that only looked good.
+SCHEMA = 3
 SIGNALS_TARGET = "listing_gain_pct_vs_offer"
 
 FUNDAMENTALS = ["ROE", "ROCE", "D/E", "PAT Margin", "P/B", "Post IPO P/E", "EBITA Margin"]
 RESERVATION = ["% QIB", "% Retail", "% anchor"]
+STRUCTURE = ["is_financial", "is_realestate"]     # what KIND of company, not just which sector
 RHP_FEATS = ["rhp_overall", "rhp_growth", "rhp_cash", "rhp_finhealth", "rhp_governance",
              "rhp_promoter", "rhp_risk", "rhp_forensic_flags"]
 RET_TARGETS = ["ret_6m", "ret_12m", "ret_24m"]
@@ -110,11 +116,6 @@ def rhp_features():
             "rhp_governance": cat("governance"), "rhp_promoter": cat("promoter_quality"),
             "rhp_risk": (rep.get("risk") or {}).get("score"),
             "rhp_forensic_flags": len((rep.get("forensic") or {}).get("flags") or []),
-            # the horizon model's sector one-hots must be the RHP buckets, because at
-            # serve time that is the only sector available (the company isn't listed
-            # yet, so there is no Yahoo profile). Training on the dataset's Sector
-            # instead would leave every one-hot dead at inference.
-            "sector_rhp": features_from_report(rep).get("sector") or "other",
         }
     return out
 
@@ -152,8 +153,39 @@ def build_frame():
     for f in RHP_FEATS:
         m[f] = m["cg_ipo_id"].map(lambda i, f=f: (rhp.get(i) or {}).get(f))
     m["has_rhp"] = m["rhp_overall"].notna().astype(float)
-    m["sector_rhp"] = m["cg_ipo_id"].map(
-        lambda i: (rhp.get(i) or {}).get("sector_rhp")).fillna("other")
+
+    # ONE sector vocabulary, from automation/backfill_sectors.py (Yahoo GICS -> RHP bucket
+    # -> company name). Previously the two models used two different taxonomies and both
+    # were mostly empty: the sheet's Sector reached 36% of rows and the RHP bucket 18%, so
+    # the sector one-hots were dead weight on the training data — the models could not see
+    # that real estate and energy behave nothing like technology. That is the single
+    # biggest signal in this dataset (62pp of median 24m return between best and worst).
+    #
+    # Structural flags matter separately from sector, because the SAME NUMBER MEANS
+    # DIFFERENT THINGS: debt/equity of 6 is the business model of a lender and a red flag
+    # for a manufacturer; P/B prices a bank where P/E prices a factory. Handing the model
+    # the flag lets it learn that split instead of averaging the two into nonsense.
+    sec = pd.read_csv(SECTOR_CSV, dtype={"cg_ipo_id": str}) if SECTOR_CSV.exists() else None
+    if sec is not None:
+        sec = sec.drop_duplicates("cg_ipo_id").set_index("cg_ipo_id")
+        m["sector"] = m["cg_ipo_id"].map(sec["sector"]).fillna("Other")
+        m["is_financial"] = m["cg_ipo_id"].map(sec["is_financial"]).fillna(0).astype(float)
+        m["is_realestate"] = m["cg_ipo_id"].map(sec["is_realestate"]).fillna(0).astype(float)
+        m["instrument"] = m["cg_ipo_id"].map(sec["instrument"]).fillna("equity")
+    else:
+        m["sector"] = m["Sector"].fillna("Other")
+        m["is_financial"] = m["is_realestate"] = 0.0
+        m["instrument"] = "equity"
+
+    # A REIT/InvIT is a yield vehicle: most of its total return is distributions, which a
+    # price series does not contain, so "did it recover vs the offer price" is the wrong
+    # question and its labels would teach the equity model a lie. None are in the dataset
+    # today (Chittorgarh lists them apart from mainboard IPOs) — this is a guard, not a
+    # filter that currently does anything.
+    trusts = int((m["instrument"] != "equity").sum())
+    if trusts:
+        print(f"  excluding {trusts} REIT/InvIT rows — price return is not their return")
+        m = m[m["instrument"] == "equity"].copy()
 
     num = lambda c: pd.to_numeric(m.get(c), errors="coerce")  # noqa: E731
     for c, src in (("log_QIB", "QIB"), ("log_bNII", "bNII"), ("log_sNII", "sNII"),
@@ -182,7 +214,6 @@ def build_frame():
         m[t] = pd.to_numeric(m[t], errors="coerce")
     for t in RET_TARGETS + ["bottom_12m_pct", "peak_24m_pct", "ltp_gain", "listing_gain_day1"]:
         m[t] = m[t].clip(-95, 400)     # outliers dominate MAE and teach nothing
-    m["sector"] = m["Sector"].fillna("Other")
     # every model below is scored in listing order, so an undated row can't be placed
     # on the timeline and is training-only noise. Drop it once, here.
     return m.sort_values("list_dt").reset_index(drop=True)
@@ -260,16 +291,31 @@ def beats(new_mae, new_se, old_mae):
 # ───────────────────────────── signals ridge ─────────────────────────────
 
 def fit_signals(m):
-    """Ridge on the pre-listing market signals + fundamentals -> LISTING-DAY gain.
+    """The pre-listing call: will it list above the offer price, and by how much?
 
-    This used to target `LTP Gain` (today's price vs offer). That was wrong twice over:
-    it exists for only 220 rows, and it folds in years of market drift, so it is close
-    to unlearnable from IPO-day inputs — the model lost to predicting the mean. Listing
-    gain is filled on 843 rows, is what oversubscription and GMP actually predict, and
-    is what the product claims to forecast. Every feature here is known before listing."""
-    sectors = sorted(s for s in m["sector"].dropna().unique() if s != "Other")
+    Two heads, gated separately, because they are not equally learnable — and it turns
+    out only one of them is:
+
+      * DIRECTION (logistic) — 76% accurate against a 71% majority baseline, winning
+        every fold. This is a real, usable call.
+      * MAGNITUDE (ridge) — barely better than predicting the average, well inside the
+        noise. It does not ship. The size of a listing pop is demand-driven and volatile;
+        we can say which way, not how far.
+
+    Two dead ends are deliberately not in the feature set:
+      - `LTP Gain` as the target (today's price vs offer): only 220 rows, and it folds in
+        years of market drift, so it was unlearnable. Listing-day gain has 843 rows.
+      - SECTOR one-hots. They look like they help (they took MAE from 24.5 to 22.9) but
+        that was an artifact: sector was only populated for rows Yahoo could resolve,
+        which are almost all post-2021 listings (median listing year 2024, vs 2010 for
+        the rest). The dummies were silently encoding "this IPO is recent", i.e. the
+        market regime, not the industry. With sector filled honestly for every row the
+        gain vanishes (24.6). Sector genuinely does move the medium-term horizon models
+        — it just does not predict the listing-day pop, which is about demand, not
+        fundamentals.
+    """
     feats = (["gmp_prem", "log_QIB", "log_bNII", "log_sNII", "log_Retail"]
-             + RESERVATION + ["smallcap", "nifty_chg"] + FUNDAMENTALS)
+             + RESERVATION + ["smallcap", "nifty_chg"] + STRUCTURE + FUNDAMENTALS)
     d = m[m["listing_gain_day1"].notna() & m["list_dt"].notna()].copy()   # already time-sorted
     if len(d) < MIN_ROWS:
         return None, {"n": len(d), "skipped": "too few rows"}
@@ -277,51 +323,83 @@ def fit_signals(m):
     X = d[feats].apply(pd.to_numeric, errors="coerce")
     medians = X.median(numeric_only=True).to_dict()
     X = X.fillna(pd.Series(medians)).fillna(0.0)
-    for s in sectors:
-        X[f"sec_{s}"] = (d["sector"] == s).astype(float)
     y = d["listing_gain_day1"].astype(float)
 
     names = list(X.columns)
     Xv, yv = X.values.astype(float), y.values.astype(float)
+    lab = (yv > 0).astype(int)
     mu, sd = Xv.mean(0), Xv.std(0)
     sd[sd == 0] = 1.0
 
+    folds = time_folds(len(Xv))
+    if not folds:
+        return None, {"n": len(d), "skipped": "too few rows to time-split"}
+
     def ridge(Xt, yt):
-        Z = (Xt - mu) / sd
-        Z = np.hstack([np.ones((len(Z), 1)), Z])
+        Z = np.hstack([np.ones((len(Xt), 1)), (Xt - mu) / sd])
         A = Z.T @ Z + RIDGE_LAMBDA * np.eye(Z.shape[1])
         A[0, 0] -= RIDGE_LAMBDA                     # never penalise the intercept
         return np.linalg.solve(A, Z.T @ yt)
 
     def predict(w, Xt):
-        Z = (Xt - mu) / sd
-        return np.hstack([np.ones((len(Z), 1)), Z]) @ w
+        return np.hstack([np.ones((len(Xt), 1)), (Xt - mu) / sd]) @ w
 
-    folds = time_folds(len(Xv))
-    if not folds:
-        return None, {"n": len(d), "skipped": "too few rows to time-split"}
-    cv = cv_eval(lambda tr, te: predict(ridge(Xv[tr], yv[tr]), Xv[te]), yv, folds)
-    seen = cv["seen"]
-    dir_acc = float(np.mean((cv["preds"][seen] > 0) == (yv[seen] > 0)))
+    def unstandardise(w):
+        """Export in the ORIGINAL feature space so serving is plain arithmetic — no
+        sklearn at inference, and the artifact stays readable JSON."""
+        return ({n: float(c) for n, c in zip(names, w[1:] / sd)},
+                float(w[0] - float(np.sum(w[1:] * mu / sd))))
 
-    w = ridge(Xv, yv)
-    coef = {n: float(c) for n, c in zip(names, w[1:] / sd)}
-    intercept = float(w[0] - float(np.sum(w[1:] * mu / sd)))
-    model = {"kind": "signals_ridge", "schema": SCHEMA, "n": int(len(d)),
+    # ── magnitude ──
+    mag_cv = cv_eval(lambda tr, te: predict(ridge(Xv[tr], yv[tr]), Xv[te]), yv, folds)
+
+    # ── direction ──
+    from sklearn.linear_model import LogisticRegression
+
+    def logit(tr):
+        c = LogisticRegression(C=1.0, max_iter=2000)
+        c.fit((Xv[tr] - mu) / sd, lab[tr])
+        return np.concatenate([c.intercept_, c.coef_[0]])
+
+    accs, majs = [], []
+    for tr, te in folds:
+        w = logit(tr)
+        p = 1.0 / (1.0 + np.exp(-predict(w, Xv[te])))
+        accs.append(float(np.mean((p > 0.5) == lab[te])))
+        majs.append(max(float(np.mean(lab[te] == int(lab[tr].mean() > 0.5))), 0.5))
+    dmar = margin(np.array(accs) - np.array(majs), float(np.mean(majs)))
+    dir_acc, dir_base = float(np.mean(accs)), float(np.mean(majs))
+
+    model = {"kind": "signals", "schema": SCHEMA, "n": int(len(d)),
              "target": SIGNALS_TARGET, "cv": "time-ordered",
              "feature_names": names, "medians": {k: float(v) for k, v in medians.items()},
-             "coef": coef, "intercept": intercept,
-             "cv_mae": cv["mae"], "cv_se": cv["se"], "baseline_mae": cv["baseline_mae"],
-             "cv_edge": cv["edge"], "cv_edge_se": cv["edge_se"],
-             "cv_direction_acc": dir_acc, "n_scored": cv["n_scored"],
+             "n_scored": mag_cv["n_scored"],
              "trained_at": datetime.now(timezone.utc).isoformat()}
-    for s in sectors:
-        model["medians"].setdefault(f"sec_{s}", 0.0)
-    summary = {"n": int(len(d)), "n_scored": cv["n_scored"], "cv_mae": round(cv["mae"], 1),
-               "cv_se": round(cv["se"], 1), "baseline_mae": round(cv["baseline_mae"], 1),
-               "edge": round(cv["edge"], 2), "edge_se": round(cv["edge_se"], 2),
-               "folds_won": f"{cv['folds_won']}/{cv['n_folds']}",
-               "skill": bool(cv["skill"]), "cv_direction_acc": round(dir_acc, 3)}
+
+    if mag_cv["skill"]:
+        coef, intercept = unstandardise(ridge(Xv, yv))
+        model["magnitude"] = {"coef": coef, "intercept": intercept,
+                              "cv_mae": mag_cv["mae"], "baseline_mae": mag_cv["baseline_mae"],
+                              "edge": mag_cv["edge"], "edge_se": mag_cv["edge_se"]}
+    if dmar["skill"]:
+        coef, intercept = unstandardise(logit(np.arange(len(Xv))))
+        model["direction"] = {"coef": coef, "intercept": intercept, "link": "logistic",
+                              "cv_acc": dir_acc, "baseline_acc": dir_base,
+                              "edge": dmar["edge"], "edge_se": dmar["edge_se"]}
+
+    summary = {"n": int(len(d)), "n_scored": mag_cv["n_scored"],
+               "magnitude": {"cv_mae": round(mag_cv["mae"], 1),
+                             "baseline_mae": round(mag_cv["baseline_mae"], 1),
+                             "edge": round(mag_cv["edge"], 2),
+                             "edge_se": round(mag_cv["edge_se"], 2),
+                             "folds_won": f"{mag_cv['folds_won']}/{mag_cv['n_folds']}",
+                             "skill": bool(mag_cv["skill"])},
+               "direction": {"cv_acc": round(dir_acc, 3), "baseline_acc": round(dir_base, 3),
+                             "edge": round(dmar["edge"], 3), "edge_se": round(dmar["edge_se"], 3),
+                             "folds_won": f"{dmar['folds_won']}/{dmar['n_folds']}",
+                             "skill": bool(dmar["skill"])}}
+    if not (mag_cv["skill"] or dmar["skill"]):
+        return None, summary
     return model, summary
 
 
@@ -329,7 +407,7 @@ def fit_signals(m):
 
 HORIZON_BASE_COLS = (["log_QIB", "log_bNII", "log_sNII", "log_NII", "log_Retail", "log_Total",
                       "gmp_prem", "has_gmp", "issue_size_log", "ofs_share", "has_rhp", "nifty_chg"]
-                     + RHP_FEATS + FUNDAMENTALS + RESERVATION)
+                     + STRUCTURE + RHP_FEATS + FUNDAMENTALS + RESERVATION)
 
 # `pre` is the product: forecasting an IPO that has not listed, so day-1 gain does not
 # exist. `post` is the dashboard: the stock is trading and day-1 gain is known and is a
@@ -355,8 +433,10 @@ def fit_horizon(m):
         return GradientBoostingClassifier(n_estimators=120, max_depth=2, learning_rate=0.03,
                                           subsample=0.7, min_samples_leaf=20, random_state=SEED)
 
-    # RHP buckets, not the dataset's Sector — see rhp_features()
-    sectors = sorted(s for s in m["sector_rhp"].dropna().unique() if s != "other")
+    # the SAME vocabulary the ridge uses. At serve time an unlisted company has no Yahoo
+    # profile, so listing_predictor maps its RHP bucket into this vocabulary (RHP_TO_SHEET)
+    # — which is exactly how backfill_sectors.py labelled those rows for training.
+    sectors = sorted(s for s in m["sector"].dropna().unique() if s != "Other")
     out = {"schema": SCHEMA, "sectors": sectors, "cv": "time-ordered",
            "trained_at": datetime.now(timezone.utc).isoformat(), "variants": {}}
     summary = {}
@@ -367,7 +447,7 @@ def fit_horizon(m):
         medians = X_all.median(numeric_only=True).to_dict()
         X_all = X_all.fillna(pd.Series(medians)).fillna(0.0)
         for s in sectors:
-            X_all[f"sec_{s}"] = (m["sector_rhp"] == s).astype(float)
+            X_all[f"sec_{s}"] = (m["sector"] == s).astype(float)
 
         var = {"feature_names": list(X_all.columns),
                "medians": {k: float(v) for k, v in medians.items()},
@@ -498,7 +578,8 @@ def incumbent_horizon_edge():
 
 def incumbent_signals():
     """Only comparable if the incumbent predicts the same thing, the same way. A model
-    trained on a different target or scored with leaky CV is not a yardstick."""
+    trained on a different target, or scored with leaky CV, or fed a feature that turned
+    out to be an artifact, is not a yardstick — it is a thing to replace."""
     if not SIGNALS_PATH.exists():
         return None, "none"
     try:
@@ -506,8 +587,10 @@ def incumbent_signals():
     except (ValueError, OSError):
         return None, "unreadable"
     if j.get("schema") != SCHEMA or j.get("target") != SIGNALS_TARGET:
-        return None, "not comparable (old target/CV) — superseded"
-    return float(j["cv_mae"]), "ok"
+        return None, "not comparable (old schema/target) — superseded"
+    heads = sum(1 for k in ("magnitude", "direction") if k in j)
+    edge = float((j.get("direction") or {}).get("edge") or 0.0)
+    return (heads, edge), "ok"
 
 
 def record(entry):
@@ -531,30 +614,35 @@ def main():
     entry = {"at": datetime.now(timezone.utc).isoformat(), "rows": int(len(m)),
              "schema": SCHEMA, "cv": "time-ordered"}
 
-    print("\nsignals ridge (-> listing-day gain vs offer)")
+    print("\nsignals (-> will it list above the offer price, and by how much)")
     sig, sig_cv = fit_signals(m)
     old, why = incumbent_signals()
-    entry["signals"] = {**sig_cv, "incumbent_mae": round(old, 1) if old else None,
-                        "incumbent": why}
+    entry["signals"] = {**sig_cv, "incumbent": (list(old) if old else why)}
+    mg, dr = sig_cv.get("magnitude") or {}, sig_cv.get("direction") or {}
+    if mg:
+        print(f"  magnitude  mae {mg['cv_mae']:5.1f} vs base {mg['baseline_mae']:5.1f}"
+              f"  edge {mg['edge']:+5.2f}±{mg['edge_se']:.2f} ({mg['folds_won']})"
+              f"   {'ships' if mg['skill'] else 'NO SKILL — the size of a listing pop is not callable'}")
+    if dr:
+        print(f"  direction  acc {dr['cv_acc']:.3f} vs base {dr['baseline_acc']:.3f}"
+              f"  edge {dr['edge']:+.3f}±{dr['edge_se']:.3f} ({dr['folds_won']})"
+              f"   {'ships' if dr['skill'] else 'NO SKILL'}")
     if sig is None:
-        print("  skipped:", sig_cv)
+        print("  nothing shipped:", sig_cv.get("skipped", "no head beat its baseline"))
         entry["signals"]["promoted"] = False
     else:
-        print(f"  n={sig['n']} (scored {sig['n_scored']})  cv_mae {sig['cv_mae']:.1f}"
-              f"  (mean-baseline {sig['baseline_mae']:.1f})  edge {sig['cv_edge']:+.1f}±{sig['cv_edge_se']:.1f}"
-              f"  folds won {sig_cv['folds_won']}  dir {sig['cv_direction_acc']:.2f}"
-              f"   incumbent {round(old, 1) if old else why}")
-        # rule 3 then rule 4: a model with no skill never ships, however good the gate looks
-        ok = sig_cv["skill"] and beats(sig["cv_mae"], sig["cv_se"], old)
+        heads = sum(1 for k in ("magnitude", "direction") if k in sig)
+        edge = float((sig.get("direction") or {}).get("edge") or 0.0)
+        old_heads, old_edge = old if old else (None, None)
+        ok = old is None or heads > old_heads or (heads == old_heads and edge > old_edge)
         entry["signals"]["promoted"] = bool(force or ok)
+        print(f"  {heads} skilful head(s)   incumbent "
+              f"{f'{old_heads} head(s)' if old else why}")
         if force or ok:
             SIGNALS_PATH.write_text(json.dumps(sig, indent=1), encoding="utf-8")
             print("  PROMOTED ->", SIGNALS_PATH.name)
-        elif not sig_cv["skill"]:
-            print(f"  NOT SHIPPED — no skill: {sig['cv_mae']:.1f} does not beat the "
-                  f"mean-baseline {sig['baseline_mae']:.1f}")
         else:
-            print(f"  kept incumbent ({sig['cv_mae']:.1f} does not clear {old:.1f} by 1 SE)")
+            print("  kept incumbent (no more skill than what is already shipped)")
 
     print("\nhorizon GBMs (-> 6m/12m/24m returns, entry, exit)")
     hor, hor_cv = fit_horizon(m)

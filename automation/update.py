@@ -715,11 +715,15 @@ def build_site():
                       "inputs_used": hz.get("inputs_used"),
                       # which model answered, and what it deliberately refuses to answer
                       "variant": hz.get("variant"), "no_skill": hz.get("no_skill"),
-                      # the listing-day call — the one pre-listing forecast with real skill
-                      "listing_gain": ({"pct": sg.get("forecast_listing_gain_pct_vs_offer"),
+                      # the listing-day call. Normally a PROBABILITY, not a number: which
+                      # way it lists is callable, how far it pops is not.
+                      "listing_gain": ({"p_above_offer": sg.get("p_lists_above_offer"),
+                                        "direction_acc": sg.get("cv_direction_acc"),
+                                        "direction_baseline": sg.get("cv_direction_baseline"),
+                                        "pct": sg.get("forecast_listing_gain_pct_vs_offer"),
                                         "cv_mae_pp": sg.get("cv_mae_pp"),
                                         "baseline_mae_pp": sg.get("baseline_mae_pp"),
-                                        "direction_acc": sg.get("cv_direction_acc"),
+                                        "no_magnitude": sg.get("no_magnitude"),
                                         "inputs_used": sg.get("inputs_used")} if sg else None)}
             except Exception as e:
                 print(f"  forecast failed {r['company'][:40]}: {e}")

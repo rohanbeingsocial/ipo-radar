@@ -22,3 +22,6 @@ frontend/out/
 frontend/CLAUDE.md
 dossier/
 .project-memory/
+
+# internal strategy docs — docs/ holds ONLY the GitHub Pages site (index.html + data/)
+docs/*.md

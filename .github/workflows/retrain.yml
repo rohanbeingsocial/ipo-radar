@@ -39,10 +39,20 @@ jobs:
         run: |
           git config user.name "ipo-radar-bot"
           git config user.email "actions@github.com"
-          git add backend/app/horizon_model.pkl backend/app/listing_model_signals.json data/model_history.json
+          # stage the artifacts first: whether THEY changed is what "promoted" means.
+          # model_history.json always changes (it records the attempt), so staging it
+          # together would make every run look like a promotion.
+          git add backend/app/horizon_model.pkl backend/app/listing_model_signals.json
           if git diff --cached --quiet; then
-            echo "::notice::no model promoted this week — incumbent still the best"
+            MSG="model: retrain $(date -u +%F) — no promotion, incumbent still best"
+            echo "::notice::no model beat the incumbent; artifacts unchanged"
           else
-            git commit -m "model: weekly retrain $(date -u +%F)"
+            MSG="model: retrain $(date -u +%F) — promoted"
+          fi
+          git add data/model_history.json
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "$MSG"
             git push
           fi

@@ -382,19 +382,28 @@ def _page_unit(text: str) -> str | None:
     return m.group(1).lower() if m else None
 
 
-def _total_from_tables(pdf_path: str, page_no: int, label_re: str) -> float | None:
+def _total_from_tables(pdf_path: str, page_no: int, label_re: str,
+                       must_contain: str | None = None) -> float | None:
     """Pull the 'Total' row out of a table on a page, returning its first plausible number.
 
-    Contingent liabilities and related-party aggregates live in TABLES, not in prose. The
-    old extractors regexed the page text for '<phrase> ... ₹123 crore' on one line, which
-    essentially never occurs in a restated financial note — which is exactly why both rules
-    scored on 0% of documents."""
+    Contingent liabilities and related-party aggregates live in TABLES, not in prose, which
+    is why regexing page text for '<phrase> ... ₹123 crore' scored on 0% of documents.
+
+    `must_contain` is not optional in spirit. A financial-note page carries several tables,
+    and matching any row that starts with 'Total' happily returns a number from whichever
+    table happened to be there — on one real prospectus that made contingent liabilities and
+    related-party transactions come out as the SAME figure (573.94), which is how you can
+    tell it was reading neither. The table must prove it is the right table first."""
     try:
         with pdfplumber.open(pdf_path) as pdf:
             tables = pdf.pages[page_no - 1].extract_tables() or []
     except Exception:                                    # noqa: BLE001
         return None
     for table in tables:
+        if must_contain:
+            blob = " ".join(str(c or "") for row in (table or []) for c in row)
+            if not re.search(must_contain, blob, re.I):
+                continue
         for row in table or []:
             if not row:
                 continue
@@ -416,44 +425,70 @@ def _scaled(val: float | None, unit: str | None) -> float | None:
     return round(val * f, 2) if f else None      # unknown unit => refuse to guess
 
 
-def extract_rpt(pages: list[dict], sections: dict, pdf_path: str | None = None) -> dict:
+def _note_pages(pages: list[dict], sections: dict, phrase: str) -> list[int]:
+    """Pages carrying a financial-note phrase, LAST first.
+
+    Do not trust the `financial_statements` section range for this. On a real RHP it
+    resolves to the ~20-page SUMMARY chapter (pages 84-105 of a 500-page document), while
+    the restated financials — and the notes we want — sit hundreds of pages later. Searching
+    the 'section' therefore searched the wrong 4% of the document, which is why contingent
+    liabilities and related-party totals scored on 0% of prospectuses.
+
+    Text is already in memory, so scanning every page is cheap; only the table parse on a
+    matching page costs anything. Notes come last, and the phrase also appears in risk
+    factors and MD&A prose, so walk backwards and take the first page that yields a number."""
+    hits = [p["n"] for p in pages if re.search(phrase, p["text"], re.I)]
+    if not hits:
+        return []
     r = _sec_range(sections, "financial_statements")
+    if r:                                   # prefer notes at/after the financials chapter
+        later = [n for n in hits if n >= r[0]]
+        if later:
+            hits = later
+    return list(reversed(hits))[:12]
+
+
+def extract_rpt(pages: list[dict], sections: dict, pdf_path: str | None = None) -> dict:
     out = {"found": False, "total_cr": None, "source_page": None}
-    if not r:
-        return out
-    for p in pages[r[0] - 1:r[1]]:
-        if not re.search(r"related\s+party\s+(?:transactions?|disclosures?)", p["text"][:2000], re.I):
-            continue
-        out["found"], out["source_page"] = True, p["n"]
-        m = re.search(rf"(?:total|aggregate)[^\n]{{0,80}}related\s+party[^\n]{{0,80}}?{STRICT_AMOUNT_RE}", p["text"], re.I) \
-            or re.search(rf"related\s+party\s+transactions?[^\n]{{0,120}}?(?:aggregat\w+|total\w*)[^\n]{{0,60}}?{STRICT_AMOUNT_RE}", p["text"], re.I)
-        if m:
-            out["total_cr"] = _to_crore(m.group(1), m.group(2))
-        elif pdf_path:
-            out["total_cr"] = _scaled(_total_from_tables(pdf_path, p["n"], r"^\s*total"),
-                                      _page_unit(p["text"]))
-        break
+    by_n = {p["n"]: p for p in pages}
+    for n in _note_pages(pages, sections, r"related\s+party\s+(?:transactions?|disclosures?)"):
+        text = by_n[n]["text"]
+        if not out["found"]:
+            out["found"], out["source_page"] = True, n
+        m = re.search(rf"(?:total|aggregate)[^\n]{{0,80}}related\s+party[^\n]{{0,80}}?{STRICT_AMOUNT_RE}", text, re.I) \
+            or re.search(rf"related\s+party\s+transactions?[^\n]{{0,120}}?(?:aggregat\w+|total\w*)[^\n]{{0,60}}?{STRICT_AMOUNT_RE}", text, re.I)
+        val = _to_crore(m.group(1), m.group(2)) if m else (
+            _scaled(_total_from_tables(
+                pdf_path, n, r"^\s*total",
+                # an RPT schedule names parties and transaction types; a page of generic
+                # "Total" rows does not qualify
+                must_contain=r"related\s+part|key\s+manage|holding\s+compan|subsidiar"),
+                _page_unit(text)) if pdf_path else None)
+        if val is not None:
+            out["total_cr"], out["source_page"] = val, n
+            break
     return out
 
 
 def extract_contingent_liabilities(pages: list[dict], sections: dict,
                                    pdf_path: str | None = None) -> dict:
-    r = _sec_range(sections, "financial_statements")
     out = {"found": False, "total_cr": None, "source_page": None}
-    if not r:
-        return out
-    for p in pages[r[0] - 1:r[1]]:
-        if not re.search(r"contingent\s+liabilit(?:y|ies)", p["text"], re.I):
-            continue
-        out["found"], out["source_page"] = True, p["n"]
-        m = re.search(rf"contingent\s+liabilit(?:y|ies)[^\n]{{0,200}}?{STRICT_AMOUNT_RE}", p["text"], re.I | re.S)
-        if m:
-            out["total_cr"] = _to_crore(m.group(1), m.group(2))
-        elif pdf_path:
-            out["total_cr"] = _scaled(
-                _total_from_tables(pdf_path, p["n"], r"^\s*total|contingent\s+liabilit"),
-                _page_unit(p["text"]))
-        break
+    by_n = {p["n"]: p for p in pages}
+    for n in _note_pages(pages, sections, r"contingent\s+liabilit(?:y|ies)"):
+        text = by_n[n]["text"]
+        if not out["found"]:
+            out["found"], out["source_page"] = True, n
+        m = re.search(rf"contingent\s+liabilit(?:y|ies)[^\n]{{0,200}}?{STRICT_AMOUNT_RE}", text, re.I | re.S)
+        val = _to_crore(m.group(1), m.group(2)) if m else (
+            _scaled(_total_from_tables(
+                pdf_path, n, r"^\s*total|contingent\s+liabilit",
+                # a contingent-liabilities schedule always itemises these; a page of generic
+                # "Total" rows does not qualify
+                must_contain=r"contingent|claims?\s+against|not\s+acknowledged|guarantee"),
+                _page_unit(text)) if pdf_path else None)
+        if val is not None:
+            out["total_cr"], out["source_page"] = val, n
+            break
     return out
 
 

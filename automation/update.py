@@ -427,6 +427,28 @@ def yahoo_session():
     return op, crumb
 
 
+# Yahoo reports a GICS-style taxonomy; the dataset (and the sector one-hots the
+# listing model is trained on) use the sheet's Indian-market taxonomy. Map onto the
+# sheet's vocabulary so Sector stays a single consistent column — mixing the two
+# silently produces sectors no model can encode.
+SECTOR_MAP = {
+    "consumer cyclical": "Consumer Discretionary",
+    "consumer defensive": "Consumer Discretionary",
+    "financial services": "Financials",
+    "basic materials": "Materials",
+    "communication services": "Technology",
+    "utilities": "Energy",
+    "industrials": "Industrials", "technology": "Technology", "healthcare": "Healthcare",
+    "real estate": "Real Estate", "energy": "Energy",
+}
+
+
+def canon_sector(s):
+    if not s:
+        return None
+    return SECTOR_MAP.get(str(s).strip().lower(), str(s).strip())
+
+
 def yahoo_sector(op, crumb, sym):
     u = (f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/{sym}"
          f"?modules=assetProfile&crumb={urllib.parse.quote(crumb)}")
@@ -438,7 +460,7 @@ def yahoo_sector(op, crumb, sym):
         raise
     res = (d.get("quoteSummary") or {}).get("result") or []
     prof = res[0].get("assetProfile", {}) if res else {}
-    return prof.get("sector") or None
+    return canon_sector(prof.get("sector"))
 
 
 def _space_text(html):

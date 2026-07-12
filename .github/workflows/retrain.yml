@@ -1,0 +1,48 @@
+name: Model retrain
+
+# The models improve because the data grows underneath them: every IPO that matures
+# adds a 6m/12m/24m label, and every IPO the daily job enriches adds features. This
+# harvests that weekly. A retrain is NOT assumed to be an improvement — retrain.py
+# only promotes a model that beats the incumbent on cross-validated MAE, and records
+# every attempt (promoted or not) in data/model_history.json.
+
+on:
+  schedule:
+    - cron: "0 4 * * 0"      # Sundays 09:30 IST, after the daily data refresh
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ipo-radar          # never race the daily data job
+  cancel-in-progress: false
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install --quiet -r automation/requirements.txt
+
+      - name: Retrain (promote only if it beats the incumbent)
+        run: python automation/retrain.py
+
+      - name: Commit promoted models
+        run: |
+          git config user.name "ipo-radar-bot"
+          git config user.email "actions@github.com"
+          git add backend/app/horizon_model.pkl backend/app/listing_model_signals.json data/model_history.json
+          if git diff --cached --quiet; then
+            echo "::notice::no model promoted this week — incumbent still the best"
+          else
+            git commit -m "model: weekly retrain $(date -u +%F)"
+            git push
+          fi

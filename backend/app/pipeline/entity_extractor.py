@@ -116,12 +116,49 @@ def extract_issue_details(pages: list[dict], sections: dict) -> dict:
     return out
 
 
+_PE_PAT = r"p\s*[/\\]?\s*e\b|\bpe\s*ratio\b|price\s*(?:/|to)\s*earning"
+_EPS_PAT = r"\beps\b|earning[s]?\s+per\s+share"
+
+
+def _is_data_row(row) -> bool:
+    """A peer row = a company name plus at least two numbers. Header fragments carry a
+    name-ish word but no numbers, which is what separates them."""
+    name = str(row[0] or "").strip()
+    if len(name) < 3 or not re.search(r"[A-Za-z]", name):
+        return False
+    return sum(1 for c in row[1:] if parse_number(c) is not None) >= 2
+
+
+def _fold_header(table) -> tuple[int, list[str]]:
+    """Peer tables in real prospectuses wrap their column headers over SEVERAL physical
+    rows, so table[0] alone is usually blank or a fragment:
+
+        row0: ['', '', '', 'Closing price', '', '', '']
+        row1: ['', 'Revenue', '', '', '', 'EPS', 'EPS']
+        row2: ['', '', 'Face value', 'on', '', '', '']
+        row3: ['Name of the', 'from', '', '', 'P/E', '(Basic) (₹', '(Diluted) (₹']
+
+    Reading only row 0 finds neither 'P/E' nor 'EPS' and the table is discarded — which is
+    why peer extraction was failing on ~95% of real documents while passing on tidy test
+    PDFs. Fold every row above the first data row into one header string per COLUMN."""
+    start = next((i for i, row in enumerate(table) if _is_data_row(row)), None)
+    if not start:                      # no data rows, or data on row 0 with no header
+        return 0, []
+    ncols = max(len(r) for r in table)
+    cols = []
+    for c in range(ncols):
+        cols.append(" ".join(str(table[r][c] or "") for r in range(start)
+                             if c < len(table[r])).strip().lower())
+    return start, cols
+
+
 def extract_peers(pdf_path: str, pages: list[dict], sections: dict,
                   company_name: str | None = None) -> list[dict]:
     """The 'Basis for Offer Price' chapter mandatorily carries a listed-peer
     comparison table (name / EPS / P/E / RoNW / NAV). The issuer's own row is
     tagged is_issuer so peer statistics exclude it (its EPS still feeds the
-    derived issue P/E for fixed-price documents)."""
+    derived issue P/E, which matters because many documents print the issuer's own
+    P/E as a '[●]' placeholder that is only filled at pricing)."""
     r = _sec_range(sections, "basis_for_offer_price")
     if not r:
         return []
@@ -129,7 +166,7 @@ def extract_peers(pdf_path: str, pages: list[dict], sections: dict,
                     if w and w not in {"limited", "ltd", "private", "pvt"}]
     peers: list[dict] = []
     with pdfplumber.open(pdf_path) as pdf:
-        for n in range(r[0], min(r[1] + 1, r[0] + 15)):
+        for n in range(r[0], min(r[1] + 1, r[0] + 30)):
             try:
                 tables = pdf.pages[n - 1].extract_tables()
             except Exception:
@@ -137,19 +174,20 @@ def extract_peers(pdf_path: str, pages: list[dict], sections: dict,
             for table in tables or []:
                 if not table or len(table) < 2:
                     continue
-                header = " ".join(str(c or "") for c in table[0]).lower()
-                if not (re.search(r"p\s*/\s*e|p/e ratio", header) and re.search(r"eps|earning", header)):
+                start, cols = _fold_header(table)
+                if not cols:
                     continue
-                cols = [str(c or "").lower() for c in table[0]]
+                header = " ".join(cols)
+                if not (re.search(_PE_PAT, header) and re.search(_EPS_PAT, header)):
+                    continue
 
                 def col_idx(pat: str) -> int | None:
-                    for i, c in enumerate(cols):
-                        if re.search(pat, c):
-                            return i
-                    return None
+                    return next((i for i, c in enumerate(cols) if re.search(pat, c)), None)
 
-                i_pe, i_eps, i_ronw = col_idx(r"p\s*/?\s*e"), col_idx(r"eps|earning"), col_idx(r"ronw|return on net")
-                for row in table[1:]:
+                # 'EPS (Basic)' and 'EPS (Diluted)' both appear; basic is the disclosed basis
+                i_eps = col_idx(r"eps.*basic|basic.*eps") or col_idx(_EPS_PAT)
+                i_pe, i_ronw = col_idx(_PE_PAT), col_idx(r"ronw|return on net")
+                for row in table[start:]:
                     name = str(row[0] or "").strip()
                     if not name or re.search(r"peer|company name|^name$|average|nifty", name, re.I):
                         continue
@@ -157,17 +195,76 @@ def extract_peers(pdf_path: str, pages: list[dict], sections: dict,
                     peer = {"name": clean, "source_page": n}
                     if issuer_words and all(w in clean.lower() for w in issuer_words):
                         peer["is_issuer"] = True
-                    if i_pe is not None and i_pe < len(row):
-                        peer["pe"] = parse_number(row[i_pe])
-                    if i_eps is not None and i_eps < len(row):
-                        peer["eps"] = parse_number(row[i_eps])
-                    if i_ronw is not None and i_ronw < len(row):
-                        peer["ronw"] = parse_number(row[i_ronw])
+                    for key, i in (("pe", i_pe), ("eps", i_eps), ("ronw", i_ronw)):
+                        if i is not None and i < len(row):
+                            peer[key] = parse_number(row[i])
                     if peer.get("pe") is not None or peer.get("eps") is not None:
                         peers.append(peer)
                 if peers:
                     return peers
     return peers
+
+
+def extract_issuer_eps(pdf_path: str, sections: dict) -> float | None:
+    """The issuer's weighted-average basic EPS, from the table SEBI mandates in
+    'Basis for Offer Price':
+
+        Particulars  | Basic EPS (₹) | Diluted EPS (₹) | Weight
+        Fiscal 2026  |     9.68      |      9.31       |   3
+        Fiscal 2025  |    11.03      |     10.81       |   2
+        Fiscal 2024  |     8.32      |      8.32       |   1
+
+    This is the canonical issuer EPS and we were not reading it. The old code could only
+    get the issuer's EPS if the issuer also appeared as a row in the PEER table, which is
+    a table about OTHER companies — it is often absent there (found in only 7 of 25 real
+    documents). Without an issuer EPS there is no issue P/E, and with no issue P/E the
+    whole valuation category (50 of 465 rubric points) never scores.
+    """
+    r = _sec_range(sections, "basis_for_offer_price")
+    if not r:
+        return None
+    with pdfplumber.open(pdf_path) as pdf:
+        for n in range(r[0], min(r[1] + 1, r[0] + 30)):
+            try:
+                tables = pdf.pages[n - 1].extract_tables()
+            except Exception:
+                continue
+            for table in tables or []:
+                if not table or len(table) < 2:
+                    continue
+                start, cols = _fold_header(table)
+                if not cols:
+                    continue
+                header = " ".join(cols)
+                # the EPS-by-year table: basic EPS and a weight column, and NO P/E column
+                # (that one is the peer table, handled above)
+                if not (re.search(r"\beps\b", header) and re.search(r"weight", header)):
+                    continue
+                i_eps = next((i for i, c in enumerate(cols)
+                              if re.search(r"basic", c) and re.search(r"eps", c)), None)
+                if i_eps is None:
+                    i_eps = next((i for i, c in enumerate(cols) if re.search(r"\beps\b", c)), None)
+                i_w = next((i for i, c in enumerate(cols) if re.search(r"weight", c)), None)
+                if i_eps is None or i_w is None:
+                    continue
+                num, den = 0.0, 0.0
+                for row in table[start:]:
+                    label = str(row[0] or "").lower()
+                    if "weighted" in label:          # the document's own average row
+                        v = parse_number(row[i_eps]) if i_eps < len(row) else None
+                        if v is not None and v != 0:
+                            return round(v, 2)
+                        continue
+                    if not re.search(r"fiscal|financial year|fy\s*\d|20\d\d", label):
+                        continue
+                    eps = parse_number(row[i_eps]) if i_eps < len(row) else None
+                    w = parse_number(row[i_w]) if i_w < len(row) else None
+                    if eps is not None and w:
+                        num += eps * w
+                        den += w
+                if den:
+                    return round(num / den, 2)
+    return None
 
 
 def extract_issuer_pe(pages: list[dict], sections: dict) -> tuple[float | None, int | None]:

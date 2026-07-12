@@ -52,7 +52,7 @@ def compute_ratios(fin: dict) -> dict:
 
 
 def valuation_call(issuer_pe: float | None, peers: list[dict], ratios: dict,
-                   price_high: float | None = None) -> dict:
+                   price_high: float | None = None, issuer_eps: float | None = None) -> dict:
     """Bands vs peer-median P/E: <0.7x undervalued · 0.7–1.1 fair ·
     1.1–1.5 expensive-side · >1.5 overvalued."""
     listed = [p for p in peers if not p.get("is_issuer")]
@@ -61,17 +61,23 @@ def valuation_call(issuer_pe: float | None, peers: list[dict], ratios: dict,
                  "call": "indeterminate", "reasoning": []}
 
     if issuer_pe is None and price_high:
-        # not printed as a single figure — derive from the issuer's own EPS row
-        # in the peer-comparison table (first row = the issuer's primary basis)
-        issuer_eps = next((p["eps"] for p in peers if p.get("is_issuer")
-                           and isinstance(p.get("eps"), (int, float)) and p["eps"] > 0), None)
-        if issuer_eps:
-            issuer_pe = round(price_high / issuer_eps, 2)
+        # Most documents do not print the issue P/E as one figure — a DRHP literally
+        # prints "[●]" because the price is not set yet — so derive it. Prefer the
+        # weighted-average EPS table the document is required to carry; fall back to the
+        # issuer's own row in the peer table, which is often simply absent.
+        eps = issuer_eps if (isinstance(issuer_eps, (int, float)) and issuer_eps > 0) else None
+        src = "the weighted-average EPS table"
+        if eps is None:
+            eps = next((p["eps"] for p in peers if p.get("is_issuer")
+                        and isinstance(p.get("eps"), (int, float)) and p["eps"] > 0), None)
+            src = "the peer-comparison table"
+        if eps:
+            issuer_pe = round(price_high / eps, 2)
             out["issuer_pe"] = issuer_pe
             out["issuer_pe_derived"] = True
             out["reasoning"].append(
-                f"Issue P/E derived as offer price ₹{price_high:g} ÷ issuer EPS ₹{issuer_eps:g} "
-                f"disclosed in the peer-comparison table (the document does not print it as one figure).")
+                f"Issue P/E derived as offer price ₹{price_high:g} ÷ issuer EPS ₹{eps:g} "
+                f"from {src} (the document does not print it as a single figure).")
 
     if not peer_pes:
         out["reasoning"].append("No usable listed-peer P/E table could be extracted; peer-relative valuation is indeterminate.")

@@ -104,8 +104,10 @@ def run_analysis(analysis_id: str) -> None:
         stage("valuation", 0.72)
         ctx["ratios"] = _safe(lambda: valuation.compute_ratios(ctx["financials"]), {"margin_series": []})
         issuer_pe, pe_page = _safe(lambda: ent.extract_issuer_pe(pages, sections), (None, None))
+        issuer_eps = _safe(lambda: ent.extract_issuer_eps(document.stored_path, sections), None)
         ctx["valuation"] = _safe(lambda: valuation.valuation_call(issuer_pe, issue.get("peers_json") or [],
-                                                                  ctx["ratios"], price_high=issue.get("price_band_high")),
+                                                                  ctx["ratios"], price_high=issue.get("price_band_high"),
+                                                                  issuer_eps=issuer_eps),
                                  {"call": "indeterminate", "reasoning": []})
         ctx["valuation"]["issuer_pe_page"] = pe_page
 

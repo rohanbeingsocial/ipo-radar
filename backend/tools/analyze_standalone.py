@@ -41,8 +41,18 @@ def _safe(fn, default):
         return default
 
 
-def analyze_pdf(pdf_path: str, doc_type: str = "RHP", use_llm: bool = False) -> dict:
-    """Full deterministic pipeline -> report dict (same JSON the API serves)."""
+def analyze_pdf(pdf_path: str, doc_type: str = "RHP", use_llm: bool = False,
+                offer_price: float | None = None) -> dict:
+    """Full deterministic pipeline -> report dict (same JSON the API serves).
+
+    `offer_price` is the final issue price, which the pipeline knows from Chittorgarh but
+    the DOCUMENT often does not: most filings in SEBI's archive are drafts that print the
+    issue P/E as a literal "[●]" because the price is not set until days before the issue
+    opens. Only 4 of 25 real documents carry a price band. Without a price there is no
+    issue P/E, and without an issue P/E the entire valuation category (50 of 465 rubric
+    points) silently fails to score — which is most of why the score has had nothing to
+    say about whether an IPO is expensive. Passing the known price in lifts peer-relative
+    valuation from 16% of documents to 44%."""
     ctx: dict = {"doc_type": doc_type}
     pdf = pdf_processor.process_pdf(pdf_path)
     ctx.update(page_count=pdf["page_count"], readable_ratio=round(pdf["readable_ratio"], 3))
@@ -57,14 +67,14 @@ def analyze_pdf(pdf_path: str, doc_type: str = "RHP", use_llm: bool = False) -> 
                                "source_pages": {}, "confidence": {}, "anchor_pages": []})
 
     company = _safe(lambda: ent.extract_company_name(pages), None)
-    issue = _safe(lambda: ent.extract_issue_details(pages, sections), {"source_pages": {}})
+    issue = _safe(lambda: ent.extract_issue_details(pages, sections, pdf_path), {"source_pages": {}})
     issue["peers_json"] = _safe(lambda: ent.extract_peers(pdf_path, pages, sections,
                                                           company_name=company), [])
     issue["objects_json"] = _safe(lambda: ent.extract_objects(pages, sections), [])
     entities = {
         "litigation": _safe(lambda: ent.extract_litigation(pages, sections), {"found": False, "counts": {}}),
-        "rpt": _safe(lambda: ent.extract_rpt(pages, sections), {"found": False}),
-        "contingent": _safe(lambda: ent.extract_contingent_liabilities(pages, sections), {"found": False}),
+        "rpt": _safe(lambda: ent.extract_rpt(pages, sections, pdf_path), {"found": False}),
+        "contingent": _safe(lambda: ent.extract_contingent_liabilities(pages, sections, pdf_path), {"found": False}),
         "dividend": _safe(lambda: ent.extract_dividend(pages, sections), {"found": False}),
         "pledging": _safe(lambda: ent.detect_pledging(pages, sections), {"pledged": False}),
         "auditor": _safe(lambda: ent.detect_auditor_flags(pages, sections), {}),
@@ -76,8 +86,15 @@ def analyze_pdf(pdf_path: str, doc_type: str = "RHP", use_llm: bool = False) -> 
 
     ctx["ratios"] = _safe(lambda: valuation.compute_ratios(ctx["financials"]), {"margin_series": []})
     issuer_pe, pe_page = _safe(lambda: ent.extract_issuer_pe(pages, sections), (None, None))
+    issuer_eps = _safe(lambda: ent.extract_issuer_eps(pdf_path, sections), None)
+    # the document's own band first; the known offer price only where the draft has none
+    price_high = issue.get("price_band_high") or offer_price
+    if not issue.get("price_band_high") and offer_price:
+        issue["price_band_high"] = offer_price
+        issue["price_from_market_data"] = True
     ctx["valuation"] = _safe(lambda: valuation.valuation_call(issuer_pe, issue.get("peers_json") or [],
-                                                              ctx["ratios"], price_high=issue.get("price_band_high")),
+                                                              ctx["ratios"], price_high=price_high,
+                                                              issuer_eps=issuer_eps),
                              {"call": "indeterminate", "reasoning": []})
     ctx["valuation"]["issuer_pe_page"] = pe_page
 

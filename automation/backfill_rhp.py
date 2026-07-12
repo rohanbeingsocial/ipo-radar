@@ -65,9 +65,13 @@ def sebi_archive(pages):
     return entries
 
 
-def queue():
+def queue(reanalyze=False):
     """IPOs with no report, ordered by how much they can teach us: a matured 24m label
-    beats a 12m, beats a 6m, beats a listing gain, beats nothing."""
+    beats a 12m, beats a 6m, beats a listing gain, beats nothing.
+
+    With reanalyze=True, take the IPOs that DO have a report instead — used after an
+    extractor fix, because the stored JSON is the analyzer's OUTPUT, not the prospectus,
+    so a fix only reaches old reports by running the document through again."""
     issue = pd.read_csv(DATA / "cg_issue.csv", dtype={"cg_ipo_id": str})
     issue.columns = [c.split("<")[0].strip() for c in issue.columns]
     outc = pd.read_csv(DATA / "ipo_outcomes.csv", dtype={"cg_ipo_id": str}).set_index("cg_ipo_id")
@@ -76,16 +80,18 @@ def queue():
     rows = []
     for _, r in issue.iterrows():
         cid = r["cg_ipo_id"]
-        if (REPORTS / f"{cid}.json").exists():
+        if (REPORTS / f"{cid}.json").exists() != reanalyze:
             continue
         o = outc.loc[cid] if cid in outc.index else None
         has = lambda k: o is not None and pd.notna(o.get(k))   # noqa: E731
         weight = (3 if has("ret_24m") else 2 if has("ret_12m") else
                   1 if has("ret_6m") else 0)
-        if weight == 0:
+        if weight == 0 and not reanalyze:
             continue                       # no outcome => cannot test the score against it
         rows.append({"cg_ipo_id": cid, "company": r["company"], "open_dt": r["open_dt"],
-                     "weight": weight})
+                     "weight": weight,
+                     # the price the document usually does NOT contain (drafts print "[●]")
+                     "offer_price": r.get("Issue Price (Rs.)")})
     q = pd.DataFrame(rows)
     if q.empty:
         return q
@@ -111,11 +117,14 @@ def main():
     ap.add_argument("--limit", type=int, default=150)
     ap.add_argument("--pages", type=int, default=50)
     ap.add_argument("--list", action="store_true")
+    ap.add_argument("--reanalyze", action="store_true",
+                    help="re-run prospectuses that already have a report (after an extractor fix)")
     a = ap.parse_args()
 
-    q = queue()
+    q = queue(reanalyze=a.reanalyze)
     have = len(list(REPORTS.glob("*.json")))
-    print(f"reports on disk: {have}   missing-with-an-outcome: {len(q)}")
+    print(f"reports on disk: {have}   "
+          f"{'to RE-ANALYZE' if a.reanalyze else 'missing-with-an-outcome'}: {len(q)}")
     if q.empty:
         return
     print(q["weight"].value_counts().rename({3: "has 24m", 2: "has 12m", 1: "has 6m"}).to_string())
@@ -146,7 +155,8 @@ def main():
             continue
         cands.sort(key=lambda e: abs((e["date"] - r["open_dt"]).days))
         try:
-            fetch_and_analyze(cands[0]["url"], REPORTS / f"{r['cg_ipo_id']}.json")
+            fetch_and_analyze(cands[0]["url"], REPORTS / f"{r['cg_ipo_id']}.json",
+                              offer_price=r.get("offer_price"))
             done += 1
             rate = (time.time() - t0) / done
             print(f"  [{done}/{a.limit}] {r['company'][:44]:46} "

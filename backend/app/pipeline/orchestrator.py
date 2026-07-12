@@ -78,14 +78,14 @@ def run_analysis(analysis_id: str) -> None:
         # 4 ─ Entities
         stage("entity_extraction", 0.5)
         company = _safe(lambda: ent.extract_company_name(pages), None)
-        issue = _safe(lambda: ent.extract_issue_details(pages, sections), {"source_pages": {}})
+        issue = _safe(lambda: ent.extract_issue_details(pages, sections, document.stored_path), {"source_pages": {}})
         issue["peers_json"] = _safe(lambda: ent.extract_peers(document.stored_path, pages, sections,
                                                               company_name=company), [])
         issue["objects_json"] = _safe(lambda: ent.extract_objects(pages, sections), [])
         entities = {
             "litigation": _safe(lambda: ent.extract_litigation(pages, sections), {"found": False, "counts": {}}),
-            "rpt": _safe(lambda: ent.extract_rpt(pages, sections), {"found": False}),
-            "contingent": _safe(lambda: ent.extract_contingent_liabilities(pages, sections), {"found": False}),
+            "rpt": _safe(lambda: ent.extract_rpt(pages, sections, document.stored_path), {"found": False}),
+            "contingent": _safe(lambda: ent.extract_contingent_liabilities(pages, sections, document.stored_path), {"found": False}),
             "dividend": _safe(lambda: ent.extract_dividend(pages, sections), {"found": False}),
             "pledging": _safe(lambda: ent.detect_pledging(pages, sections), {"pledged": False}),
             "auditor": _safe(lambda: ent.detect_auditor_flags(pages, sections), {}),

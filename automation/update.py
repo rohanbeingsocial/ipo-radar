@@ -336,7 +336,7 @@ PDF_RES = [re.compile(r'href=[\'"](https://www\.sebi\.gov\.in/sebi_data/[^\'"]+\
            re.compile(r'href=[\'"]([^\'"]+\.pdf)[\'"]', re.I)]
 
 
-def fetch_and_analyze(entry_url, out_json: Path) -> bool:
+def fetch_and_analyze(entry_url, out_json: Path, offer_price=None) -> bool:
     detail = http(entry_url, referer="https://www.sebi.gov.in/").decode("utf-8", "replace")
     pdf_url = None
     for rx in PDF_RES:
@@ -354,7 +354,10 @@ def fetch_and_analyze(entry_url, out_json: Path) -> bool:
         if r.returncode != 0 or not dest.exists() or dest.stat().st_size < 100_000 \
                 or not dest.read_bytes()[:5].startswith(b"%PDF"):
             raise RuntimeError("bad pdf download")
-        rep = analyze_pdf(str(dest))
+        # SEBI's archive is mostly DRAFT prospectuses: the price is not set at filing, so
+        # the document prints the issue P/E as "[●]". We know the real price from
+        # Chittorgarh, so hand it in — otherwise the whole valuation category never scores.
+        rep = analyze_pdf(str(dest), offer_price=num(offer_price) if offer_price is not None else None)
         out_json.write_text(json.dumps(compact_report(rep), ensure_ascii=False), encoding="utf-8")
     return True
 
@@ -386,7 +389,8 @@ def ensure_rhp_reports():
             continue
         cands.sort(key=lambda e: abs((e["date"] - (r["open_dt"] or e["date"])).days))
         try:
-            fetch_and_analyze(cands[0]["url"], REPORTS / f"{r['cg_ipo_id']}.json")
+            fetch_and_analyze(cands[0]["url"], REPORTS / f"{r['cg_ipo_id']}.json",
+                              offer_price=r.get("Issue Price (Rs.)"))
             done += 1
             print(f"  analyzed RHP: {r['company'][:45]}")
         except Exception as e:

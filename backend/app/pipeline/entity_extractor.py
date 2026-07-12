@@ -53,7 +53,8 @@ def extract_company_name(pages: list[dict]) -> str | None:
     return m.group(1).title().strip() if m else None
 
 
-def extract_issue_details(pages: list[dict], sections: dict) -> dict:
+def extract_issue_details(pages: list[dict], sections: dict,
+                          pdf_path: str | None = None) -> dict:
     out: dict = {"source_pages": {}}
     cover_range = (1, min(8, len(pages)))
     ranges = [cover_range]
@@ -113,7 +114,54 @@ def extract_issue_details(pages: list[dict], sections: dict) -> dict:
     if m:
         out["post_issue_promoter_pct"] = parse_number(m[0].group(1))
         out["source_pages"]["post_issue_promoter_pct"] = m[1]
+
+    # The shareholding is a Pre-Offer | Post-Offer TABLE, so the prose regex above finds it
+    # in ~2% of documents. Fall back to the table. Note a draft prints the post-offer column
+    # as "[●]" (the final share count isn't known), so this can still legitimately come back
+    # empty — but for a real RHP it is there, and it is the number that says how much of the
+    # company the promoter is keeping.
+    if out.get("post_issue_promoter_pct") is None and pdf_path and cap:
+        got = _promoter_holding_from_tables(pdf_path, cap)
+        if got:
+            out["post_issue_promoter_pct"] = got[0]
+            out["source_pages"]["post_issue_promoter_pct"] = got[1]
     return out
+
+
+def _promoter_holding_from_tables(pdf_path: str, cap: tuple[int, int]) -> tuple[float, int] | None:
+    """Post-offer promoter/promoter-group % from the capital-structure shareholding table."""
+    try:
+        pdf = pdfplumber.open(pdf_path)
+    except Exception:                                    # noqa: BLE001
+        return None
+    with pdf:
+        for n in range(cap[0], min(cap[1] + 1, cap[0] + 25)):
+            try:
+                tables = pdf.pages[n - 1].extract_tables() or []
+            except Exception:                            # noqa: BLE001
+                continue
+            for table in tables:
+                start, cols = _fold_header(table)
+                if not cols:
+                    continue
+                header = " ".join(cols)
+                if not re.search(r"post[\s-]?(?:offer|issue)", header):
+                    continue
+                # the % column on the POST side — take the last '%' column, since the table
+                # runs [pre: shares, %] then [post: shares, %]
+                pct_cols = [i for i, c in enumerate(cols) if re.search(r"%|percentage", c)]
+                if not pct_cols:
+                    continue
+                i_pct = pct_cols[-1]
+                for row in table[start:]:
+                    label = str(row[0] or "")
+                    if not re.search(r"promoter", label, re.I) or re.search(r"public|non[- ]promoter", label, re.I):
+                        continue
+                    if i_pct < len(row):
+                        v = parse_number(row[i_pct])
+                        if v is not None and 0 < v <= 100:
+                            return v, n
+    return None
 
 
 _PE_PAT = r"p\s*[/\\]?\s*e\b|\bpe\s*ratio\b|price\s*(?:/|to)\s*earning"
@@ -324,33 +372,88 @@ def extract_litigation(pages: list[dict], sections: dict) -> dict:
     return out
 
 
-def extract_rpt(pages: list[dict], sections: dict) -> dict:
+_UNIT_RE = re.compile(r"(?:₹|rs\.?|inr)?\s*(?:in\s+)?(lakhs?|lacs|crores?|millions?|billions?)", re.I)
+
+
+def _page_unit(text: str) -> str | None:
+    """Financial notes state their unit once, in the table caption ('₹ in lakhs'), never in
+    the cells. Reading a cell without it is how you turn ₹500 lakh into ₹500 crore."""
+    m = _UNIT_RE.search(text[:1500]) or _UNIT_RE.search(text)
+    return m.group(1).lower() if m else None
+
+
+def _total_from_tables(pdf_path: str, page_no: int, label_re: str) -> float | None:
+    """Pull the 'Total' row out of a table on a page, returning its first plausible number.
+
+    Contingent liabilities and related-party aggregates live in TABLES, not in prose. The
+    old extractors regexed the page text for '<phrase> ... ₹123 crore' on one line, which
+    essentially never occurs in a restated financial note — which is exactly why both rules
+    scored on 0% of documents."""
+    try:
+        with pdfplumber.open(pdf_path) as pdf:
+            tables = pdf.pages[page_no - 1].extract_tables() or []
+    except Exception:                                    # noqa: BLE001
+        return None
+    for table in tables:
+        for row in table or []:
+            if not row:
+                continue
+            if not re.search(label_re, str(row[0] or ""), re.I):
+                continue
+            for cell in row[1:]:
+                v = parse_number(cell)
+                if v is not None and v > 0:
+                    return v
+    return None
+
+
+def _scaled(val: float | None, unit: str | None) -> float | None:
+    if val is None:
+        return None
+    f = {"lakh": 0.01, "lakhs": 0.01, "lac": 0.01, "lacs": 0.01,
+         "crore": 1.0, "crores": 1.0, "million": 0.1, "millions": 0.1,
+         "billion": 100.0, "billions": 100.0}.get((unit or "").lower())
+    return round(val * f, 2) if f else None      # unknown unit => refuse to guess
+
+
+def extract_rpt(pages: list[dict], sections: dict, pdf_path: str | None = None) -> dict:
     r = _sec_range(sections, "financial_statements")
     out = {"found": False, "total_cr": None, "source_page": None}
     if not r:
         return out
     for p in pages[r[0] - 1:r[1]]:
-        if re.search(r"related\s+party\s+(?:transactions?|disclosures?)", p["text"][:2000], re.I):
-            out["found"], out["source_page"] = True, p["n"]
-            m = re.search(rf"(?:total|aggregate)[^\n]{{0,80}}related\s+party[^\n]{{0,80}}?{STRICT_AMOUNT_RE}", p["text"], re.I) \
-                or re.search(rf"related\s+party\s+transactions?[^\n]{{0,120}}?(?:aggregat\w+|total\w*)[^\n]{{0,60}}?{STRICT_AMOUNT_RE}", p["text"], re.I)
-            if m:
-                out["total_cr"] = _to_crore(m.group(1), m.group(2))
-            break
+        if not re.search(r"related\s+party\s+(?:transactions?|disclosures?)", p["text"][:2000], re.I):
+            continue
+        out["found"], out["source_page"] = True, p["n"]
+        m = re.search(rf"(?:total|aggregate)[^\n]{{0,80}}related\s+party[^\n]{{0,80}}?{STRICT_AMOUNT_RE}", p["text"], re.I) \
+            or re.search(rf"related\s+party\s+transactions?[^\n]{{0,120}}?(?:aggregat\w+|total\w*)[^\n]{{0,60}}?{STRICT_AMOUNT_RE}", p["text"], re.I)
+        if m:
+            out["total_cr"] = _to_crore(m.group(1), m.group(2))
+        elif pdf_path:
+            out["total_cr"] = _scaled(_total_from_tables(pdf_path, p["n"], r"^\s*total"),
+                                      _page_unit(p["text"]))
+        break
     return out
 
 
-def extract_contingent_liabilities(pages: list[dict], sections: dict) -> dict:
+def extract_contingent_liabilities(pages: list[dict], sections: dict,
+                                   pdf_path: str | None = None) -> dict:
     r = _sec_range(sections, "financial_statements")
     out = {"found": False, "total_cr": None, "source_page": None}
     if not r:
         return out
     for p in pages[r[0] - 1:r[1]]:
+        if not re.search(r"contingent\s+liabilit(?:y|ies)", p["text"], re.I):
+            continue
+        out["found"], out["source_page"] = True, p["n"]
         m = re.search(rf"contingent\s+liabilit(?:y|ies)[^\n]{{0,200}}?{STRICT_AMOUNT_RE}", p["text"], re.I | re.S)
         if m:
-            out["found"], out["source_page"] = True, p["n"]
             out["total_cr"] = _to_crore(m.group(1), m.group(2))
-            break
+        elif pdf_path:
+            out["total_cr"] = _scaled(
+                _total_from_tables(pdf_path, p["n"], r"^\s*total|contingent\s+liabilit"),
+                _page_unit(p["text"]))
+        break
     return out
 
 

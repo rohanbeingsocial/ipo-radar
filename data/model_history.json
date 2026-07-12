@@ -24,5 +24,31 @@
    },
    "promoted": true
   }
+ },
+ {
+  "at": "2026-07-12T10:53:57.913782+00:00",
+  "rows": 927,
+  "signals": {
+   "n": 220,
+   "cv_mae": 53.3,
+   "baseline_mae": 50.3,
+   "cv_direction_acc": 0.641,
+   "incumbent_mae": 51.8,
+   "promoted": false
+  },
+  "horizon": {
+   "mean_mae": 72.3,
+   "incumbent_mean_mae": 72.3,
+   "n": {
+    "ret_6m": 724,
+    "ret_12m": 650,
+    "ret_24m": 569,
+    "bottom_12m_pct": 669,
+    "sessions_to_bottom": 669,
+    "peak_24m_pct": 669,
+    "sessions_to_peak": 669
+   },
+   "promoted": false
+  }
  }
 ]

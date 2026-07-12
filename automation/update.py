@@ -22,6 +22,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta
@@ -48,6 +49,9 @@ SEBI_AJAX = "https://www.sebi.gov.in/sebiweb/ajax/home/getnewslistinfo.jsp"
 NOW = pd.Timestamp.now().normalize()
 SITE_WINDOW_DAYS = 550          # how far back the dashboard looks
 MAX_NEW_RHP_PER_RUN = 6         # keep CI runs bounded
+MAX_NEW_DETAILS_PER_RUN = 40    # Chittorgarh detail-page / Yahoo sector fetches per run
+DETAILS_WINDOW_DAYS = 1825      # Chittorgarh only carries the KPI + reservation block
+                                # for recent IPOs (~2021 on); older pages have neither
 DATE_FMT = "%d-%b-%Y"
 
 
@@ -297,6 +301,16 @@ def compact_report(rep: dict) -> dict:
     cases = rep.get("cases") or {}
     keep["cases"] = {side: [{"text": c.get("text")} for c in (cases.get(side) or [])[:3]]
                      for side in ("bull", "bear")}
+    # retain the latest-FY ratios the analyzer already computes (financial_extractor
+    # -> valuation.compute_ratios) so the dataset/dashboard can surface fundamentals
+    # without re-parsing the PDF. Ratios are fractions here; consumers scale to %.
+    ratios = (rep.get("financials") or {}).get("ratios") or {}
+    fund = {"pat_margin": ratios.get("net_margin"), "ebitda_margin": ratios.get("operating_margin"),
+            "roe": ratios.get("roe"), "roce": ratios.get("roce"),
+            "debt_equity": ratios.get("debt_equity"),
+            "post_ipo_pe": (rep.get("valuation") or {}).get("issuer_pe")}
+    if any(v is not None for v in fund.values()):
+        keep["fundamentals"] = fund
     return keep
 
 
@@ -378,6 +392,252 @@ def ensure_rhp_reports():
         except Exception as e:
             print(f"  RHP failed {r['company'][:40]}: {e}")
     print(f"  rhp reports: {done} new")
+
+
+# ─────────────── 3b. enrichment: sector · reservation · GMP ───────────────
+# Sector (Yahoo assetProfile) and the QIB/Retail/NII reservation split
+# (Chittorgarh detail page) are per-IPO facts that don't change once known, so
+# they're fetched once and cached in data/cg_details.csv. GMP is live-only
+# (grey market, third-party) and only meaningful while an IPO is open, so it's
+# refreshed every run into data/cg_gmp.csv for currently-open issues.
+
+DETAILS_CSV = DATA / "cg_details.csv"
+GMP_CSV = DATA / "cg_gmp.csv"
+
+
+def sid_col(s):
+    """Stable string ids. A single NaN would make the column float64 and turn every
+    id into "2624.0", which would silently duplicate every cached row."""
+    return s.map(lambda v: "" if pd.isna(v)
+                 else str(int(float(v))) if str(v).replace(".", "").isdigit() else str(v))
+
+
+def yahoo_session():
+    """Cookie + crumb handshake; quoteSummary now 401s without it."""
+    import http.cookiejar
+    op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+    op.addheaders = [("User-Agent", UA["User-Agent"])]
+    for seed in ("https://fc.yahoo.com/", "https://finance.yahoo.com/"):
+        try:
+            op.open(seed, timeout=30)
+            break
+        except Exception:
+            continue
+    crumb = op.open("https://query1.finance.yahoo.com/v1/test/getcrumb", timeout=30).read().decode()
+    return op, crumb
+
+
+def yahoo_sector(op, crumb, sym):
+    u = (f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/{sym}"
+         f"?modules=assetProfile&crumb={urllib.parse.quote(crumb)}")
+    try:
+        d = json.loads(op.open(u, timeout=30).read())
+    except urllib.error.HTTPError as e:
+        if e.code in (401, 404):     # bad/renamed symbol or crumb gone stale
+            return None
+        raise
+    res = (d.get("quoteSummary") or {}).get("result") or []
+    prof = res[0].get("assetProfile", {}) if res else {}
+    return prof.get("sector") or None
+
+
+def _space_text(html):
+    """Strip tags to spaces (not empties) so adjacent table cells stay separated."""
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html)).strip()
+
+
+def parse_reservation(html):
+    """QIB/Retail/NII reserved shares from the detail page. Chittorgarh serves this
+    two ways depending on the IPO: a rendered issue-structure table ("QIB Shares
+    Offered  Not more than 50%") and an embedded JSON blob
+    ("qib_percentage_temp":"Not more than 50%"), so try both.
+    Anchor is the regulatory 60% of the QIB portion (matches the source sheet)."""
+    txt = _space_text(html)
+
+    def pct(*patterns):
+        for p in patterns:
+            m = re.search(p, txt, re.I)
+            if not m:
+                continue
+            try:
+                v = round(float(m.group(1)), 2)
+            except ValueError:
+                continue
+            if 0 < v <= 100:
+                return v
+        return None
+
+    # the shares_offered_* keys carry the actual reserved split (QIB 75 / NII 15 /
+    # RII 10); the "Not more/less than" wording is the regulatory cap and is only a
+    # fallback. Retail is keyed "rii".
+    qib = pct(r"shares_offered_qib_percentage[^%]{0,60}?([\d.]+)\s*%",
+              r"QIB\b[^%]{0,40}?Not (?:more|less) than\s+([\d.]+)\s*%",
+              r"qib_percentage[^%]{0,60}?([\d.]+)\s*%")
+    retail = pct(r"shares_offered_rii_percentage[^%]{0,60}?([\d.]+)\s*%",
+                 r"Retail\b[^%]{0,40}?Not (?:more|less) than\s+([\d.]+)\s*%",
+                 r"(?:retail|rii)_percentage[^%]{0,60}?([\d.]+)\s*%")
+    nii = pct(r"shares_offered_nii_percentage[^%]{0,60}?([\d.]+)\s*%",
+              r"\bNII\b[^%]{0,40}?Not (?:more|less) than\s+([\d.]+)\s*%",
+              r"(?<![a-z])nii_percentage[^%]{0,60}?([\d.]+)\s*%")
+    anchor = round(qib * 0.6, 2) if qib is not None else None
+    return {"pct_qib": qib, "pct_retail": retail, "pct_nii": nii, "pct_anchor": anchor}
+
+
+KPI_ROWS = [("kpi_roe", r"\bROE\b"), ("kpi_roce", r"\bROCE\b"),
+            ("kpi_debt_equity", r"Debt\s*/\s*Equity"), ("kpi_pat_margin", r"PAT\s+Margin"),
+            ("kpi_ebitda_margin", r"EBITDA\s+Margin"), ("kpi_pb", r"Price to Book Value")]
+
+
+def parse_kpis(html):
+    """Chittorgarh's published KPI block — the same figures the source sheet was
+    filled from by hand. Already in sheet units (ROE/margins as %, D-E and P/B as
+    ratios), so no scaling. Multi-year rows list latest first; the Pre-IPO/Post-IPO
+    pair lists pre then post, so P/E takes the second figure."""
+    txt = _space_text(html)
+    i = txt.find("Key Performance Indicator")
+    if i < 0:
+        return {}
+    blk = txt[i:i + 800]
+    out = {}
+    for key, pat in KPI_ROWS:
+        m = re.search(pat + r"\s+(-?[\d.]+)\s*%?", blk, re.I)
+        if m:
+            try:
+                out[key] = round(float(m.group(1)), 2)
+            except ValueError:
+                pass
+    m = re.search(r"P\s*/\s*E\s*\(x\)\s+(-?[\d.]+)(?:\s+(-?[\d.]+))?", blk, re.I)
+    if m:
+        try:
+            out["kpi_post_ipo_pe"] = round(float(m.group(2) or m.group(1)), 2)
+        except ValueError:
+            pass
+    return out
+
+
+def refresh_details():
+    issue = pd.read_csv(DATA / "cg_issue.csv")
+    issue["cg_ipo_id"] = sid_col(issue["cg_ipo_id"])
+    lst = pd.read_csv(DATA / "cg_listing.csv")
+    lst.columns = [c.split("<")[0].strip() for c in lst.columns]
+    lst["cg_ipo_id"] = sid_col(lst["cg_ipo_id"])
+    sym_by = {r["cg_ipo_id"]: str(r.get("NSE Symbol") or "").strip()
+              for _, r in lst.iterrows()}
+
+    cache = pd.read_csv(DETAILS_CSV, dtype={"cg_ipo_id": str}) if DETAILS_CSV.exists() \
+        else pd.DataFrame(columns=["cg_ipo_id"])
+    if len(cache):
+        cache["cg_ipo_id"] = sid_col(cache["cg_ipo_id"])
+    have = {r["cg_ipo_id"]: dict(r) for _, r in cache.iterrows()}
+    issue["open_dt"] = pdate(issue["Opening Date"])
+    window = issue[issue["open_dt"] >= NOW - timedelta(days=DETAILS_WINDOW_DAYS)] \
+        .sort_values("open_dt", ascending=False)
+
+    ysess = None
+    done = 0
+    for _, r in window.iterrows():
+        cid = r["cg_ipo_id"]
+        rec = have.get(cid, {"cg_ipo_id": cid})
+        need_res = not any(rec.get(k) not in (None, "") and pd.notna(rec.get(k))
+                           for k in ("pct_qib", "pct_retail", "kpi_roe", "kpi_pb"))
+        need_sec = rec.get("sector") in (None, "") or pd.isna(rec.get("sector"))
+        if not (need_res or need_sec):
+            continue
+        # An upcoming IPO has no reservation table yet and an unlisted one has no
+        # Yahoo profile, so a miss is normal. Retry those weekly rather than every
+        # run, or they'd eat the whole per-run budget and new IPOs would never
+        # get fetched.
+        last = rec.get("details_fetched")
+        if last not in (None, "") and pd.notna(last):
+            try:
+                if (NOW - pd.to_datetime(last)).days < 7:
+                    continue
+            except (ValueError, TypeError):
+                pass
+        if done >= MAX_NEW_DETAILS_PER_RUN:
+            break
+        if need_res and str(r.get("detail_url") or "").startswith("http"):
+            try:
+                html = http(r["detail_url"], referer="https://www.chittorgarh.com/").decode("utf-8", "replace")
+                rec.update(parse_reservation(html))
+                rec.update(parse_kpis(html))
+            except Exception as e:
+                print(f"  detail {r['company'][:32]}: {e}")
+        if need_sec:
+            sym = sym_by.get(cid, "")
+            if sym and sym.lower() not in ("nan", "na", "-", ""):
+                try:
+                    if ysess is None:
+                        ysess = yahoo_session()
+                    rec["sector"] = yahoo_sector(ysess[0], ysess[1], sym.upper() + ".NS")
+                except Exception as e:
+                    print(f"  sector {r['company'][:32]}: {e}")
+        rec["details_fetched"] = str(NOW.date())
+        have[cid] = rec
+        done += 1
+        time.sleep(0.4)
+    pd.DataFrame(have.values()).to_csv(DETAILS_CSV, index=False)
+    print(f"  details: {done} fetched, {len(have)} cached")
+
+
+def parse_ipowatch(html):
+    """Mainboard IPO -> GMP (₹) from the ipowatch GMP table."""
+    out = {}
+    for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.S):
+        txt = _space_text(tr)
+        if "Mainboard" not in txt:
+            continue
+        m = re.match(r"(.+?)\s+₹\s*([\d,]+)", txt)
+        if not m:
+            continue
+        name = re.sub(r"\s+IPO$", "", m.group(1)).strip()
+        gmp = num(m.group(2))
+        key = " ".join(norm_tokens(name))
+        if key and np.isfinite(gmp):
+            out[key] = gmp
+    return out
+
+
+def refresh_gmp():
+    issue = pd.read_csv(DATA / "cg_issue.csv")
+    issue["cg_ipo_id"] = sid_col(issue["cg_ipo_id"])
+    issue["open_dt"] = pdate(issue["Opening Date"])
+    issue["close_dt"] = pdate(issue["Closing Date"])
+    # "open" = subscription window is current or imminent (GMP only exists then)
+    live = issue[(issue["open_dt"] <= NOW + timedelta(days=10))
+                 & (issue["close_dt"] >= NOW - timedelta(days=3))]
+    if live.empty:
+        print("  gmp: no open IPOs")
+        return
+    try:
+        html = http("https://ipowatch.in/ipo-grey-market-premium-latest-ipo-gmp/",
+                    referer="https://ipowatch.in/").decode("utf-8", "replace")
+        table = parse_ipowatch(html)
+    except Exception as e:
+        print(f"  gmp source failed ({e}); skipping")
+        return
+    cache = pd.read_csv(GMP_CSV, dtype={"cg_ipo_id": str}) if GMP_CSV.exists() \
+        else pd.DataFrame(columns=["cg_ipo_id"])
+    have = {r["cg_ipo_id"]: dict(r) for _, r in cache.iterrows()}
+    hits = 0
+    for _, r in live.iterrows():
+        toks = set(norm_tokens(r["company"]))
+        best = None
+        for key, gmp in table.items():
+            kt = set(key.split())
+            if kt and (kt <= toks or toks <= kt or len(kt & toks) >= max(2, len(kt) - 1)):
+                best = gmp
+                break
+        if best is None:
+            continue
+        offer = num(r.get("Issue Price (Rs.)"))
+        have[r["cg_ipo_id"]] = {
+            "cg_ipo_id": r["cg_ipo_id"], "company": r["company"], "gmp": best,
+            "estimated_price": round(offer + best, 2) if np.isfinite(offer) else None,
+            "gmp_fetched": str(NOW.date())}
+        hits += 1
+    pd.DataFrame(have.values()).to_csv(GMP_CSV, index=False)
+    print(f"  gmp: {hits} open IPOs matched, {len(have)} cached")
 
 
 # ─────────────────────────── 4. site payload ───────────────────────────
@@ -540,6 +800,16 @@ def main():
             ensure_rhp_reports()
         except Exception as e:
             print(f"  FAILED: {e}")
+    print("3b) sector / reservation")
+    try:
+        refresh_details()
+    except Exception as e:
+        print(f"  FAILED: {e}")
+    print("3c) grey-market premium")
+    try:
+        refresh_gmp()
+    except Exception as e:
+        print(f"  FAILED: {e}")
     print("4) site payload")
     build_site()
     print("5) excel rebuild")

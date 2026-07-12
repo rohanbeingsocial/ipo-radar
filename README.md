@@ -20,6 +20,14 @@ IPO's RHP in SEBI's Red-Herring filings archive, runs the full deterministic ana
 pipeline on it (no server, no keys — `backend/tools/analyze_standalone.py`), refreshes
 real price outcomes from Yahoo, recomputes entry/exit + 6m/12m/24m horizon forecasts,
 rebuilds `ipodata/finalipodata_expanded_20yr.xlsx`, and commits the results.
+The analysis columns are sourced automatically too: **ROE / ROCE / D-E / PAT + EBITDA
+margin / post-issue P/E** are computed by the analyzer from the RHP's restated financials,
+**Sector** comes from Yahoo's profile for the listed symbol, the **% QIB / % Retail /
+% anchor** reserved split is read from Chittorgarh's issue-structure table (anchor = 60% of
+the QIB portion), **LTP Gain** is the current price vs offer, and **GMP** is captured from
+the live grey-market feed while an IPO is open (`data/cg_details.csv`, `data/cg_gmp.csv`).
+Grey-market premium is third-party and only exists pre-listing, so it is captured going
+forward rather than reconstructed for old issues.
 **The dashboard** (GitHub Pages, `docs/`) is the analyzer UI as a static site: every
 tracked IPO gets a full report page — Overview, Forecast (6m/12m/24m horizons, entry/exit,
 subscription, actuals), Valuation, Risks and the rule-by-rule Score trace — rendered from

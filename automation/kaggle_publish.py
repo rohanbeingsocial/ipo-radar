@@ -26,6 +26,8 @@ FILES = [
     ROOT / "data" / "cg_subs.csv",
     ROOT / "data" / "cg_listing.csv",
     ROOT / "data" / "ipo_outcomes.csv",
+    ROOT / "data" / "cg_details.csv",
+    ROOT / "data" / "cg_gmp.csv",
 ]
 
 DATASET_README = """\
@@ -47,6 +49,8 @@ commits the results.
 | `cg_subs.csv` | Final subscription multiples by category: QIB, bNII, sNII, Retail, Total. |
 | `cg_listing.csv` | Listing-day open/high/low/close and listing gain vs offer price. |
 | `ipo_outcomes.csv` | Post-listing outcomes from daily price paths: returns vs offer at 6m/12m/24m, drawdown bottom (depth and session), peak, sessions to each. Returns are anchored to the unadjusted day-1 close to neutralise split adjustments. |
+| `cg_details.csv` | Per-IPO sector (Yahoo profile) and the reserved offer split: % QIB / % Retail / % NII, with anchor = 60% of the QIB portion. |
+| `cg_gmp.csv` | Grey-market premium captured while an IPO was open, and the implied estimated listing price (offer + GMP). GMP is third-party and pre-listing only. |
 
 Key columns are documented row-by-row in the workbook's **ReadMe** sheet.
 

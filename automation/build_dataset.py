@@ -3,6 +3,7 @@
 Output: ipodata/finalipodata_expanded_20yr.xlsx (sheets Expanded / Original /
 ReadMe). The user's original 125-row workbook is never modified.
 """
+import json
 import re
 from pathlib import Path
 
@@ -12,8 +13,17 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 IPODATA = ROOT / "ipodata"
+REPORTS = ROOT / "docs" / "data" / "reports"
 ORIG = IPODATA / "finalipodata (6).xlsx"
 OUT = IPODATA / "finalipodata_expanded_20yr.xlsx"
+
+# the 14 analysis columns, and where each is sourced automatically
+TARGET_COLS = ["Sector", "GMP", "Estimated Price", "ROE", "ROCE", "D/E", "PAT Margin",
+               "P/B", "Post IPO P/E", "EBITA Margin", "% QIB", "% Retail", "% anchor", "LTP Gain"]
+# report fundamentals (fractions) -> (column, scale-to-sheet-units)
+FUND_MAP = {"roe": ("ROE", 100), "roce": ("ROCE", 100), "debt_equity": ("D/E", 1),
+            "pat_margin": ("PAT Margin", 100), "ebitda_margin": ("EBITA Margin", 100),
+            "post_ipo_pe": ("Post IPO P/E", 1)}
 
 
 def norm(name):
@@ -35,6 +45,64 @@ def num(x):
 def id_str(s):
     return s.map(lambda v: "" if pd.isna(v)
                  else str(int(float(v))) if str(v).replace(".", "").isdigit() else str(v))
+
+
+def sid(v):
+    try:
+        return str(int(float(v)))
+    except (ValueError, TypeError):
+        return "" if v is None else str(v).strip()
+
+
+def auto_enrichment(ids):
+    """Populate the 14 columns per cg_ipo_id from the automated sources, in priority
+    order: Chittorgarh's published KPI block (the same figures the source sheet was
+    filled from by hand) -> the analyzer's own RHP-derived ratios for any gaps ->
+    Yahoo outcomes (LTP) and the GMP feed. Hand-sheet is the final fallback."""
+    ids = set(ids)
+    out = {i: {} for i in ids}
+
+    def _pull(csv_path, mapping):
+        if not csv_path.exists():
+            return
+        df = pd.read_csv(csv_path)
+        if "cg_ipo_id" not in df.columns:
+            return
+        for _, r in df.iterrows():
+            i = sid(r.get("cg_ipo_id"))
+            if i not in ids:
+                continue
+            for src, col in mapping.items():
+                v = r.get(src)
+                if pd.notna(v) and v != "" and out[i].get(col) is None:
+                    out[i][col] = num(v) if col != "Sector" else str(v)
+
+    # 1. Chittorgarh detail page — sector, reserved split, and the KPI block.
+    #    Already in sheet units (ROE/margins %, D-E and P/B ratios), so no scaling.
+    _pull(DATA / "cg_details.csv", {
+        "sector": "Sector", "pct_qib": "% QIB", "pct_retail": "% Retail",
+        "pct_anchor": "% anchor", "kpi_roe": "ROE", "kpi_roce": "ROCE",
+        "kpi_debt_equity": "D/E", "kpi_pat_margin": "PAT Margin",
+        "kpi_ebitda_margin": "EBITA Margin", "kpi_pb": "P/B",
+        "kpi_post_ipo_pe": "Post IPO P/E"})
+
+    # 2. the analyzer's RHP-derived ratios fill whatever Chittorgarh didn't publish
+    #    (these are fractions, hence the scale)
+    for i in ids:
+        rp = REPORTS / f"{i}.json"
+        if not rp.exists():
+            continue
+        try:
+            fund = (json.loads(rp.read_text(encoding="utf-8")) or {}).get("fundamentals") or {}
+        except (ValueError, OSError):
+            continue
+        for k, (col, scale) in FUND_MAP.items():
+            if fund.get(k) is not None and out[i].get(col) is None:
+                out[i][col] = round(float(fund[k]) * scale, 2)
+
+    _pull(DATA / "ipo_outcomes.csv", {"current_ret": "LTP Gain"})
+    _pull(DATA / "cg_gmp.csv", {"gmp": "GMP", "estimated_price": "Estimated Price"})
+    return out
 
 
 def build():
@@ -84,36 +152,64 @@ def build():
                                 "current_ret": "Current Ret %", "delisted": "Delisted"})
         base = base.merge(oc, on="cg_ipo_id", how="left")
 
+    # automated sources first (keyed by cg_ipo_id); the hand-sheet only fills gaps
+    auto = auto_enrichment(list(base["cg_ipo_id"]))
+    for col in TARGET_COLS:
+        base[col] = [auto.get(i, {}).get(col) for i in base["cg_ipo_id"]]
+
     orig = pd.read_excel(ORIG, sheet_name="Sheet1")
     orig.columns = [str(c).strip() for c in orig.columns]
     orig = orig[orig["Name"].notna()].copy()
-    extra_cols = [c for c in ["Sector", "GMP", "Estimated Price", "ROE", "ROCE", "D/E",
-                              "PAT Margin", "P/B", "Post IPO P/E", "EBITA Margin",
-                              "% QIB", "% Retail", "% anchor", "LTP Gain"] if c in orig.columns]
-    orig_x = orig[["Name"] + extra_cols].copy()
+    fb_cols = [c for c in TARGET_COLS if c in orig.columns]
+    orig_x = orig[["Name"] + fb_cols].copy()
     orig_x["key"] = orig_x["Name"].map(norm)
-    orig_x = orig_x.drop_duplicates("key").drop(columns=["Name"])
+    orig_x = orig_x.drop_duplicates("key").drop(columns=["Name"]).set_index("key")
     base["key"] = base["Name"].map(norm)
-    base = base.merge(orig_x, on="key", how="left", suffixes=("", "_orig")).drop(columns=["key"])
+    for col in fb_cols:
+        fb = base["key"].map(orig_x[col])
+        base[col] = [a if (a is not None and pd.notna(a)) else b
+                     for a, b in zip(base[col], fb)]
+    base = base.drop(columns=["key"])
+    for col in TARGET_COLS:                          # numeric cols to numbers, Sector stays text
+        if col != "Sector":
+            base[col] = pd.to_numeric(base[col], errors="coerce")
 
     for c in ["Offer Price", "Issue Size (cr)", "Fresh (cr)", "OFS (cr)", "QIB", "bNII",
               "sNII", "NII", "Retail", "Employee", "Total Sub", "Day1 Close", "Listing Gain"]:
         base[c] = base[c].map(num)
+
+    # GMP = Estimated Price - Offer Price. The source sheet's GMP column is corrupted
+    # (a trailing digit: Waaree 1295 -> 12955, Hyundai 62 -> 621) and its own Offer
+    # Price column is row-misaligned, but Estimated Price is sound and Chittorgarh's
+    # offer price is authoritative — so deriving is both a repair and a backfill.
+    # Live rows (GMP straight from the GMP feed) satisfy Est = Offer + GMP already,
+    # so this reproduces them unchanged.
+    derived = (pd.to_numeric(base["Estimated Price"], errors="coerce")
+               - pd.to_numeric(base["Offer Price"], errors="coerce")).round(2)
+    base["GMP"] = derived.where(derived.notna(), pd.to_numeric(base["GMP"], errors="coerce"))
+
     base["_dt"] = pd.to_datetime(base["List Date"], format="%d-%b-%Y", errors="coerce")
     base = base.sort_values("_dt", ascending=False).drop(columns=["_dt"])
 
     readme = pd.DataFrame({"Field": [
         "Coverage", "Sources", "QIB/bNII/sNII/Retail", "Listing Gain", "Ret 6m/12m/24m %",
-        "Bottom 12m % / Sessions to Bottom", "Peak 24m %", "GMP/Sector/fundamentals", "Caveat"],
+        "Bottom 12m % / Sessions to Bottom", "Peak 24m %", "ROE/ROCE/D-E/margins/Post-IPO P/E",
+        "Sector", "% QIB / % Retail / % anchor", "LTP Gain", "GMP / Estimated Price", "Caveat"],
         "Notes": [
             "All NSE/BSE mainboard IPOs Feb-2005 onward (Chittorgarh archive); auto-updated daily.",
-            "chittorgarh.com cloud reports 82/21/25; Yahoo Finance charts; user's original sheet.",
+            "chittorgarh.com cloud reports 82/21/25 + detail pages; Yahoo Finance; RHP analysis; ipowatch GMP.",
             "Final subscription multiples (x).",
             "Listing-day close vs offer price, % (Chittorgarh; close, not open).",
             "Close vs offer price at 6/12/24 months after listing (Yahoo; survivors only).",
             "Lowest close within 12m vs offer = optimal entry; trading sessions to reach it.",
             "Highest close within 24m AFTER the bottom, vs offer = exit marker.",
-            "Only for rows in the original 125-IPO sheet (GMP history isn't public for older IPOs).",
+            "Computed from the RHP's restated financials by the analyzer (latest fiscal year); "
+            "only for IPOs with an analyzed RHP. Hand-sheet fills any gaps.",
+            "Yahoo assetProfile sector for the listed symbol (GICS-style taxonomy).",
+            "Reserved offer split from the Chittorgarh issue-structure table; anchor = 60% of the QIB portion.",
+            "Current price vs offer price, % (= Current Ret %, Yahoo).",
+            "Grey-market premium is live-only and third-party (ipowatch); captured for currently-open "
+            "IPOs and NOT recoverable for older ones. Estimated Price = Offer + GMP.",
             "Delisted companies lack Yahoo horizons -> long-horizon columns skew to survivors.",
         ]})
 

@@ -93,15 +93,30 @@ def sid(v):
 
 # ───────────────────────────── features ─────────────────────────────
 
+MIN_COVERAGE = 0.5      # below this the analyzer did not really read the document
+
+
 def rhp_features():
     """RHP-derived features straight from the committed report JSONs, keyed by
     cg_ipo_id. The old trainers pulled these from a live API on localhost, which is
-    exactly why they could never run in CI."""
-    out = {}
+    exactly why they could never run in CI.
+
+    Reports the analyzer could not actually READ are dropped, not down-weighted. Older
+    prospectuses extract terribly — median coverage is 0.19 for 2005-2013 filings, i.e.
+    the scorer saw a fifth of the document — and a score computed from a fifth of a
+    prospectus is not a weak signal, it is a different quantity. Measured: within a
+    single era, the score correlates +0.26 with the 6-month return when coverage is
+    high and -0.16 when it is low. Feeding the low-coverage rows in as if they were
+    RHP features would inject noise with a confident-looking number attached."""
+    out, dropped = {}, 0
     for p in REPORTS.glob("*.json"):
         try:
             rep = json.loads(p.read_text(encoding="utf-8"))
         except (ValueError, OSError):
+            continue
+        cvg = (rep.get("meta") or {}).get("coverage")
+        if isinstance(cvg, (int, float)) and cvg < MIN_COVERAGE:
+            dropped += 1
             continue
         sc = rep.get("scoring") or {}
         cats = sc.get("categories") or {}
@@ -116,7 +131,11 @@ def rhp_features():
             "rhp_governance": cat("governance"), "rhp_promoter": cat("promoter_quality"),
             "rhp_risk": (rep.get("risk") or {}).get("score"),
             "rhp_forensic_flags": len((rep.get("forensic") or {}).get("flags") or []),
+            "rhp_coverage": float(cvg) if isinstance(cvg, (int, float)) else np.nan,
         }
+    if dropped:
+        print(f"  RHP: {len(out)} usable, {dropped} dropped for coverage < {MIN_COVERAGE} "
+              f"(the analyzer could not read enough of the prospectus to score it)")
     return out
 
 

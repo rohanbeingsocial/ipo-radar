@@ -34,7 +34,7 @@ DATASET_README = """\
 NSE/BSE **mainboard** IPOs from 2004 onward — issue structure, category-wise
 subscription, listing-day prices, and post-listing price paths out to 24 months.
 Refreshed weekly from a self-updating pipeline
-(https://github.com/rohanbeingsocial/rhp-analyst) that pulls Chittorgarh's IPO
+(https://github.com/rohanbeingsocial/ipo-radar) that pulls Chittorgarh's IPO
 archives, SEBI's Red-Herring Prospectus filings, and Yahoo Finance daily and
 commits the results.
 

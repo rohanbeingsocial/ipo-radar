@@ -2,9 +2,14 @@ name: Model retrain
 
 # The models improve because the data grows underneath them: every IPO that matures
 # adds a 6m/12m/24m label, and every IPO the daily job enriches adds features. This
-# harvests that weekly. A retrain is NOT assumed to be an improvement — retrain.py
-# only promotes a model that beats the incumbent on cross-validated MAE, and records
-# every attempt (promoted or not) in data/model_history.json.
+# harvests that weekly.
+#
+# A retrain is NOT assumed to be an improvement. Cross-validation is forward in time
+# (train on IPOs that listed before the ones being scored), and every model head must
+# beat its own mean/majority baseline by more than the noise, win a majority of folds,
+# and remove >=3% of that baseline's error — otherwise it is not shipped at all. So a
+# run that promotes nothing, or that drops a forecast the site used to show, is the
+# system working. Every attempt is recorded in data/model_history.json.
 
 on:
   schedule:

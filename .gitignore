@@ -17,3 +17,8 @@ frontend/out/
 # misc
 .env
 *.log
+
+# internal working notes / AI-agent scaffolding — never published
+frontend/CLAUDE.md
+dossier/
+.project-memory/

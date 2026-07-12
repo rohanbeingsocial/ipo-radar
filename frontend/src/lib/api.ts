@@ -123,9 +123,21 @@ export interface Report {
 
 export interface HorizonForecast {
   engine: string;
+  /** which model answered: "pre" (not yet listed, no day-1 gain) or "post" (trading) */
+  variant?: "pre" | "post" | "legacy";
   inputs_used: string[];
-  horizons: Record<string, { ret_pct_vs_offer: number; p_above_offer: number; cv_mae_pp: number | null }>;
-  entry: { expected_bottom_session?: number; expected_bottom_depth_pct_vs_offer?: number; read?: string };
+  /**
+   * Only horizons with demonstrated out-of-sample skill appear, and a horizon may carry
+   * a probability without a point estimate — pre-listing, the direction and the size of
+   * 6m/12m/24m moves are both unpredictable, so the key is simply absent. Missing means
+   * "we cannot call this", not "not loaded".
+   */
+  horizons: Record<string, {
+    ret_pct_vs_offer?: number; cv_mae_pp?: number | null; cv_baseline_mae_pp?: number | null;
+    p_above_offer?: number; cv_direction_acc?: number | null;
+  }>;
+  no_skill?: { horizons: string[]; why: string };
+  entry: { expected_bottom_session?: number; expected_bottom_depth_pct_vs_offer?: number; cv_mae_pp?: number | null; read?: string };
   exit: { call?: string; expected_ret_pct?: number; expected_peak_pct_vs_offer?: number; expected_peak_session?: number; note?: string };
   note: string;
 }
@@ -137,7 +149,11 @@ export interface ListingForecast {
     bottom: { window_sessions: [number, number]; depth_vs_offer_pct: [number, number]; note?: string };
     recovery: { above_offer_sessions: [number, number] | null; above_listing_sessions: [number, number] | null; note?: string };
   };
-  ml_signals?: { forecast_ltp_gain_pct_vs_offer: number; cv_mae_pp: number; cv_direction_acc: number; inputs_used: string[]; note: string };
+  ml_signals?: {
+    forecast_listing_gain_pct_vs_offer: number;
+    cv_mae_pp: number; baseline_mae_pp?: number; cv_direction_acc: number;
+    cv?: string; inputs_used: string[]; note: string;
+  };
   ml_horizons?: HorizonForecast;
   disclaimer: string;
 }

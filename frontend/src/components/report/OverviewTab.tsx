@@ -213,19 +213,36 @@ function ForecastPanel({ fc }: { fc: ListingForecast }) {
       {hz ? (
         <>
           <div className="grid gap-3 sm:grid-cols-3">
-            {Object.entries(hz.horizons).map(([label, h]) => (
-              <div key={label} className="rounded border border-edge bg-page p-3">
-                <div className="text-xs text-ink-3">{label} vs offer price</div>
-                <div className={`text-lg font-semibold tabular ${h.ret_pct_vs_offer >= 0 ? "text-good" : "text-critical"}`}>
-                  {h.ret_pct_vs_offer >= 0 ? "+" : ""}{h.ret_pct_vs_offer}%
+            {Object.entries(hz.horizons).map(([label, h]) => {
+              const pt = h.ret_pct_vs_offer;
+              const prob = h.p_above_offer;
+              return (
+                <div key={label} className="rounded border border-edge bg-page p-3">
+                  <div className="text-xs text-ink-3">{label} vs offer price</div>
+                  {pt != null ? (
+                    <div className={`text-lg font-semibold tabular ${pt >= 0 ? "text-good" : "text-critical"}`}>
+                      {pt >= 0 ? "+" : ""}{pt}%
+                    </div>
+                  ) : (
+                    <div className="text-lg font-semibold tabular text-ink-2">
+                      {prob != null ? `${Math.round(prob * 100)}%` : "—"}
+                    </div>
+                  )}
+                  <div className="text-xs text-ink-3">
+                    {pt != null
+                      ? `${prob != null ? `P(above offer) ${Math.round(prob * 100)}%` : ""}${h.cv_mae_pp != null ? ` · ±${h.cv_mae_pp}pp CV error` : ""}`
+                      : "chance of ending above the offer price — the size of the move is not predictable here"}
+                  </div>
                 </div>
-                <div className="text-xs text-ink-3">
-                  P(above offer) {Math.round(h.p_above_offer * 100)}%
-                  {h.cv_mae_pp != null ? ` · ±${h.cv_mae_pp}pp CV error` : ""}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+          {hz.no_skill?.horizons?.length ? (
+            <p className="mt-3 rounded border border-edge bg-page p-3 text-xs text-ink-3">
+              <span className="font-medium text-ink-2">No forecast for {hz.no_skill.horizons.join(" / ")}.</span>{" "}
+              {hz.no_skill.why}
+            </p>
+          ) : null}
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             <div className="rounded border border-edge bg-page p-3 text-sm text-ink-2">
               <div className="mb-1 text-xs font-medium uppercase tracking-wide text-ink-3">Entry</div>

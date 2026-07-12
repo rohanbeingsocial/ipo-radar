@@ -4,12 +4,33 @@ Two things make the models get better on their own, and neither is the loop itse
   1. every IPO that matures adds a label (a 6m/12m/24m return that didn't exist yet),
   2. every IPO the pipeline enriches adds features (ROE/ROCE/P-B/GMP/reservation...).
 The loop just harvests that. Retraining does NOT monotonically improve a model, so a
-new model is only PROMOTED if it beats the incumbent on cross-validated MAE. Otherwise
-the incumbent is kept and the attempt is still recorded, so a regression is visible
-rather than silently shipped.
+new model is only PROMOTED if it clears the incumbent by more than the noise in the
+estimate. Otherwise the incumbent is kept and the attempt is still recorded, so a
+regression is visible rather than silently shipped.
 
 Reads only committed data (the expanded workbook + docs/data/reports/*.json), so it
 runs in CI with no backend and no database.
+
+Four rules keep the reported numbers honest — they exist because the first version of
+this file broke all four:
+
+  1. TIME-ORDERED CV. Folds are forward-chaining: a model is only ever scored on IPOs
+     that listed AFTER the ones it trained on. Random KFold trains on 2025 to predict
+     2021, which flatters MAE and selects for models good at interpolating history
+     rather than predicting the next IPO.
+
+  2. TWO HORIZON VARIANTS. Day-1 listing gain is a huge feature for 6m/12m/24m return
+     — and it does not exist for an IPO that hasn't listed, which is exactly when the
+     product is used. Training one model on it and median-filling at serve time scores
+     the model on a question nobody asks it. So we train `pre` (no day-1 gain) and
+     `post` (with it), score each honestly, and serve whichever matches reality.
+
+  3. SKILL GATE. A target whose CV MAE does not beat "just predict the training mean"
+     is not shipped. Shipping it is worse than shipping nothing.
+
+  4. NOISE GATE. A 0.8pp MAE improvement on ~650 rows is inside the standard error of
+     the estimate. Promotion requires beating the incumbent by more than 1 SE across
+     folds, so the loop cannot drift on coin flips.
 
     python automation/retrain.py            # train, promote only if better
     python automation/retrain.py --force    # promote regardless (first run / reset)
@@ -42,6 +63,12 @@ HISTORY = DATA / "model_history.json"
 SEED = 42
 MIN_ROWS = 60                     # below this a CV score is noise, not a signal
 RIDGE_LAMBDA = 1.0
+N_SPLITS = 5
+MIN_TRAIN_FRAC = 0.4              # oldest 40% is train-only; never scored
+MIN_EDGE_FRAC = 0.03              # a head must remove >=3% of the baseline's error to ship
+
+SCHEMA = 2                        # bump when the artifact layout changes
+SIGNALS_TARGET = "listing_gain_pct_vs_offer"
 
 FUNDAMENTALS = ["ROE", "ROCE", "D/E", "PAT Margin", "P/B", "Post IPO P/E", "EBITA Margin"]
 RESERVATION = ["% QIB", "% Retail", "% anchor"]
@@ -153,29 +180,106 @@ def build_frame():
                           "LTP Gain": "ltp_gain"})
     for t in RET_TARGETS + AUX_TARGETS + ["ltp_gain"]:
         m[t] = pd.to_numeric(m[t], errors="coerce")
-    for t in RET_TARGETS + ["bottom_12m_pct", "peak_24m_pct", "ltp_gain"]:
+    for t in RET_TARGETS + ["bottom_12m_pct", "peak_24m_pct", "ltp_gain", "listing_gain_day1"]:
         m[t] = m[t].clip(-95, 400)     # outliers dominate MAE and teach nothing
     m["sector"] = m["Sector"].fillna("Other")
-    return m
+    # every model below is scored in listing order, so an undated row can't be placed
+    # on the timeline and is training-only noise. Drop it once, here.
+    return m.sort_values("list_dt").reset_index(drop=True)
+
+
+# ───────────────────────────── honest cross-validation ─────────────────────────────
+
+def time_folds(n):
+    """Forward-chaining folds over rows already sorted oldest→newest: fold k trains
+    only on IPOs that listed BEFORE the ones it is scored on. The oldest MIN_TRAIN_FRAC
+    is never scored (it has no past to train on). This is the whole difference between
+    'how well do we fit history' and 'how well would we have called the next IPO'."""
+    start = max(int(n * MIN_TRAIN_FRAC), MIN_ROWS)
+    if n - start < N_SPLITS * 5:
+        return []
+    edges = np.linspace(start, n, N_SPLITS + 1).astype(int)
+    return [(np.arange(0, edges[i]), np.arange(edges[i], edges[i + 1]))
+            for i in range(N_SPLITS) if edges[i + 1] > edges[i]]
+
+
+def cv_eval(fit_predict, y, folds):
+    """Pooled MAE over the scored rows, the per-fold spread (for the noise gate), and
+    the baseline every model must beat: predict the TRAINING mean (not the global mean
+    — that would peek at the test block's level)."""
+    preds = np.full(len(y), np.nan)
+    fold_maes, fold_base = [], []
+    for tr, te in folds:
+        preds[te] = fit_predict(tr, te)
+        fold_maes.append(float(np.mean(np.abs(preds[te] - y[te]))))
+        fold_base.append(float(np.mean(np.abs(y[tr].mean() - y[te]))))
+    seen = ~np.isnan(preds)
+    mae = float(np.mean(np.abs(preds[seen] - y[seen])))
+    base = float(np.mean(fold_base))
+
+    # Rules 3 and 4 in one PAIRED test, applied per model head: in each fold, by how much
+    # did we beat that fold's baseline? A model is only shipped if that margin is reliably
+    # positive (mean > 1 standard error of the margin).
+    #
+    # The comparison must be paired. MAE *levels* swing enormously between folds — a 2021
+    # cohort and a 2023 cohort simply had different return dispersion — so the SE of the
+    # level is dominated by regime variance that says nothing about whether the model beats
+    # its baseline. Gating on that would reject models that beat the baseline in every
+    # single fold. The per-fold *difference* is what carries the signal.
+    diffs = np.array(fold_base) - np.array(fold_maes)
+    return {"mae": mae, "baseline_mae": base,
+            "se": float(np.std(fold_maes, ddof=1) / math.sqrt(len(fold_maes))) if len(fold_maes) > 1 else float("inf"),
+            "n_scored": int(seen.sum()), "preds": preds, "seen": seen, **margin(diffs, base)}
+
+
+def margin(diffs, base):
+    """Turn per-fold margins over the baseline into a ship / don't-ship verdict.
+
+    Three conditions, because each alone is gameable:
+      * SIZE      — the mean margin must exceed its own standard error.
+      * CONSISTENCY — the model must win a MAJORITY of folds. This stops one lucky fold
+        from carrying a model: a head with edge +2.9 ± 2.9 that won 2 of 5 folds is noise,
+        and on the size test alone it shipped.
+      * USEFULNESS — the margin must remove at least MIN_EDGE_FRAC of the baseline error.
+        Statistical significance is not the same as being worth showing a user:
+        `sessions_to_peak` beat its baseline by 2.9 sessions... while carrying an MAE of
+        108 sessions. A five-month error bar on a timing call is not a forecast, however
+        significant the edge. Passing a t-test does not earn a number on screen."""
+    edge = float(diffs.mean())
+    edge_se = float(diffs.std(ddof=1) / math.sqrt(len(diffs))) if len(diffs) > 1 else float("inf")
+    won = int((diffs > 0).sum())
+    return {"edge": edge, "edge_se": edge_se, "folds_won": won, "n_folds": len(diffs),
+            "skill": bool(edge > edge_se and won * 2 > len(diffs) and edge > MIN_EDGE_FRAC * base)}
+
+
+def beats(new_mae, new_se, old_mae):
+    """Same noise gate, applied between runs."""
+    return old_mae is None or new_mae < old_mae - new_se
 
 
 # ───────────────────────────── signals ridge ─────────────────────────────
 
 def fit_signals(m):
-    """Ridge on the market-signal + fundamentals columns -> LTP gain vs offer.
-    This is the model that lives or dies on the 14 enriched columns."""
+    """Ridge on the pre-listing market signals + fundamentals -> LISTING-DAY gain.
+
+    This used to target `LTP Gain` (today's price vs offer). That was wrong twice over:
+    it exists for only 220 rows, and it folds in years of market drift, so it is close
+    to unlearnable from IPO-day inputs — the model lost to predicting the mean. Listing
+    gain is filled on 843 rows, is what oversubscription and GMP actually predict, and
+    is what the product claims to forecast. Every feature here is known before listing."""
     sectors = sorted(s for s in m["sector"].dropna().unique() if s != "Other")
     feats = (["gmp_prem", "log_QIB", "log_bNII", "log_sNII", "log_Retail"]
              + RESERVATION + ["smallcap", "nifty_chg"] + FUNDAMENTALS)
-    d = m[m["ltp_gain"].notna()].copy()
+    d = m[m["listing_gain_day1"].notna() & m["list_dt"].notna()].copy()   # already time-sorted
+    if len(d) < MIN_ROWS:
+        return None, {"n": len(d), "skipped": "too few rows"}
+
     X = d[feats].apply(pd.to_numeric, errors="coerce")
     medians = X.median(numeric_only=True).to_dict()
     X = X.fillna(pd.Series(medians)).fillna(0.0)
     for s in sectors:
         X[f"sec_{s}"] = (d["sector"] == s).astype(float)
-    y = d["ltp_gain"].astype(float)
-    if len(d) < MIN_ROWS:
-        return None, {"n": len(d), "skipped": "too few rows"}
+    y = d["listing_gain_day1"].astype(float)
 
     names = list(X.columns)
     Xv, yv = X.values.astype(float), y.values.astype(float)
@@ -193,110 +297,217 @@ def fit_signals(m):
         Z = (Xt - mu) / sd
         return np.hstack([np.ones((len(Z), 1)), Z]) @ w
 
-    rng = np.random.default_rng(SEED)
-    order = rng.permutation(len(Xv))
-    preds = np.zeros(len(Xv))
-    for f in range(5):                              # 5-fold CV
-        te = order[f::5]
-        tr = np.setdiff1d(order, te)
-        preds[te] = predict(ridge(Xv[tr], yv[tr]), Xv[te])
-    mae = float(np.mean(np.abs(preds - yv)))
-    base = float(np.mean(np.abs(yv.mean() - yv)))
-    dir_acc = float(np.mean((preds > 0) == (yv > 0)))
+    folds = time_folds(len(Xv))
+    if not folds:
+        return None, {"n": len(d), "skipped": "too few rows to time-split"}
+    cv = cv_eval(lambda tr, te: predict(ridge(Xv[tr], yv[tr]), Xv[te]), yv, folds)
+    seen = cv["seen"]
+    dir_acc = float(np.mean((cv["preds"][seen] > 0) == (yv[seen] > 0)))
 
     w = ridge(Xv, yv)
     coef = {n: float(c) for n, c in zip(names, w[1:] / sd)}
     intercept = float(w[0] - float(np.sum(w[1:] * mu / sd)))
-    model = {"kind": "signals_ridge", "n": int(len(d)), "target": "ltp_gain_pct_vs_offer",
+    model = {"kind": "signals_ridge", "schema": SCHEMA, "n": int(len(d)),
+             "target": SIGNALS_TARGET, "cv": "time-ordered",
              "feature_names": names, "medians": {k: float(v) for k, v in medians.items()},
-             "coef": coef, "intercept": intercept, "cv_mae": mae,
-             "cv_direction_acc": dir_acc, "baseline_mae": base,
+             "coef": coef, "intercept": intercept,
+             "cv_mae": cv["mae"], "cv_se": cv["se"], "baseline_mae": cv["baseline_mae"],
+             "cv_edge": cv["edge"], "cv_edge_se": cv["edge_se"],
+             "cv_direction_acc": dir_acc, "n_scored": cv["n_scored"],
              "trained_at": datetime.now(timezone.utc).isoformat()}
     for s in sectors:
         model["medians"].setdefault(f"sec_{s}", 0.0)
-    return model, {"n": int(len(d)), "cv_mae": round(mae, 1), "baseline_mae": round(base, 1),
-                   "cv_direction_acc": round(dir_acc, 3)}
+    summary = {"n": int(len(d)), "n_scored": cv["n_scored"], "cv_mae": round(cv["mae"], 1),
+               "cv_se": round(cv["se"], 1), "baseline_mae": round(cv["baseline_mae"], 1),
+               "edge": round(cv["edge"], 2), "edge_se": round(cv["edge_se"], 2),
+               "folds_won": f"{cv['folds_won']}/{cv['n_folds']}",
+               "skill": bool(cv["skill"]), "cv_direction_acc": round(dir_acc, 3)}
+    return model, summary
 
 
 # ───────────────────────────── horizon GBMs ─────────────────────────────
 
+HORIZON_BASE_COLS = (["log_QIB", "log_bNII", "log_sNII", "log_NII", "log_Retail", "log_Total",
+                      "gmp_prem", "has_gmp", "issue_size_log", "ofs_share", "has_rhp", "nifty_chg"]
+                     + RHP_FEATS + FUNDAMENTALS + RESERVATION)
+
+# `pre` is the product: forecasting an IPO that has not listed, so day-1 gain does not
+# exist. `post` is the dashboard: the stock is trading and day-1 gain is known and is a
+# very strong feature. One model cannot honestly serve both — the old one was trained
+# with day-1 gain always present and then median-filled it at serve time, i.e. it was
+# scored on a question the product never asks.
+HORIZON_VARIANTS = {"pre": {"extra": [], "carry": None},
+                    "post": {"extra": ["listing_gain_day1"], "carry": "listing_gain_day1"}}
+
+
 def fit_horizon(m):
     from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor
-    from sklearn.model_selection import KFold
+
+    # Small on purpose. The previous 300-tree depth-3 GBM was overfitting ~650 rows x ~40
+    # features so hard that it lost to the mean on every target; random KFold hid it by
+    # letting the model memorise neighbours in time. Under time-ordered CV this shape
+    # beats the big one on every single target.
+    def gbr():
+        return GradientBoostingRegressor(n_estimators=120, max_depth=2, learning_rate=0.03,
+                                         subsample=0.7, min_samples_leaf=20, random_state=SEED)
+
+    def gbc():
+        return GradientBoostingClassifier(n_estimators=120, max_depth=2, learning_rate=0.03,
+                                          subsample=0.7, min_samples_leaf=20, random_state=SEED)
 
     # RHP buckets, not the dataset's Sector — see rhp_features()
     sectors = sorted(s for s in m["sector_rhp"].dropna().unique() if s != "other")
-    cols = (["log_QIB", "log_bNII", "log_sNII", "log_NII", "log_Retail", "log_Total",
-             "gmp_prem", "has_gmp", "listing_gain_day1", "issue_size_log", "ofs_share",
-             "has_rhp", "nifty_chg"] + RHP_FEATS + FUNDAMENTALS + RESERVATION)
-    X_all = m[cols].apply(pd.to_numeric, errors="coerce")
-    medians = X_all.median(numeric_only=True).to_dict()
-    X_all = X_all.fillna(pd.Series(medians)).fillna(0.0)
-    for s in sectors:
-        X_all[f"sec_{s}"] = (m["sector_rhp"] == s).astype(float)
-
-    model = {"feature_names": list(X_all.columns), "medians": medians, "sectors": sectors,
-             "trained_at": datetime.now(timezone.utc).isoformat(),
-             "models": {}, "classifiers": {}, "cv": {}, "n": {}, "residual_base": {}}
+    out = {"schema": SCHEMA, "sectors": sectors, "cv": "time-ordered",
+           "trained_at": datetime.now(timezone.utc).isoformat(), "variants": {}}
     summary = {}
-    for target in RET_TARGETS + AUX_TARGETS:
-        mask = m[target].notna()
-        if mask.sum() < MIN_ROWS:
-            continue
-        X = X_all[mask].reset_index(drop=True)
-        y = m.loc[mask, target].astype(float).reset_index(drop=True)
-        if target in RET_TARGETS:                   # learn the correction to day-1 carry
-            base = X["listing_gain_day1"].values
-            model["residual_base"][target] = "listing_gain_day1"
-        else:
-            base = np.zeros(len(y))
-        preds = np.zeros(len(y))
-        for tr, te in KFold(5, shuffle=True, random_state=SEED).split(X):
-            g = GradientBoostingRegressor(n_estimators=300, max_depth=3, learning_rate=0.05,
-                                          subsample=0.8, random_state=SEED)
-            g.fit(X.iloc[tr], y.iloc[tr] - base[tr])
-            preds[te] = g.predict(X.iloc[te]) + base[te]
-        mae = float(np.mean(np.abs(preds - y)))
-        cv = {"n": int(len(y)), "mae": round(mae, 1),
-              "baseline_mean_mae": round(float(np.mean(np.abs(y.mean() - y))), 1)}
-        if target in RET_TARGETS:
-            cv["direction_acc"] = round(float(np.mean((preds > 0) == (y > 0))), 3)
-            c = GradientBoostingClassifier(n_estimators=200, max_depth=3, learning_rate=0.05,
-                                           subsample=0.8, random_state=SEED)
-            c.fit(X, (y > 0).astype(int))
-            model["classifiers"][target] = c
-        final = GradientBoostingRegressor(n_estimators=300, max_depth=3, learning_rate=0.05,
-                                          subsample=0.8, random_state=SEED)
-        final.fit(X, y - base)
-        model["models"][target] = final
-        model["cv"][target] = cv
-        model["n"][target] = int(len(y))
-        summary[target] = cv
-        print(f"  {target:20} n={len(y):4}  mae {mae:6.1f}  (mean-baseline {cv['baseline_mean_mae']})")
-    return (model, summary) if model["models"] else (None, {})
+
+    for vname, spec in HORIZON_VARIANTS.items():
+        cols = HORIZON_BASE_COLS + spec["extra"]
+        X_all = m[cols].apply(pd.to_numeric, errors="coerce")
+        medians = X_all.median(numeric_only=True).to_dict()
+        X_all = X_all.fillna(pd.Series(medians)).fillna(0.0)
+        for s in sectors:
+            X_all[f"sec_{s}"] = (m["sector_rhp"] == s).astype(float)
+
+        var = {"feature_names": list(X_all.columns),
+               "medians": {k: float(v) for k, v in medians.items()},
+               "models": {}, "classifiers": {}, "cv": {}, "n": {}, "residual_base": {}}
+        summary[vname] = {}
+        print(f"  [{vname}-listing]")
+
+        for target in RET_TARGETS + AUX_TARGETS:
+            mask = m[target].notna() & m["list_dt"].notna()
+            if mask.sum() < MIN_ROWS:
+                continue
+            X = X_all[mask].reset_index(drop=True)
+            y = m.loc[mask, target].astype(float).reset_index(drop=True).values
+            folds = time_folds(len(y))
+            if not folds:
+                continue
+            # the `post` model predicts the CORRECTION to day-1 carry; `pre` has no
+            # carry to correct, so it predicts the return outright.
+            carry = spec["carry"]
+            base = X[carry].values if (carry and target in RET_TARGETS) else np.zeros(len(y))
+
+            def fp(tr, te, X=X, y=y, base=base):
+                g = gbr()
+                g.fit(X.iloc[tr], y[tr] - base[tr])
+                return g.predict(X.iloc[te]) + base[te]
+
+            cv = cv_eval(fp, y, folds)
+            rec = {"n": int(len(y)), "n_scored": cv["n_scored"], "mae": round(cv["mae"], 1),
+                   "se": round(cv["se"], 1), "baseline_mean_mae": round(cv["baseline_mae"], 1),
+                   "edge": round(cv["edge"], 2), "edge_se": round(cv["edge_se"], 2),
+                   "folds_won": f"{cv['folds_won']}/{cv['n_folds']}",
+                   "mae_skill": bool(cv["skill"])}
+
+            # Magnitude and direction are gated SEPARATELY, because they are not equally
+            # learnable. Pre-listing, no model can beat the mean on 6m/12m/24m magnitude —
+            # but "does it end above the offer price" is called right ~2 times in 3. So we
+            # ship the probability and stay silent on the number, rather than dressing up
+            # noise as a point forecast.
+            if target in RET_TARGETS:
+                lab = (y > 0).astype(int)
+                proba = np.full(len(y), np.nan)
+                fold_acc, fold_maj = [], []
+                for tr, te in folds:
+                    c = gbc()
+                    c.fit(X.iloc[tr], lab[tr])
+                    proba[te] = c.predict_proba(X.iloc[te])[:, 1]
+                    fold_acc.append(float(np.mean((proba[te] > 0.5) == lab[te])))
+                    # The bar is the BETTER of "always predict the training majority" and
+                    # a coin flip. The majority baseline alone is not enough: when the
+                    # regime flips (most 2021 IPOs ended up, most 2023 ones down), that
+                    # baseline collapses to 0.38 and a 0.49-accuracy model "beats" it while
+                    # being worse than a coin. Nothing below 0.5 is ever a call worth making.
+                    p = lab[tr].mean()
+                    fold_maj.append(max(float(np.mean(lab[te] == int(p > 0.5))), 0.5))
+                sc = ~np.isnan(proba)
+                acc = float(np.mean((proba[sc] > 0.5) == lab[sc]))
+                dmar = margin(np.array(fold_acc) - np.array(fold_maj), float(np.mean(fold_maj)))
+                rec.update(direction_acc=round(acc, 3),
+                           direction_baseline=round(float(np.mean(fold_maj)), 3),
+                           direction_edge=round(dmar["edge"], 3),
+                           direction_edge_se=round(dmar["edge_se"], 3),
+                           direction_folds_won=f"{dmar['folds_won']}/{dmar['n_folds']}",
+                           direction_skill=dmar["skill"])
+
+            bits = []
+            if cv["skill"]:
+                bits.append("mae")
+            if rec.get("direction_skill"):
+                bits.append("dir")
+            flag = f"   ships: {'+'.join(bits)}" if bits else "   NO SKILL — not shipped"
+            dtxt = (f"  dir {rec['direction_acc']:.2f}/{rec['direction_baseline']:.2f}"
+                    if "direction_acc" in rec else "")
+            print(f"    {target:20} n={len(y):4}  mae {cv['mae']:6.1f} vs base {cv['baseline_mae']:6.1f}"
+                  f"  edge {cv['edge']:+5.1f}±{cv['edge_se']:.1f} ({rec['folds_won']}){dtxt}{flag}")
+            var["cv"][target] = rec
+            summary[vname][target] = rec
+
+            if cv["skill"]:                   # rule 3: losing to the mean ships nothing
+                final = gbr()
+                final.fit(X, y - base)
+                var["models"][target] = final
+                var["n"][target] = int(len(y))
+                if carry and target in RET_TARGETS:
+                    var["residual_base"][target] = carry
+            if rec.get("direction_skill"):
+                c = gbc()
+                c.fit(X, (y > 0).astype(int))
+                var["classifiers"][target] = c
+
+        out["variants"][vname] = var
+
+    if not any(v["models"] or v["classifiers"] for v in out["variants"].values()):
+        return None, {}
+    return out, summary
+
+
+def horizon_edge(summary, variant):
+    """How much useful model there is in a variant: how many heads survived their skill
+    gate, and by what normalised margin over their baselines. Every head that shipped is
+    already significant on its own (see cv_eval), so between runs we simply prefer the
+    artifact that carries more skill — more heads first, bigger margin as the tiebreak."""
+    edges = []
+    for r in (summary.get(variant) or {}).values():
+        if r.get("mae_skill") and r.get("baseline_mean_mae"):
+            edges.append(r["edge"] / r["baseline_mean_mae"])       # normalised: fraction of baseline error removed
+        if r.get("direction_skill"):
+            edges.append(r["direction_edge"])                      # already a fraction (accuracy points)
+    return len(edges), (float(np.mean(edges)) if edges else 0.0)
+
+
+def incumbent_horizon_edge():
+    """Recompute the incumbent's heads/edge from the CV it recorded, so the comparison is
+    like-for-like. Older artifacts recorded a leaky CV and simply do not qualify."""
+    if not HORIZON_PATH.exists():
+        return None, "none"
+    try:
+        import joblib
+        j = joblib.load(HORIZON_PATH)
+    except Exception:                                # noqa: BLE001
+        return None, "unreadable"
+    if j.get("schema") != SCHEMA:
+        return None, "not comparable (leaky CV, single variant) — superseded"
+    cvs = (j.get("variants", {}).get("pre", {}) or {}).get("cv") or {}
+    return horizon_edge({"pre": cvs}, "pre"), "ok"
 
 
 # ───────────────────────────── promotion gate ─────────────────────────────
 
-def incumbent_signals_mae():
+def incumbent_signals():
+    """Only comparable if the incumbent predicts the same thing, the same way. A model
+    trained on a different target or scored with leaky CV is not a yardstick."""
     if not SIGNALS_PATH.exists():
-        return None
+        return None, "none"
     try:
-        return float(json.loads(SIGNALS_PATH.read_text())["cv_mae"])
-    except (ValueError, OSError, KeyError):
-        return None
-
-
-def incumbent_horizon_mae():
-    if not HORIZON_PATH.exists():
-        return None
-    try:
-        import joblib
-        cv = joblib.load(HORIZON_PATH).get("cv") or {}
-        maes = [v["mae"] for v in cv.values() if isinstance(v, dict) and "mae" in v]
-        return float(np.mean(maes)) if maes else None
-    except Exception:                                # noqa: BLE001
-        return None
+        j = json.loads(SIGNALS_PATH.read_text())
+    except (ValueError, OSError):
+        return None, "unreadable"
+    if j.get("schema") != SCHEMA or j.get("target") != SIGNALS_TARGET:
+        return None, "not comparable (old target/CV) — superseded"
+    return float(j["cv_mae"]), "ok"
 
 
 def record(entry):
@@ -314,52 +525,68 @@ def main():
     force = "--force" in sys.argv
     m = build_frame()
     print(f"rows: {len(m)}   with RHP features: {int(m['has_rhp'].sum())}   "
-          f"with fundamentals: {int(m['ROE'].notna().sum())}")
+          f"with fundamentals: {int(m['ROE'].notna().sum())}   "
+          f"with listing gain: {int(m['listing_gain_day1'].notna().sum())}")
 
-    entry = {"at": datetime.now(timezone.utc).isoformat(), "rows": int(len(m))}
+    entry = {"at": datetime.now(timezone.utc).isoformat(), "rows": int(len(m)),
+             "schema": SCHEMA, "cv": "time-ordered"}
 
-    print("\nsignals ridge (-> LTP gain vs offer)")
+    print("\nsignals ridge (-> listing-day gain vs offer)")
     sig, sig_cv = fit_signals(m)
-    old = incumbent_signals_mae()
-    entry["signals"] = {**sig_cv, "incumbent_mae": round(old, 1) if old else None}
+    old, why = incumbent_signals()
+    entry["signals"] = {**sig_cv, "incumbent_mae": round(old, 1) if old else None,
+                        "incumbent": why}
     if sig is None:
         print("  skipped:", sig_cv)
         entry["signals"]["promoted"] = False
     else:
-        print(f"  n={sig['n']}  cv_mae {sig['cv_mae']:.1f}  (mean-baseline {sig['baseline_mae']:.1f})  "
-              f"dir {sig['cv_direction_acc']:.2f}   incumbent {old if old else 'none'}")
-        better = force or old is None or sig["cv_mae"] < old
-        entry["signals"]["promoted"] = bool(better)
-        if better:
+        print(f"  n={sig['n']} (scored {sig['n_scored']})  cv_mae {sig['cv_mae']:.1f}"
+              f"  (mean-baseline {sig['baseline_mae']:.1f})  edge {sig['cv_edge']:+.1f}±{sig['cv_edge_se']:.1f}"
+              f"  folds won {sig_cv['folds_won']}  dir {sig['cv_direction_acc']:.2f}"
+              f"   incumbent {round(old, 1) if old else why}")
+        # rule 3 then rule 4: a model with no skill never ships, however good the gate looks
+        ok = sig_cv["skill"] and beats(sig["cv_mae"], sig["cv_se"], old)
+        entry["signals"]["promoted"] = bool(force or ok)
+        if force or ok:
             SIGNALS_PATH.write_text(json.dumps(sig, indent=1), encoding="utf-8")
             print("  PROMOTED ->", SIGNALS_PATH.name)
+        elif not sig_cv["skill"]:
+            print(f"  NOT SHIPPED — no skill: {sig['cv_mae']:.1f} does not beat the "
+                  f"mean-baseline {sig['baseline_mae']:.1f}")
         else:
-            print(f"  kept incumbent (new {sig['cv_mae']:.1f} does not beat {old:.1f})")
+            print(f"  kept incumbent ({sig['cv_mae']:.1f} does not clear {old:.1f} by 1 SE)")
 
     print("\nhorizon GBMs (-> 6m/12m/24m returns, entry, exit)")
     hor, hor_cv = fit_horizon(m)
-    old_h = incumbent_horizon_mae()
+    old, why_h = incumbent_horizon_edge()
     if hor is None:
-        entry["horizon"] = {"promoted": False, "skipped": "too few labelled rows"}
-        print("  skipped (too few labelled rows)")
+        entry["horizon"] = {"promoted": False, "skipped": "no head beat its baseline"}
+        print("  skipped — nothing beat its baseline; shipping nothing beats shipping noise")
     else:
-        new_h = float(np.mean([v["mae"] for v in hor_cv.values()]))
-        better = force or old_h is None or new_h < old_h
-        entry["horizon"] = {"mean_mae": round(new_h, 1),
-                            "incumbent_mean_mae": round(old_h, 1) if old_h else None,
-                            "n": {k: v["n"] for k, v in hor_cv.items()},
-                            "promoted": bool(better)}
-        print(f"  mean mae {new_h:.1f}   incumbent {round(old_h, 1) if old_h else 'none'}")
-        if better:
+        # gate on the PRE variant: forecasting an unlisted IPO is what the product does
+        heads, edge = horizon_edge(hor_cv, "pre")
+        old_heads, old_edge = old if old else (None, None)
+        ok = old is None or heads > old_heads or (heads == old_heads and edge > old_edge)
+        entry["horizon"] = {
+            "gate": "pre-listing skill heads, then margin over baseline",
+            "pre": {"heads": heads, "edge": round(edge, 3)},
+            "post": dict(zip(("heads", "edge"), horizon_edge(hor_cv, "post"))),
+            "incumbent_pre": ({"heads": old_heads, "edge": round(old_edge, 3)} if old else why_h),
+            "targets": hor_cv,
+            "promoted": bool(force or ok)}
+        print(f"\n  pre-listing: {heads} skilful head(s), mean edge {edge:+.3f}"
+              f"   incumbent {f'{old_heads} head(s), edge {old_edge:+.3f}' if old else why_h}")
+        if force or ok:
             import joblib
             joblib.dump(hor, HORIZON_PATH, compress=3)
             print("  PROMOTED ->", HORIZON_PATH.name)
         else:
-            print(f"  kept incumbent (new {new_h:.1f} does not beat {old_h:.1f})")
+            print(f"  kept incumbent ({heads}/{edge:+.3f} does not improve on "
+                  f"{old_heads}/{old_edge:+.3f})")
 
     record(entry)
-    print(f"\nhistory -> {HISTORY.relative_to(ROOT)}  ({entry['signals'].get('promoted')} / "
-          f"{entry['horizon'].get('promoted')} promoted)")
+    print(f"\nhistory -> {HISTORY.relative_to(ROOT)}  (signals {entry['signals'].get('promoted')} / "
+          f"horizon {entry['horizon'].get('promoted')} promoted)")
 
 
 if __name__ == "__main__":

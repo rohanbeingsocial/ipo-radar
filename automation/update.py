@@ -708,10 +708,19 @@ def build_site():
         if rep:
             try:
                 full = listing_predictor.forecast(rep, signals=signals or None)
-                fc = {"rules": full.get("rules"), "horizons": (full.get("ml_horizons") or {}).get("horizons"),
-                      "entry": (full.get("ml_horizons") or {}).get("entry"),
-                      "exit": (full.get("ml_horizons") or {}).get("exit"),
-                      "inputs_used": (full.get("ml_horizons") or {}).get("inputs_used")}
+                hz = full.get("ml_horizons") or {}
+                sg = full.get("ml_signals") or {}
+                fc = {"rules": full.get("rules"), "horizons": hz.get("horizons"),
+                      "entry": hz.get("entry"), "exit": hz.get("exit"),
+                      "inputs_used": hz.get("inputs_used"),
+                      # which model answered, and what it deliberately refuses to answer
+                      "variant": hz.get("variant"), "no_skill": hz.get("no_skill"),
+                      # the listing-day call — the one pre-listing forecast with real skill
+                      "listing_gain": ({"pct": sg.get("forecast_listing_gain_pct_vs_offer"),
+                                        "cv_mae_pp": sg.get("cv_mae_pp"),
+                                        "baseline_mae_pp": sg.get("baseline_mae_pp"),
+                                        "direction_acc": sg.get("cv_direction_acc"),
+                                        "inputs_used": sg.get("inputs_used")} if sg else None)}
             except Exception as e:
                 print(f"  forecast failed {r['company'][:40]}: {e}")
         row = {

@@ -543,17 +543,28 @@ function monthTicks(maxS) {
 function mountForecastPath(box, fc, item) {
   if (!box || !fc) return;
   const hz = fc.horizons ? fc : fc.ml_horizons;
-  if (!hz || !hz.horizons) return;
+  if (!hz) return;
   const H2S = { "6m": 126, "12m": 252, "24m": 504 };
   const fpts = [];
   const rules = fc.rules;
-  if (rules && rules.listing_open_premium_pct && rules.listing_open_premium_pct.point != null)
+  // day 1: prefer the trained listing-gain model over the rules heuristic — it is the
+  // one pre-listing number with demonstrated out-of-sample skill
+  const lg = fc.listing_gain;
+  if (lg && lg.pct != null) fpts.push({ x: 1, v: lg.pct });
+  else if (rules && rules.listing_open_premium_pct && rules.listing_open_premium_pct.point != null)
     fpts.push({ x: 1, v: rules.listing_open_premium_pct.point });
+
+  const band = [];
+  if (lg && lg.pct != null && lg.cv_mae_pp != null)
+    band.push({ x: 1, lo: lg.pct - lg.cv_mae_pp, hi: lg.pct + lg.cv_mae_pp });
+
+  // the drawdown model predicts HOW DEEP, not WHEN. Only place it on the path if the
+  // timing head also survived validation; otherwise it is drawn as a floor line below.
   if (hz.entry && hz.entry.expected_bottom_session != null && hz.entry.expected_bottom_depth_pct_vs_offer != null)
     fpts.push({ x: hz.entry.expected_bottom_session, v: hz.entry.expected_bottom_depth_pct_vs_offer, tag: "expected low" });
-  const band = [];
+
   for (const [k, s] of Object.entries(H2S)) {
-    const h = hz.horizons[k];
+    const h = (hz.horizons || {})[k];
     if (h && h.ret_pct_vs_offer != null) {
       fpts.push({ x: s, v: h.ret_pct_vs_offer });
       if (h.cv_mae_pp != null) band.push({ x: s, lo: h.ret_pct_vs_offer - h.cv_mae_pp, hi: h.ret_pct_vs_offer + h.cv_mae_pp });
@@ -563,7 +574,8 @@ function mountForecastPath(box, fc, item) {
     fpts.push({ x: hz.exit.expected_peak_session, v: hz.exit.expected_peak_pct_vs_offer, tag: "expected peak", big: true });
   fpts.sort((a, b) => a.x - b.x);
   const dedup = fpts.filter((p, i) => !i || p.x - fpts[i - 1].x > 2);
-  if (dedup.length < 3) return;
+  // 2 is enough now: the model deliberately forecasts fewer points than it used to
+  if (dedup.length < 2) return;
   const series = [{
     name: "Forecast path", colorHex: cssVar("--series-1"), pts: dedup,
     endLabel: fmtSigned(dedup[dedup.length - 1].v, 0),
@@ -978,19 +990,45 @@ function forecastBlocks(fc) {
   const hz = fc.horizons ? fc : (fc.ml_horizons || null);
   const rules = fc.rules || null;
   let html = "";
-  if (hz && hz.horizons) {
-    html += `<div class="grid2i">` + Object.entries(hz.horizons).map(([k, h]) => ibox(
-      `${k} vs offer price`, pct(h.ret_pct_vs_offer),
-      `P(above offer) ${Math.round((h.p_above_offer ?? 0.5) * 100)}%${h.cv_mae_pp != null ? ` · ±${f(h.cv_mae_pp, 0)}pp CV error` : ""}`)).join("") + `</div>`;
+  const lg = fc.listing_gain;
+  if (lg && lg.pct != null)
+    html += `<div class="grid2i">` + ibox("Listing-day gain (model)", pct(lg.pct),
+      `direction called right ${Math.round((lg.direction_acc ?? 0) * 100)}% of the time out-of-sample`
+      + `${lg.cv_mae_pp != null ? ` · ±${f(lg.cv_mae_pp, 0)}pp typical error vs ±${f(lg.baseline_mae_pp, 0)}pp for guessing the average` : ""}`) + `</div>`;
+
+  if (hz && hz.horizons && Object.keys(hz.horizons).length) {
+    // a horizon box shows only what that horizon actually has skill on: sometimes a
+    // number, sometimes just a probability, sometimes both
+    html += `<div class="grid2i" style="margin-top:12px">` + Object.entries(hz.horizons).map(([k, h]) => {
+      const hasPt = h.ret_pct_vs_offer != null;
+      const prob = h.p_above_offer != null ? `${Math.round(h.p_above_offer * 100)}% chance above offer` : null;
+      const err = h.cv_mae_pp != null ? `±${f(h.cv_mae_pp, 0)}pp typical error` : null;
+      return ibox(`${k} vs offer price`,
+        hasPt ? pct(h.ret_pct_vs_offer) : (h.p_above_offer != null ? `${Math.round(h.p_above_offer * 100)}%` : "—"),
+        hasPt ? [prob, err].filter(Boolean).join(" · ")
+              : "probability of ending above the offer price — the size of the move is not predictable here");
+    }).join("") + `</div>`;
+  }
+  if (hz && hz.no_skill && hz.no_skill.horizons && hz.no_skill.horizons.length)
+    html += `<p class="muted" style="margin-top:10px;border:1px solid var(--line);border-radius:6px;padding:8px 10px">
+      <strong>No forecast for ${esc(hz.no_skill.horizons.join(" / "))}.</strong> ${esc(hz.no_skill.why)}</p>`;
+
+  if (hz) {
     let ee = "";
-    if (hz.entry && hz.entry.expected_bottom_session != null)
-      ee += ibox("Entry", `session ~${Math.round(hz.entry.expected_bottom_session)}`,
-        `expected low ${pct(hz.entry.expected_bottom_depth_pct_vs_offer)} vs offer${hz.entry.read ? " — " + esc(hz.entry.read) : ""}`);
+    if (hz.entry && hz.entry.expected_bottom_depth_pct_vs_offer != null)
+      ee += ibox("Expected drawdown",
+        pct(hz.entry.expected_bottom_depth_pct_vs_offer),
+        `worst level vs offer within 12m${hz.entry.expected_bottom_session != null
+          ? ` · low around session ~${Math.round(hz.entry.expected_bottom_session)}` : ""}`
+        + `${hz.entry.read ? " — " + esc(hz.entry.read) : ""}`);
     if (hz.exit && hz.exit.call)
       ee += ibox("Exit", esc(hz.exit.call),
-        `${hz.exit.expected_ret_pct != null ? `expected ${pct(hz.exit.expected_ret_pct)} · ` : ""}peak ~${pct(hz.exit.expected_peak_pct_vs_offer)} around session ${f(hz.exit.expected_peak_session, 0)}`);
+        [hz.exit.expected_ret_pct != null ? `expected ${pct(hz.exit.expected_ret_pct)}` : null,
+         hz.exit.expected_peak_pct_vs_offer != null ? `peak ~${pct(hz.exit.expected_peak_pct_vs_offer)}` : null,
+         hz.exit.expected_peak_session != null ? `around session ${f(hz.exit.expected_peak_session, 0)}` : null
+        ].filter(Boolean).join(" · ") || "—");
     if (ee) html += `<div class="grid2i" style="margin-top:12px">${ee}</div>`;
-    if (hz.inputs_used) html += `<p class="muted" style="margin-top:10px">Inputs used: ${esc(hz.inputs_used.join(", ")) || "training medians only"}.${hz.note ? " " + esc(hz.note) : ""}</p>`;
+    if (hz.inputs_used) html += `<p class="muted" style="margin-top:10px">Inputs used: ${esc(hz.inputs_used.join(", ")) || "training medians only"}.${hz.variant ? ` Model: <strong>${esc(hz.variant)}-listing</strong>.` : ""}${hz.note ? " " + esc(hz.note) : ""}</p>`;
   }
   if (rules) {
     html += `<p class="muted" style="margin-top:10px">Rules engine: listing premium ~${f(rules.listing_open_premium_pct && rules.listing_open_premium_pct.point)}%
@@ -1019,10 +1057,12 @@ function tabForecast(item) {
     if (subItems.length) mountBars($("viz-subs"), { items: subItems, label: "Final subscription by category" });
   };
   return `<div class="card">
-    <div class="ctitle">Horizon forecast — 6m / 12m / 24m, entry &amp; exit</div>
+    <div class="ctitle">Forecast path — what the model will and won't call</div>
     <div class="viz" id="viz-path"></div>
     <p class="muted" style="margin:4px 0 14px">Expected % vs offer price by month since listing — the shaded wash is the
-    model's cross-validated error band. Exact values below; hover or use arrow keys for point-by-point reads.</p>
+    model's cross-validated error band, and it is wide on purpose. The path only extends as far as the model has
+    demonstrated skill against a plain "guess the average" baseline; where it stops, we cannot call the outcome.
+    Hover or use arrow keys for point-by-point reads.</p>
     ${forecastBlocks(item.forecast)}
     ${subsHtml}
     ${item.day1_gain != null ? `<div class="grid2i" style="margin-top:12px">${ibox("Day-1 close vs offer", pct(item.day1_gain))}</div>` : ""}
@@ -1198,8 +1238,9 @@ function tabSignals(analysisId, report) {
     <div class="ctitle">Market signals &amp; forecast (optional, user-supplied)</div>
     <p class="muted" style="margin-bottom:12px;line-height:1.7">GMP, subscription multiples and the listing-day close live
     outside the prospectus and are never part of the fundamental score. Enter whatever you have — all knowable within the
-    first 2–3 days of listing — and the forecast engines combine them with this report's RHP features for the
-    6m / 12m / 24m horizons and entry/exit reads.</p>
+    first 2–3 days of listing — and the forecast engines combine them with this report's RHP features. Supplying the
+    listing-day close matters most: it switches the model from the pre-listing variant to the post-listing one, which is
+    the only one that can call a 6-month return at all.</p>
     <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end">
       ${fields.map(([k, label]) => `<label style="font-size:12px;color:var(--ink-2)">${esc(label)}
         <input class="txt" id="sig-${k}" inputmode="decimal" value="${ms[k] != null ? esc(ms[k]) : ""}"></label>`).join("")}

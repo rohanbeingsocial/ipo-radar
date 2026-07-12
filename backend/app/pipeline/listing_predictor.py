@@ -194,10 +194,16 @@ def _ml_vector(f: dict, names: list[str]) -> list[float]:
 
 
 def signals_forecast(report: dict, signals: dict | None = None) -> dict | None:
-    """LTP-gain forecast from the ridge trained on the user's 125-IPO sheet
-    (GMP + subscription multiples + fundamentals + sector). Missing inputs
-    fall back to training medians, so it degrades gracefully — but it is only
-    worth reading once real market signals have been posted."""
+    """LISTING-DAY gain forecast from the ridge (GMP + subscription multiples +
+    fundamentals + sector). Missing inputs fall back to training medians, so it
+    degrades gracefully — but it is only worth reading once real market signals
+    have been posted.
+
+    This used to forecast LTP gain (today's price vs offer). That target folds in
+    years of market drift, so it was unlearnable from IPO-day inputs and the model
+    lost to predicting the mean. Listing-day gain is what oversubscription and GMP
+    actually predict, and it is the only pre-listing number this system can call
+    with demonstrated skill."""
     if not SIGNALS_MODEL_PATH.exists():
         return None
     model = json.loads(SIGNALS_MODEL_PATH.read_text())
@@ -231,12 +237,15 @@ def signals_forecast(report: dict, signals: dict | None = None) -> dict | None:
     if _SHEET_SECTOR.get(sector) in x:
         x[_SHEET_SECTOR[sector]] = 1.0
     pred = model["intercept"] + sum(model["coef"][k] * v for k, v in x.items())
-    return {"engine": "ml_signals", "forecast_ltp_gain_pct_vs_offer": round(pred, 1),
+    return {"engine": "ml_signals", "forecast_listing_gain_pct_vs_offer": round(pred, 1),
             "trained_on_n": model["n"], "cv_mae_pp": round(model["cv_mae"], 1),
+            "baseline_mae_pp": round(model.get("baseline_mae", 0), 1),
             "cv_direction_acc": round(model["cv_direction_acc"], 2),
+            "cv": model.get("cv", "time-ordered"),
             "inputs_used": used or ["training medians only — post market-signals to sharpen"],
-            "note": "Direction (above/below offer) is the reliable read; the point "
-                    "estimate carries the CV MAE shown."}
+            "note": "Cross-validated forward in time (trained only on IPOs that listed "
+                    "before the ones it is scored on). Direction (above/below offer) is "
+                    "the reliable read; the point estimate carries the CV MAE shown."}
 
 
 def _load_horizon_model():
@@ -250,15 +259,30 @@ def _load_horizon_model():
 
 
 def horizon_forecast(report: dict, signals: dict | None = None) -> dict | None:
-    """6m/12m/24m return + entry/exit forecast from the GBMs trained on the
-    20-year expanded dataset (tools/train_horizon_model.py). Uses subscription
-    multiples, GMP, listing-day gain (post the market-signals for these) plus
-    this report's RHP features; anything missing falls back to training
-    medians and is excluded from inputs_used."""
+    """6m/12m/24m return + entry/exit forecast from the GBMs (automation/retrain.py).
+
+    Two variants exist and the right one is picked by whether the stock has actually
+    listed. Day-1 listing gain is a powerful feature for later returns and it simply
+    does not exist before listing — the old single model was trained with it always
+    present and then median-filled it at serve time, which meant its quoted accuracy
+    described a situation the product never faces.
+
+    Only heads that beat a mean/majority baseline out-of-sample, forward in time, are
+    in the artifact at all. So the shape of this output varies on purpose: before
+    listing there is NO 6m/12m/24m return forecast, because no model we could build
+    beats simply guessing the average — not on magnitude, not even on direction. We
+    say nothing rather than dress up noise as a number."""
     model = _load_horizon_model()
     if not model:
         return None
     s = signals or report.get("market_signals") or {}
+    listed = s.get("day1_gain") is not None
+    if "variants" in model:                       # schema 2
+        var = model["variants"]["post" if listed else "pre"]
+        variant = "post" if listed else "pre"
+    else:                                         # legacy single-variant artifact
+        var, variant = model, "legacy"
+
     f = features_from_report(report)
     sc = report.get("scoring") or {}
     cats = sc.get("categories") or {}
@@ -267,7 +291,7 @@ def horizon_forecast(report: dict, signals: dict | None = None) -> dict | None:
         v = (cats.get(k) or {}).get("score")
         return v if isinstance(v, (int, float)) else None
 
-    x = dict(model["medians"])
+    x = dict(var["medians"])
     used = []
     for src, feat in (("sub_qib", "log_QIB"), ("sub_bnii", "log_bNII"),
                       ("sub_snii", "log_sNII"), ("sub_nii", "log_NII"),
@@ -309,32 +333,66 @@ def horizon_forecast(report: dict, signals: dict | None = None) -> dict | None:
         x[f"sec_{sec}"] = 1.0 if f.get("sector") == sec else 0.0
 
     import pandas as pd
-    vec = pd.DataFrame([[x.get(name, 0.0) for name in model["feature_names"]]],
-                       columns=model["feature_names"])
-    out = {"engine": "ml_horizons", "inputs_used": used, "horizons": {}, "cv": model["cv"]}
+    names = var["feature_names"]
+    vec = pd.DataFrame([[x.get(n, 0.0) for n in names]], columns=names)
+    cvs = var.get("cv") or {}
+    out = {"engine": "ml_horizons", "variant": variant, "inputs_used": used,
+           "horizons": {}, "cv": cvs}
+
     preds = {}
-    for target, mod in model["models"].items():
+    for target, mod in var["models"].items():
         p = float(mod.predict(vec)[0])
-        rb = (model.get("residual_base") or {}).get(target)
-        if rb:                       # return models predict the correction to day-1 carry
-            p += float(x.get(rb, 0.0))
+        rb = (var.get("residual_base") or {}).get(target)
+        if rb:                       # the post-listing return models predict the CORRECTION
+            p += float(x.get(rb, 0.0))   # to day-1 carry, so add the carry back
         preds[target] = p
-    for target, clf in model.get("classifiers", {}).items():
+    for target, clf in (var.get("classifiers") or {}).items():
         preds[target + "_p_pos"] = float(clf.predict_proba(vec)[0][1])
+
+    # A horizon appears only if SOMETHING about it survived validation. Magnitude and
+    # direction are separate heads: pre-listing we can often say neither, post-listing
+    # we can usually say both for 6m. An absent key means "we have no skill here",
+    # which is information — not a rendering bug.
+    skipped = []
     for h, label in (("ret_6m", "6m"), ("ret_12m", "12m"), ("ret_24m", "24m")):
+        box = {}
         if h in preds:
-            out["horizons"][label] = {
-                "ret_pct_vs_offer": round(preds[h], 1),
-                "p_above_offer": round(preds.get(h + "_p_pos", 0.5), 2),
-                "cv_mae_pp": model["cv"].get(h, {}).get("mae")}
+            box["ret_pct_vs_offer"] = round(preds[h], 1)
+            box["cv_mae_pp"] = (cvs.get(h) or {}).get("mae")
+            box["cv_baseline_mae_pp"] = (cvs.get(h) or {}).get("baseline_mean_mae")
+        if h + "_p_pos" in preds:
+            box["p_above_offer"] = round(preds[h + "_p_pos"], 2)
+            box["cv_direction_acc"] = (cvs.get(h) or {}).get("direction_acc")
+        if box:
+            out["horizons"][label] = box
+        else:
+            skipped.append(label)
+    if skipped:
+        out["no_skill"] = {
+            "horizons": skipped,
+            "why": ("No model beat a mean/majority baseline out-of-sample for these, so no "
+                    "number is shown. Before an IPO lists, its 6m/12m/24m outcome is simply "
+                    "not predictable from the prospectus and the order book — neither the "
+                    "size of the move nor its direction."
+                    if variant == "pre" else
+                    "No model beat a mean/majority baseline out-of-sample at these horizons, "
+                    "so no number is shown. Once a stock is trading, its day-1 gain makes the "
+                    "6-month outcome partly predictable; beyond that the signal runs out.")}
+
     entry = {}
+    if "bottom_12m_pct" in preds:
+        entry["expected_bottom_depth_pct_vs_offer"] = round(preds["bottom_12m_pct"], 1)
+        entry["cv_mae_pp"] = (cvs.get("bottom_12m_pct") or {}).get("mae")
     if "sessions_to_bottom" in preds:
         sess = max(0, int(round(preds["sessions_to_bottom"])))
-        entry = {"expected_bottom_session": sess,
-                 "expected_bottom_depth_pct_vs_offer": round(preds.get("bottom_12m_pct", 0), 1),
-                 "read": ("dips are bought fast; waiting rarely improves entry" if sess <= 10
-                          else f"patience pays: model expects the low around session {sess} "
-                               f"(~{round(sess / 21, 1)} months in)")}
+        entry["expected_bottom_session"] = sess
+        entry["read"] = ("dips are bought fast; waiting rarely improves entry" if sess <= 10
+                         else f"patience pays: model expects the low around session {sess} "
+                              f"(~{round(sess / 21, 1)} months in)")
+    elif entry:
+        entry["read"] = ("depth is predictable, timing is not — the model has no skill on "
+                         "WHEN the low lands, only how deep it tends to be")
+
     exit_ = {}
     ret_opts = {k: v for k, v in (("6m", preds.get("ret_6m")), ("12m", preds.get("ret_12m")),
                                   ("24m", preds.get("ret_24m"))) if v is not None}
@@ -344,14 +402,23 @@ def horizon_forecast(report: dict, signals: dict | None = None) -> dict | None:
             exit_ = {"call": "avoid", "note": "no profitable horizon predicted within 2 years"}
         else:
             exit_ = {"call": f"hold to ~{best}", "expected_ret_pct": round(ret_opts[best], 1)}
-        if "peak_24m_pct" in preds and "sessions_to_peak" in preds:
-            exit_["expected_peak_pct_vs_offer"] = round(preds["peak_24m_pct"], 1)
+        if "sessions_to_peak" in preds:
             exit_["expected_peak_session"] = max(0, int(round(preds["sessions_to_peak"])))
+        if "peak_24m_pct" in preds:
+            exit_["expected_peak_pct_vs_offer"] = round(preds["peak_24m_pct"], 1)
     out["entry"] = entry
     out["exit"] = exit_
-    out["note"] = ("Trained on ~20 years of NSE/BSE mainboard IPOs. Point estimates carry the "
-                   "CV MAE shown; direction and entry-timing bands are the reliable read. "
-                   "Long-horizon training data skews to survivors.")
+    out["note"] = (
+        f"Trained on ~20 years of NSE/BSE mainboard IPOs, cross-validated forward in time: "
+        f"every score comes from IPOs that listed AFTER the ones the model learned from. "
+        f"This is the '{variant}-listing' model"
+        + (" — day-1 listing gain is known, which is a strong feature for later returns."
+           if variant == "post" else
+           " — the stock has not listed, so day-1 gain does not exist as an input.")
+        + " Only forecasts that beat a mean/majority baseline out-of-sample are shown at all;"
+          " where a horizon is missing, the honest answer is that we cannot call it."
+          " Point estimates carry the CV MAE shown, which is large — treat them as bands, not"
+          " numbers. Long-horizon training data skews to survivors.")
     return out
 
 

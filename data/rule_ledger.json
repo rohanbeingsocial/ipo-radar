@@ -9158,6 +9158,28 @@
    "retail": 0.85,
    "qib_bar": 7.76,
    "retail_bar": 3.25
+  },
+  {
+   "cg_ipo_id": "2675",
+   "company": "Alpine Texworld Ltd. O",
+   "opened": "2026-07-14",
+   "recorded_at": "2026-07-14T05:18:51.977484+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.05,
+   "qib_bar": 10.27,
+   "retail_bar": 3.43
+  },
+  {
+   "cg_ipo_id": "2949",
+   "company": "SBI Funds Management Ltd. O",
+   "opened": "2026-07-14",
+   "recorded_at": "2026-07-14T05:18:51.978756+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.16,
+   "qib_bar": 10.27,
+   "retail_bar": 3.43
   }
  ],
  "scoreboard": {

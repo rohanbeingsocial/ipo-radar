@@ -19,7 +19,7 @@ import argparse
 import re
 import sys
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -65,13 +65,18 @@ def sebi_archive(pages):
     return entries
 
 
-def queue(reanalyze=False):
+def queue(reanalyze=False, skip_since=None):
     """IPOs with no report, ordered by how much they can teach us: a matured 24m label
     beats a 12m, beats a 6m, beats a listing gain, beats nothing.
 
     With reanalyze=True, take the IPOs that DO have a report instead — used after an
     extractor fix, because the stored JSON is the analyzer's OUTPUT, not the prospectus,
-    so a fix only reaches old reports by running the document through again."""
+    so a fix only reaches old reports by running the document through again.
+
+    skip_since resumes an interrupted re-analysis: reports whose file was written at or
+    after that datetime are treated as already re-analyzed and skipped. Only sound when
+    every report written since that instant used the CURRENT extractor — the file itself
+    does not record its vintage, so the caller owns that guarantee."""
     issue = pd.read_csv(DATA / "cg_issue.csv", dtype={"cg_ipo_id": str})
     issue.columns = [c.split("<")[0].strip() for c in issue.columns]
     outc = pd.read_csv(DATA / "ipo_outcomes.csv", dtype={"cg_ipo_id": str}).set_index("cg_ipo_id")
@@ -80,7 +85,11 @@ def queue(reanalyze=False):
     rows = []
     for _, r in issue.iterrows():
         cid = r["cg_ipo_id"]
-        if (REPORTS / f"{cid}.json").exists() != reanalyze:
+        rpt = REPORTS / f"{cid}.json"
+        if rpt.exists() != reanalyze:
+            continue
+        if reanalyze and skip_since is not None and \
+                datetime.fromtimestamp(rpt.stat().st_mtime) >= skip_since:
             continue
         o = outc.loc[cid] if cid in outc.index else None
         has = lambda k: o is not None and pd.notna(o.get(k))   # noqa: E731
@@ -119,9 +128,14 @@ def main():
     ap.add_argument("--list", action="store_true")
     ap.add_argument("--reanalyze", action="store_true",
                     help="re-run prospectuses that already have a report (after an extractor fix)")
+    ap.add_argument("--skip-written-since", metavar="ISO",
+                    help="resume an interrupted --reanalyze: skip reports whose file mtime is at/after "
+                         "this local datetime (only sound if every write since then used the current "
+                         "extractor)")
     a = ap.parse_args()
 
-    q = queue(reanalyze=a.reanalyze)
+    skip_since = datetime.fromisoformat(a.skip_written_since) if a.skip_written_since else None
+    q = queue(reanalyze=a.reanalyze, skip_since=skip_since)
     have = len(list(REPORTS.glob("*.json")))
     print(f"reports on disk: {have}   "
           f"{'to RE-ANALYZE' if a.reanalyze else 'missing-with-an-outcome'}: {len(q)}")

@@ -8081,7 +8081,8 @@
    "retail": 7.76,
    "qib_bar": 48.11,
    "retail_bar": 6.83,
-   "ret_6m_from_listing": 6.5
+   "ret_6m_from_listing": 6.5,
+   "ret_12m_from_listing": -10.3
   },
   {
    "cg_ipo_id": "2049",
@@ -8093,7 +8094,8 @@
    "retail": 34.36,
    "qib_bar": 48.11,
    "retail_bar": 6.83,
-   "ret_6m_from_listing": -12.8
+   "ret_6m_from_listing": -12.8,
+   "ret_12m_from_listing": -19.8
   },
   {
    "cg_ipo_id": "2027",
@@ -8105,7 +8107,8 @@
    "retail": 21.77,
    "qib_bar": 48.11,
    "retail_bar": 6.83,
-   "ret_6m_from_listing": -22.1
+   "ret_6m_from_listing": -22.1,
+   "ret_12m_from_listing": -27.3
   },
   {
    "cg_ipo_id": "2230",
@@ -9196,7 +9199,7 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 73,
-   "n_rest": 455,
+   "n_rest": 458,
    "rule_median": 7.2,
    "rest_median": -11.8,
    "edge_pp": 19.0,

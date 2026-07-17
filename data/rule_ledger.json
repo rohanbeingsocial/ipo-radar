@@ -9185,6 +9185,17 @@
    "retail": 0.16,
    "qib_bar": 10.27,
    "retail_bar": 3.43
+  },
+  {
+   "cg_ipo_id": "1999",
+   "company": "Caliber Mining & Logistics Ltd. O",
+   "opened": "2026-07-17",
+   "recorded_at": "2026-07-17T05:30:52.568362+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.47,
+   "qib_bar": 10.27,
+   "retail_bar": 3.43
   }
  ],
  "scoreboard": {

@@ -9196,6 +9196,39 @@
    "retail": 0.47,
    "qib_bar": 10.27,
    "retail_bar": 3.43
+  },
+  {
+   "cg_ipo_id": "2574",
+   "company": "Lohia Corp Ltd. O",
+   "opened": "2026-07-23",
+   "recorded_at": "2026-07-23T05:42:42.498177+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.25,
+   "qib_bar": 13.19,
+   "retail_bar": 3.65
+  },
+  {
+   "cg_ipo_id": "2682",
+   "company": "Indo-MIM Ltd. O",
+   "opened": "2026-07-23",
+   "recorded_at": "2026-07-23T05:42:42.499372+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.22,
+   "qib_bar": 13.19,
+   "retail_bar": 3.65
+  },
+  {
+   "cg_ipo_id": "2688",
+   "company": "Xtranet Technologies Ltd. O",
+   "opened": "2026-07-23",
+   "recorded_at": "2026-07-23T05:42:42.500586+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.5,
+   "qib_bar": 13.19,
+   "retail_bar": 3.65
   }
  ],
  "scoreboard": {

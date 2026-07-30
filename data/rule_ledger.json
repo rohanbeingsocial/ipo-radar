@@ -8146,7 +8146,8 @@
    "retail": 57.75,
    "qib_bar": 76.28,
    "retail_bar": 10.03,
-   "ret_6m_from_listing": -53.6
+   "ret_6m_from_listing": -53.6,
+   "ret_12m_from_listing": -38.3
   },
   {
    "cg_ipo_id": "2018",
@@ -9258,7 +9259,7 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 73,
-   "n_rest": 461,
+   "n_rest": 462,
    "rule_median": 7.2,
    "rest_median": -11.8,
    "edge_pp": 19.0,

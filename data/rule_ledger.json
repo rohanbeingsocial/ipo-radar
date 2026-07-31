@@ -9245,6 +9245,28 @@
    "retail": 0.11,
    "qib_bar": 9.11,
    "retail_bar": 3.76
+  },
+  {
+   "cg_ipo_id": "2492",
+   "company": "Juniper Green Energy Ltd. O",
+   "opened": "2026-07-30",
+   "recorded_at": "2026-07-31T05:52:37.205379+00:00",
+   "rule_says": "no",
+   "qib": 1.05,
+   "retail": 0.17,
+   "qib_bar": 9.11,
+   "retail_bar": 3.76
+  },
+  {
+   "cg_ipo_id": "2800",
+   "company": "MV Electrosystems Ltd. O",
+   "opened": "2026-07-30",
+   "recorded_at": "2026-07-31T05:52:37.206613+00:00",
+   "rule_says": "no",
+   "qib": 0.88,
+   "retail": 21.54,
+   "qib_bar": 9.11,
+   "retail_bar": 3.76
   }
  ],
  "scoreboard": {

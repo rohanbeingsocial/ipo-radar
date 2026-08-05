@@ -8159,7 +8159,8 @@
    "retail": 21.92,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": 56.9
+   "ret_6m_from_listing": 56.9,
+   "ret_12m_from_listing": 160.4
   },
   {
    "cg_ipo_id": "2318",
@@ -8171,7 +8172,8 @@
    "retail": 42.55,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": -37.8
+   "ret_6m_from_listing": -37.8,
+   "ret_12m_from_listing": -21.8
   },
   {
    "cg_ipo_id": "2152",
@@ -8183,7 +8185,8 @@
    "retail": 7.98,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": -48.0
+   "ret_6m_from_listing": -48.0,
+   "ret_12m_from_listing": -49.1
   },
   {
    "cg_ipo_id": "2032",
@@ -8195,7 +8198,8 @@
    "retail": 10.49,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": -39.9
+   "ret_6m_from_listing": -39.9,
+   "ret_12m_from_listing": -41.6
   },
   {
    "cg_ipo_id": "2069",
@@ -9267,6 +9271,17 @@
    "retail": 21.54,
    "qib_bar": 9.11,
    "retail_bar": 3.76
+  },
+  {
+   "cg_ipo_id": "2860",
+   "company": "Ardee Industries Ltd. O",
+   "opened": "2026-08-05",
+   "recorded_at": "2026-08-05T05:32:51.418701+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.65,
+   "qib_bar": 9.11,
+   "retail_bar": 3.32
   }
  ],
  "scoreboard": {
@@ -9280,12 +9295,12 @@
    "rest_win_rate": 0.44
   },
   "ret_12m_from_listing": {
-   "n_rule": 73,
-   "n_rest": 462,
-   "rule_median": 7.2,
+   "n_rule": 74,
+   "n_rest": 465,
+   "rule_median": 5.5,
    "rest_median": -11.8,
-   "edge_pp": 19.0,
-   "rule_win_rate": 0.59,
+   "edge_pp": 17.3,
+   "rule_win_rate": 0.58,
    "rest_win_rate": 0.42
   }
  },

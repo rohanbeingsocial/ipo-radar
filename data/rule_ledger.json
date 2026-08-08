@@ -9283,6 +9283,28 @@
    "retail": 0.65,
    "qib_bar": 9.11,
    "retail_bar": 3.32
+  },
+  {
+   "cg_ipo_id": "2565",
+   "company": "Technocraft Ventures Ltd. O",
+   "opened": "2026-08-07",
+   "recorded_at": "2026-08-08T03:55:13.051634+00:00",
+   "rule_says": "no",
+   "qib": 4.47,
+   "retail": 1.01,
+   "qib_bar": 9.11,
+   "retail_bar": 3.32
+  },
+  {
+   "cg_ipo_id": "2583",
+   "company": "LEAP India Ltd. O",
+   "opened": "2026-08-07",
+   "recorded_at": "2026-08-08T03:55:13.052631+00:00",
+   "rule_says": "no",
+   "qib": 0.64,
+   "retail": 0.14,
+   "qib_bar": 9.11,
+   "retail_bar": 3.32
   }
  ],
  "scoreboard": {

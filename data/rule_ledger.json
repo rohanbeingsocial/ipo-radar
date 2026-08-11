@@ -9308,6 +9308,28 @@
    "retail": 0.14,
    "qib_bar": 9.11,
    "retail_bar": 3.32
+  },
+  {
+   "cg_ipo_id": "2579",
+   "company": "Molbio Diagnostics Ltd. O",
+   "opened": "2026-08-10",
+   "recorded_at": "2026-08-11T04:02:53.312650+00:00",
+   "rule_says": "no",
+   "qib": 1.0,
+   "retail": 0.77,
+   "qib_bar": 8.46,
+   "retail_bar": 3.17
+  },
+  {
+   "cg_ipo_id": "2859",
+   "company": "Dhoot Transmission Ltd. O",
+   "opened": "2026-08-10",
+   "recorded_at": "2026-08-11T04:02:53.313824+00:00",
+   "rule_says": "no",
+   "qib": 0.06,
+   "retail": 0.76,
+   "qib_bar": 8.46,
+   "retail_bar": 3.17
   }
  ],
  "scoreboard": {

@@ -9493,6 +9493,28 @@
    "retail": 2.74,
    "qib_bar": 13.19,
    "retail_bar": 3.54
+  },
+  {
+   "cg_ipo_id": "2469",
+   "company": "Lalithaa Jewellery Mart Ltd. O",
+   "opened": "2026-08-17",
+   "recorded_at": "2026-08-18T03:19:37.988504+00:00",
+   "rule_says": "no",
+   "qib": 0.71,
+   "retail": 0.81,
+   "qib_bar": 16.02,
+   "retail_bar": 4.08
+  },
+  {
+   "cg_ipo_id": "2826",
+   "company": "Horizon Industrial Parks Ltd. O",
+   "opened": "2026-08-17",
+   "recorded_at": "2026-08-18T03:19:37.989672+00:00",
+   "rule_says": "no",
+   "qib": 0.19,
+   "retail": 0.21,
+   "qib_bar": 16.02,
+   "retail_bar": 4.08
   }
  ],
  "scoreboard": {

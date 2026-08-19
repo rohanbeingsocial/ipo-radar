@@ -9515,6 +9515,28 @@
    "retail": 0.21,
    "qib_bar": 16.02,
    "retail_bar": 4.08
+  },
+  {
+   "cg_ipo_id": "2002",
+   "company": "Sunshine Pictures Ltd. O",
+   "opened": "2026-08-18",
+   "recorded_at": "2026-08-19T03:27:51.656244+00:00",
+   "rule_says": "no",
+   "qib": 0.03,
+   "retail": 5.99,
+   "qib_bar": 10.59,
+   "retail_bar": 3.25
+  },
+  {
+   "cg_ipo_id": "2663",
+   "company": "Shankesh Jewellers Ltd. O",
+   "opened": "2026-08-18",
+   "recorded_at": "2026-08-19T03:27:51.657133+00:00",
+   "rule_says": "no",
+   "qib": 0.03,
+   "retail": 0.53,
+   "qib_bar": 10.59,
+   "retail_bar": 3.25
   }
  ],
  "scoreboard": {

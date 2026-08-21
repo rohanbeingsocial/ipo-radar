@@ -8328,7 +8328,8 @@
    "retail": 54.96,
    "qib_bar": 76.28,
    "retail_bar": 11.66,
-   "ret_6m_from_listing": -32.1
+   "ret_6m_from_listing": -32.1,
+   "ret_12m_from_listing": 24.5
   },
   {
    "cg_ipo_id": "2003",
@@ -9094,7 +9095,8 @@
    "qib": 8.46,
    "retail": 0.2,
    "qib_bar": 24.34,
-   "retail_bar": 5.24
+   "retail_bar": 5.24,
+   "ret_6m_from_listing": 122.1
   },
   {
    "cg_ipo_id": "2067",
@@ -9548,12 +9550,23 @@
    "retail": 1.27,
    "qib_bar": 8.82,
    "retail_bar": 3.25
+  },
+  {
+   "cg_ipo_id": "2668",
+   "company": "Tempsens Instruments (India) Ltd. O",
+   "opened": "2026-08-20",
+   "recorded_at": "2026-08-21T03:31:48.007727+00:00",
+   "rule_says": "no",
+   "qib": 0.05,
+   "retail": 6.48,
+   "qib_bar": 8.82,
+   "retail_bar": 3.23
   }
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
    "n_rule": 82,
-   "n_rest": 529,
+   "n_rest": 530,
    "rule_median": 9.9,
    "rest_median": -4.7,
    "edge_pp": 14.6,
@@ -9562,12 +9575,12 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 75,
-   "n_rest": 473,
+   "n_rest": 474,
    "rule_median": 3.8,
-   "rest_median": -12.4,
-   "edge_pp": 16.2,
+   "rest_median": -12.2,
+   "edge_pp": 16.0,
    "rule_win_rate": 0.57,
-   "rest_win_rate": 0.41
+   "rest_win_rate": 0.42
   }
  },
  "scoreboard_note": "Includes the backtest period, so it is NOT yet an out-of-sample record. The calls recorded from 2026-07-12 onward are the ones that count; until enough of those mature, this rule is unproven. Research only \u2014 not investment advice."

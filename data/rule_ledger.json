@@ -9561,6 +9561,17 @@
    "retail": 6.48,
    "qib_bar": 8.82,
    "retail_bar": 3.23
+  },
+  {
+   "cg_ipo_id": "2673",
+   "company": "Augmont Enterprises Ltd. O",
+   "opened": "2026-08-21",
+   "recorded_at": "2026-08-22T03:18:27.533674+00:00",
+   "rule_says": "no",
+   "qib": 1.85,
+   "retail": 2.94,
+   "qib_bar": 10.59,
+   "retail_bar": 3.25
   }
  ],
  "scoreboard": {

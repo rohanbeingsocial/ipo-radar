@@ -9572,6 +9572,39 @@
    "retail": 2.94,
    "qib_bar": 10.59,
    "retail_bar": 3.25
+  },
+  {
+   "cg_ipo_id": "2510",
+   "company": "Skyways Air Services Ltd. O",
+   "opened": "2026-08-24",
+   "recorded_at": "2026-08-25T03:30:50.669171+00:00",
+   "rule_says": "no",
+   "qib": 0.46,
+   "retail": 1.66,
+   "qib_bar": 13.19,
+   "retail_bar": 3.54
+  },
+  {
+   "cg_ipo_id": "2591",
+   "company": "Hy-Tech Engineers Ltd. O",
+   "opened": "2026-08-24",
+   "recorded_at": "2026-08-25T03:30:50.670203+00:00",
+   "rule_says": "no",
+   "qib": 0.5,
+   "retail": 11.53,
+   "qib_bar": 13.19,
+   "retail_bar": 3.54
+  },
+  {
+   "cg_ipo_id": "2815",
+   "company": "Symbiotec Pharmalab Ltd. O",
+   "opened": "2026-08-24",
+   "recorded_at": "2026-08-25T03:30:50.671037+00:00",
+   "rule_says": "no",
+   "qib": 0.37,
+   "retail": 1.01,
+   "qib_bar": 13.19,
+   "retail_bar": 3.54
   }
  ],
  "scoreboard": {

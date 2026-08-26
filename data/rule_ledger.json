@@ -9605,6 +9605,17 @@
    "retail": 1.01,
    "qib_bar": 13.19,
    "retail_bar": 3.54
+  },
+  {
+   "cg_ipo_id": "2500",
+   "company": "Annu Projects Ltd. O",
+   "opened": "2026-08-25",
+   "recorded_at": "2026-08-26T03:36:20.699138+00:00",
+   "rule_says": "no",
+   "qib": 0.57,
+   "retail": 0.28,
+   "qib_bar": 8.82,
+   "retail_bar": 3.65
   }
  ],
  "scoreboard": {

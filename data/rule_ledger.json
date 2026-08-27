@@ -8341,7 +8341,8 @@
    "retail": 27.26,
    "qib_bar": 76.28,
    "retail_bar": 12.42,
-   "ret_6m_from_listing": 9.3
+   "ret_6m_from_listing": 9.3,
+   "ret_12m_from_listing": 18.7
   },
   {
    "cg_ipo_id": "2425",
@@ -8353,7 +8354,8 @@
    "retail": 41.49,
    "qib_bar": 76.28,
    "retail_bar": 12.42,
-   "ret_6m_from_listing": -27.4
+   "ret_6m_from_listing": -27.4,
+   "ret_12m_from_listing": 0.3
   },
   {
    "cg_ipo_id": "2117",
@@ -8365,7 +8367,8 @@
    "retail": 164.89,
    "qib_bar": 76.28,
    "retail_bar": 12.42,
-   "ret_6m_from_listing": -37.5
+   "ret_6m_from_listing": -37.5,
+   "ret_12m_from_listing": -45.4
   },
   {
    "cg_ipo_id": "2015",
@@ -9107,7 +9110,8 @@
    "qib": 2.51,
    "retail": 0.27,
    "qib_bar": 24.34,
-   "retail_bar": 5.24
+   "retail_bar": 5.24,
+   "ret_6m_from_listing": 52.6
   },
   {
    "cg_ipo_id": "2039",
@@ -9616,24 +9620,35 @@
    "retail": 0.28,
    "qib_bar": 8.82,
    "retail_bar": 3.65
+  },
+  {
+   "cg_ipo_id": "2013",
+   "company": "Lumino Industries Ltd. O",
+   "opened": "2026-08-27",
+   "recorded_at": "2026-08-27T13:01:11.972585+00:00",
+   "rule_says": "no",
+   "qib": 0.04,
+   "retail": 2.08,
+   "qib_bar": 16.02,
+   "retail_bar": 5.54
   }
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
    "n_rule": 82,
-   "n_rest": 530,
+   "n_rest": 531,
    "rule_median": 9.9,
-   "rest_median": -4.7,
-   "edge_pp": 14.6,
+   "rest_median": -4.6,
+   "edge_pp": 14.5,
    "rule_win_rate": 0.59,
    "rest_win_rate": 0.44
   },
   "ret_12m_from_listing": {
    "n_rule": 75,
-   "n_rest": 474,
+   "n_rest": 477,
    "rule_median": 3.8,
-   "rest_median": -12.2,
-   "edge_pp": 16.0,
+   "rest_median": -12.0,
+   "edge_pp": 15.8,
    "rule_win_rate": 0.57,
    "rest_win_rate": 0.42
   }

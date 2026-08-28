@@ -9631,6 +9631,28 @@
    "retail": 2.08,
    "qib_bar": 16.02,
    "retail_bar": 5.54
+  },
+  {
+   "cg_ipo_id": "1198",
+   "company": "ESDS Software Solution Ltd. O",
+   "opened": "2026-08-28",
+   "recorded_at": "2026-08-28T14:34:27.121074+00:00",
+   "rule_says": "no",
+   "qib": 0.01,
+   "retail": 2.84,
+   "qib_bar": 16.02,
+   "retail_bar": 6.78
+  },
+  {
+   "cg_ipo_id": "2435",
+   "company": "Priority Jewels Ltd. O",
+   "opened": "2026-08-28",
+   "recorded_at": "2026-08-28T14:34:27.122149+00:00",
+   "rule_says": "no",
+   "qib": 0.44,
+   "retail": 3.07,
+   "qib_bar": 16.02,
+   "retail_bar": 6.78
   }
  ],
  "scoreboard": {

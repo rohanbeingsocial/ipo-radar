@@ -9122,7 +9122,8 @@
    "qib": 14.3,
    "retail": 0.6,
    "qib_bar": 17.05,
-   "retail_bar": 4.46
+   "retail_bar": 4.46,
+   "ret_6m_from_listing": -26.8
   },
   {
    "cg_ipo_id": "2031",
@@ -9653,15 +9654,26 @@
    "retail": 3.07,
    "qib_bar": 16.02,
    "retail_bar": 6.78
+  },
+  {
+   "cg_ipo_id": "2622",
+   "company": "Purple Style Labs Ltd. O",
+   "opened": "2026-08-31",
+   "recorded_at": "2026-08-31T08:50:08.190120+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.41,
+   "qib_bar": 16.02,
+   "retail_bar": 6.82
   }
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
    "n_rule": 82,
-   "n_rest": 531,
+   "n_rest": 532,
    "rule_median": 9.9,
-   "rest_median": -4.6,
-   "edge_pp": 14.5,
+   "rest_median": -4.7,
+   "edge_pp": 14.6,
    "rule_win_rate": 0.59,
    "rest_win_rate": 0.44
   },

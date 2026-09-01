@@ -9134,7 +9134,8 @@
    "qib": 2.66,
    "retail": 0.42,
    "qib_bar": 18.16,
-   "retail_bar": 4.46
+   "retail_bar": 4.46,
+   "ret_6m_from_listing": 75.6
   },
   {
    "cg_ipo_id": "2456",
@@ -9665,15 +9666,37 @@
    "retail": 0.41,
    "qib_bar": 16.02,
    "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2827",
+   "company": "Deepa Jewellers Ltd. O",
+   "opened": "2026-09-01",
+   "recorded_at": "2026-09-01T07:59:02.106252+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.89,
+   "qib_bar": 14.8,
+   "retail_bar": 5.54
+  },
+  {
+   "cg_ipo_id": "2787",
+   "company": "Rays of Belief Ltd. O",
+   "opened": "2026-09-01",
+   "recorded_at": "2026-09-01T07:59:02.107302+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 3.87,
+   "qib_bar": 14.8,
+   "retail_bar": 5.54
   }
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
    "n_rule": 82,
-   "n_rest": 532,
+   "n_rest": 533,
    "rule_median": 9.9,
-   "rest_median": -4.7,
-   "edge_pp": 14.6,
+   "rest_median": -4.6,
+   "edge_pp": 14.5,
    "rule_win_rate": 0.59,
    "rest_win_rate": 0.44
   },

@@ -8419,7 +8419,8 @@
    "retail": 2.81,
    "qib_bar": 65.81,
    "retail_bar": 14.12,
-   "ret_6m_from_listing": -12.9
+   "ret_6m_from_listing": -12.9,
+   "ret_12m_from_listing": -4.9
   },
   {
    "cg_ipo_id": "2042",
@@ -8431,7 +8432,8 @@
    "retail": 21.78,
    "qib_bar": 65.81,
    "retail_bar": 14.12,
-   "ret_6m_from_listing": -43.4
+   "ret_6m_from_listing": -43.4,
+   "ret_12m_from_listing": -23.7
   },
   {
    "cg_ipo_id": "2045",
@@ -9149,7 +9151,8 @@
    "qib": 3.48,
    "retail": 0.35,
    "qib_bar": 18.16,
-   "retail_bar": 4.46
+   "retail_bar": 4.46,
+   "ret_6m_from_listing": 54.2
   },
   {
    "cg_ipo_id": "2501",
@@ -9691,12 +9694,23 @@
    "retail": 3.87,
    "qib_bar": 14.8,
    "retail_bar": 5.54
+  },
+  {
+   "cg_ipo_id": "2127",
+   "company": "Pranav Constructions Ltd. O",
+   "opened": "2026-09-07",
+   "recorded_at": "2026-09-07T07:31:12.383087+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 3.22,
+   "qib_bar": 22.87,
+   "retail_bar": 7.27
   }
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
    "n_rule": 82,
-   "n_rest": 533,
+   "n_rest": 534,
    "rule_median": 9.9,
    "rest_median": -4.6,
    "edge_pp": 14.5,
@@ -9705,12 +9719,12 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 75,
-   "n_rest": 480,
+   "n_rest": 482,
    "rule_median": 3.8,
    "rest_median": -12.2,
    "edge_pp": 16.0,
    "rule_win_rate": 0.57,
-   "rest_win_rate": 0.42
+   "rest_win_rate": 0.41
   }
  },
  "scoreboard_note": "Includes the backtest period, so it is NOT yet an out-of-sample record. The calls recorded from 2026-07-12 onward are the ones that count; until enough of those mature, this rule is unproven. Research only \u2014 not investment advice."

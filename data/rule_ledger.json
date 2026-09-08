@@ -8445,7 +8445,8 @@
    "retail": 1.17,
    "qib_bar": 65.81,
    "retail_bar": 14.12,
-   "ret_6m_from_listing": -42.1
+   "ret_6m_from_listing": -42.1,
+   "ret_12m_from_listing": -42.3
   },
   {
    "cg_ipo_id": "2011",
@@ -8457,7 +8458,8 @@
    "retail": 10.76,
    "qib_bar": 65.81,
    "retail_bar": 14.12,
-   "ret_6m_from_listing": 46.1
+   "ret_6m_from_listing": 46.1,
+   "ret_12m_from_listing": 132.4
   },
   {
    "cg_ipo_id": "2174",
@@ -9705,6 +9707,39 @@
    "retail": 3.22,
    "qib_bar": 22.87,
    "retail_bar": 7.27
+  },
+  {
+   "cg_ipo_id": "2594",
+   "company": "Glass Wall Systems (India) Ltd. O",
+   "opened": "2026-09-08",
+   "recorded_at": "2026-09-08T07:28:33.923777+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.62,
+   "qib_bar": 22.87,
+   "retail_bar": 7.27
+  },
+  {
+   "cg_ipo_id": "2775",
+   "company": "Prasol Chemicals Ltd. O",
+   "opened": "2026-09-08",
+   "recorded_at": "2026-09-08T07:28:33.924666+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.42,
+   "qib_bar": 22.87,
+   "retail_bar": 7.27
+  },
+  {
+   "cg_ipo_id": "2856",
+   "company": "Kanohar Electricals Ltd. O",
+   "opened": "2026-09-08",
+   "recorded_at": "2026-09-08T07:28:33.925536+00:00",
+   "rule_says": "no",
+   "qib": 0.01,
+   "retail": 1.52,
+   "qib_bar": 22.87,
+   "retail_bar": 7.27
   }
  ],
  "scoreboard": {
@@ -9718,12 +9753,12 @@
    "rest_win_rate": 0.44
   },
   "ret_12m_from_listing": {
-   "n_rule": 75,
-   "n_rest": 482,
-   "rule_median": 3.8,
-   "rest_median": -12.2,
-   "edge_pp": 16.0,
-   "rule_win_rate": 0.57,
+   "n_rule": 76,
+   "n_rest": 483,
+   "rule_median": 5.5,
+   "rest_median": -12.4,
+   "edge_pp": 17.9,
+   "rule_win_rate": 0.58,
    "rest_win_rate": 0.41
   }
  },

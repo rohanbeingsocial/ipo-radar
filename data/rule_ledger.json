@@ -8471,7 +8471,8 @@
    "retail": 51.69,
    "qib_bar": 56.2,
    "retail_bar": 11.16,
-   "ret_6m_from_listing": -55.7
+   "ret_6m_from_listing": -55.7,
+   "ret_12m_from_listing": -54.8
   },
   {
    "cg_ipo_id": "2075",
@@ -8494,7 +8495,8 @@
    "retail": 9.46,
    "qib_bar": 56.2,
    "retail_bar": 11.16,
-   "ret_6m_from_listing": -48.2
+   "ret_6m_from_listing": -48.2,
+   "ret_12m_from_listing": -8.1
   },
   {
    "cg_ipo_id": "2028",
@@ -8506,7 +8508,8 @@
    "retail": 5.11,
    "qib_bar": 56.2,
    "retail_bar": 11.16,
-   "ret_6m_from_listing": -6.2
+   "ret_6m_from_listing": -6.2,
+   "ret_12m_from_listing": 13.9
   },
   {
    "cg_ipo_id": "2023",
@@ -9740,6 +9743,72 @@
    "retail": 1.52,
    "qib_bar": 22.87,
    "retail_bar": 7.27
+  },
+  {
+   "cg_ipo_id": "2086",
+   "company": "LCC Projects Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.306849+00:00",
+   "rule_says": "no",
+   "qib": 0.55,
+   "retail": 0.62,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2514",
+   "company": "Steamhouse India Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.308030+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.35,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2524",
+   "company": "Manipal Payment & Identity Solutions Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.309180+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.42,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2558",
+   "company": "Asset Reconstruction Co.(India) Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.310365+00:00",
+   "rule_says": "no",
+   "qib": 0.09,
+   "retail": 0.28,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2971",
+   "company": "Rentomojo Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.311573+00:00",
+   "rule_says": "no",
+   "qib": 0.4,
+   "retail": 0.76,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2020",
+   "company": "Karamtara Engineering Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.312749+00:00",
+   "rule_says": "no",
+   "qib": 1.26,
+   "retail": 0.54,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
   }
  ],
  "scoreboard": {
@@ -9753,12 +9822,12 @@
    "rest_win_rate": 0.44
   },
   "ret_12m_from_listing": {
-   "n_rule": 76,
-   "n_rest": 483,
-   "rule_median": 5.5,
+   "n_rule": 77,
+   "n_rest": 485,
+   "rule_median": 3.8,
    "rest_median": -12.4,
-   "edge_pp": 17.9,
-   "rule_win_rate": 0.58,
+   "edge_pp": 16.2,
+   "rule_win_rate": 0.57,
    "rest_win_rate": 0.41
   }
  },

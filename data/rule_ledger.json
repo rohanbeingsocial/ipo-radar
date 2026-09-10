@@ -8521,7 +8521,8 @@
    "retail": 1.74,
    "qib_bar": 42.44,
    "retail_bar": 9.98,
-   "ret_6m_from_listing": -25.4
+   "ret_6m_from_listing": -25.4,
+   "ret_12m_from_listing": 29.4
   },
   {
    "cg_ipo_id": "2212",
@@ -8533,7 +8534,8 @@
    "retail": 0.99,
    "qib_bar": 42.44,
    "retail_bar": 9.98,
-   "ret_6m_from_listing": -29.9
+   "ret_6m_from_listing": -29.9,
+   "ret_12m_from_listing": -26.0
   },
   {
    "cg_ipo_id": "2345",
@@ -8545,7 +8547,8 @@
    "retail": 3.81,
    "qib_bar": 42.44,
    "retail_bar": 9.98,
-   "ret_6m_from_listing": 49.3
+   "ret_6m_from_listing": 49.3,
+   "ret_12m_from_listing": -5.7
   },
   {
    "cg_ipo_id": "2432",
@@ -9181,7 +9184,8 @@
    "qib": 1.73,
    "retail": 0.12,
    "qib_bar": 13.19,
-   "retail_bar": 3.68
+   "retail_bar": 3.68,
+   "ret_6m_from_listing": 28.4
   },
   {
    "cg_ipo_id": "2570",
@@ -9192,7 +9196,8 @@
    "qib": 4.74,
    "retail": 0.16,
    "qib_bar": 13.19,
-   "retail_bar": 3.68
+   "retail_bar": 3.68,
+   "ret_6m_from_listing": 45.8
   },
   {
    "cg_ipo_id": "2676",
@@ -9809,24 +9814,35 @@
    "retail": 0.54,
    "qib_bar": 22.87,
    "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2834",
+   "company": "Veegaland Developers Ltd. O",
+   "opened": "2026-09-10",
+   "recorded_at": "2026-09-10T07:32:55.327121+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.52,
+   "qib_bar": 26.09,
+   "retail_bar": 8.59
   }
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
    "n_rule": 82,
-   "n_rest": 534,
+   "n_rest": 536,
    "rule_median": 9.9,
-   "rest_median": -4.6,
-   "edge_pp": 14.5,
+   "rest_median": -4.5,
+   "edge_pp": 14.4,
    "rule_win_rate": 0.59,
-   "rest_win_rate": 0.44
+   "rest_win_rate": 0.45
   },
   "ret_12m_from_listing": {
    "n_rule": 77,
-   "n_rest": 485,
+   "n_rest": 488,
    "rule_median": 3.8,
-   "rest_median": -12.4,
-   "edge_pp": 16.2,
+   "rest_median": -12.2,
+   "edge_pp": 16.0,
    "rule_win_rate": 0.57,
    "rest_win_rate": 0.41
   }

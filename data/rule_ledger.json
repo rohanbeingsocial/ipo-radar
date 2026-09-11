@@ -9825,6 +9825,17 @@
    "retail": 0.52,
    "qib_bar": 26.09,
    "retail_bar": 8.59
+  },
+  {
+   "cg_ipo_id": "2483",
+   "company": "Manika Plastech Ltd. O",
+   "opened": "2026-09-11",
+   "recorded_at": "2026-09-11T07:28:22.331760+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.45,
+   "qib_bar": 38.3,
+   "retail_bar": 9.2
   }
  ],
  "scoreboard": {

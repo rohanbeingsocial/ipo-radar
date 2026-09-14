@@ -1,5 +1,5 @@
 cg_ipo_id,detail_url,company,id,Issue Category,Opening Date,Listing Date,Listing At,ISIN,BSE Scrip Code,NSE Symbol,urlrewrite_folder_name,Issue Price (Rs.),Open Price on Listing (Rs.),% Gain/Loss (Issue price v/s Open price on Listing),Close Price on Listing (Rs.),% Gain/Loss (Issue price v/s close price on Listing),Current Price,Gain / Loss (%),IL_IPO_Listing_date,issue_open_date_plan,isin,bse_script_code,nse_symbol,Current Price <br>at BSE (Rs.),Current Price <br>at NSE (Rs.)
-2127,,Pranav Constructions Ltd.,2127,Mainboard,07-Sep-2026,15-Sep-2026,"BSE, NSE",INE0H4201019,544909,PRANAV,pranav-constructions-ipo,124.00,,,,0,,0,,2026-09-07,,,,,
+2127,,Pranav Constructions Ltd.,2127,Mainboard,07-Sep-2026,15-Sep-2026,"BSE, NSE",INE0H4201019,544909,PRANAV,pranav-constructions-ipo,124.00,,,,0,,0,2026-09-15T00:00:00.000Z,2026-09-07,,,,,
 2827,,Deepa Jewellers Ltd.,2827,Mainboard,01-Sep-2026,08-Sep-2026,"BSE, NSE",INE1M2N01020,544903,DEEPA,deepa-jewellers-ipo,177.00,221,24.86,194.37,9.81,185.86,4.89,2026-09-08T00:00:00.000Z,2026-09-01,,,,,
 2787,,Rays of Belief Ltd.,2787,Mainboard,01-Sep-2026,08-Sep-2026,"BSE, NSE",INE1FCO01014,544906,MOMSBELIEF,rays-of-belief-ipo,239.00,239,0,228.34,-4.46,224.96,-7.24,2026-09-08T00:00:00.000Z,2026-09-01,,,,,
 2622,,Purple Style Labs Ltd.,2622,Mainboard,31-Aug-2026,07-Sep-2026,"BSE, NSE",INE0I1B01016,544901,PERNIASPOP,purple-style-labs-ipo,575.00,535,-6.96,568.55,-1.12,569.9,-0.84,2026-09-07T00:00:00.000Z,2026-08-31,,,,,
@@ -65,7 +65,7 @@ cg_ipo_id,detail_url,company,id,Issue Category,Opening Date,Listing Date,Listing
 2549,,Amagi Media Labs Ltd.,2549,Mainboard,13-Jan-2026,21-Jan-2026,"BSE, NSE",INE121R01077,544679,AMAGI,amagi-media-labs-ipo,361.00,318,-11.91,348.25,-3.53,578.35,59.97,2026-01-21T00:00:00.000Z,2026-01-13,,,,,
 2462,,Bharat Coking Coal Ltd.,2462,Mainboard,09-Jan-2026,19-Jan-2026,"BSE, NSE",INE05XR01022,544678,BHARATCOAL,bharat-coking-coal-ipo,23.00,45,95.65,40.58,76.43,33.01,43.48,2026-01-19T00:00:00.000Z,2026-01-09,,,,,
 2971,,Rentomojo Ltd.,2971,Mainboard,09-Sep-2026,,"BSE, NSE",,,RENTOMOJO,rentomojo-ipo,404.00,,,,0,,0,,2026-09-09,,,,,
-2000,,A-One Steels India Ltd.,2000,Mainboard,24-Sep-2026,,"BSE, NSE",,,,a-one-steels-ipo,,,,,,,,,2026-09-24,,,,,
+2000,,A-One Steels India Ltd.,2000,Mainboard,24-Sep-2026,,"BSE, NSE",,,,a-one-steels-ipo,,,,,0,,0,,2026-09-24,,,,,
 3151,,National Stock Exchange of India Ltd.,3151,Mainboard,17-Sep-2026,,BSE,,,,nse-ipo,,,,,0,,0,,2026-09-17,,,,,
 2805,,Sonaselection India Ltd.,2805,Mainboard,17-Sep-2026,,"BSE, NSE",,,,sonaselection-india-ipo,,,,,0,,0,,2026-09-17,,,,,
 2822,,SS Retail Ltd.,2822,Mainboard,16-Sep-2026,,"BSE, NSE",,,,ss-retail-ipo,,,,,0,,0,,2026-09-16,,,,,

@@ -8599,7 +8599,8 @@
    "retail": 2.09,
    "qib_bar": 38.63,
    "retail_bar": 10.49,
-   "ret_6m_from_listing": -19.0
+   "ret_6m_from_listing": -19.0,
+   "ret_12m_from_listing": -19.8
   },
   {
    "cg_ipo_id": "1998",
@@ -8611,7 +8612,8 @@
    "retail": 1.47,
    "qib_bar": 38.63,
    "retail_bar": 10.49,
-   "ret_6m_from_listing": -45.7
+   "ret_6m_from_listing": -45.7,
+   "ret_12m_from_listing": -30.6
   },
   {
    "cg_ipo_id": "2407",
@@ -9839,6 +9841,39 @@
    "retail": 0.45,
    "qib_bar": 38.3,
    "retail_bar": 9.2
+  },
+  {
+   "cg_ipo_id": "2225",
+   "company": "Hero Motors Ltd. O",
+   "opened": "2026-09-16",
+   "recorded_at": "2026-09-16T07:52:07.274847+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.62,
+   "qib_bar": 65.69,
+   "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2803",
+   "company": "Jindal Supreme (India) Ltd. O",
+   "opened": "2026-09-16",
+   "recorded_at": "2026-09-16T07:52:07.276031+00:00",
+   "rule_says": "no",
+   "qib": 1.01,
+   "retail": 6.77,
+   "qib_bar": 65.69,
+   "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2822",
+   "company": "SS Retail Ltd. O",
+   "opened": "2026-09-16",
+   "recorded_at": "2026-09-16T07:52:07.277189+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.31,
+   "qib_bar": 65.69,
+   "retail_bar": 13.33
   }
  ],
  "scoreboard": {
@@ -9853,10 +9888,10 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 77,
-   "n_rest": 491,
+   "n_rest": 493,
    "rule_median": 3.8,
-   "rest_median": -12.8,
-   "edge_pp": 16.6,
+   "rest_median": -13.1,
+   "edge_pp": 16.9,
    "rule_win_rate": 0.57,
    "rest_win_rate": 0.41
   }

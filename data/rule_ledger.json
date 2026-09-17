@@ -8625,7 +8625,8 @@
    "retail": 2.77,
    "qib_bar": 38.63,
    "retail_bar": 10.49,
-   "ret_6m_from_listing": -6.9
+   "ret_6m_from_listing": -6.9,
+   "ret_12m_from_listing": 0.0
   },
   {
    "cg_ipo_id": "2290",
@@ -8637,7 +8638,8 @@
    "retail": 23.14,
    "qib_bar": 35.86,
    "retail_bar": 9.46,
-   "ret_6m_from_listing": -6.6
+   "ret_6m_from_listing": -6.6,
+   "ret_12m_from_listing": 3.1
   },
   {
    "cg_ipo_id": "2014",
@@ -9874,6 +9876,28 @@
    "retail": 1.31,
    "qib_bar": 65.69,
    "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2805",
+   "company": "Sonaselection India Ltd. O",
+   "opened": "2026-09-17",
+   "recorded_at": "2026-09-17T07:55:37.415461+00:00",
+   "rule_says": "no",
+   "qib": 0.11,
+   "retail": 0.49,
+   "qib_bar": 65.69,
+   "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "3151",
+   "company": "National Stock Exchange of India Ltd. (NSE IPO) O",
+   "opened": "2026-09-17",
+   "recorded_at": "2026-09-17T07:55:37.416677+00:00",
+   "rule_says": "no",
+   "qib": 0.18,
+   "retail": 0.32,
+   "qib_bar": 65.69,
+   "retail_bar": 13.83
   }
  ],
  "scoreboard": {
@@ -9888,10 +9912,10 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 77,
-   "n_rest": 493,
+   "n_rest": 495,
    "rule_median": 3.8,
-   "rest_median": -13.1,
-   "edge_pp": 16.9,
+   "rest_median": -12.8,
+   "edge_pp": 16.6,
    "rule_win_rate": 0.57,
    "rest_win_rate": 0.41
   }

@@ -12,10 +12,17 @@ an IPO with a 24m return teaches more than one that listed last week.
     python automation/backfill_rhp.py --limit 200        # bounded, resumable
     python automation/backfill_rhp.py --pages 60         # how deep to walk SEBI
     python automation/backfill_rhp.py --list             # show the queue, fetch nothing
+    python automation/backfill_rhp.py --local sebi_rhps_archive   # PDFs already on disk
+
+--local skips the SEBI walk and reads prospectuses already downloaded into a folder whose
+files are named after the Chittorgarh company ("Zomato_Ltd_.pdf"). 286 IPOs with no report
+had their PDF sitting in sebi_rhps_archive/ all along (279 real prospectuses, 7 notice
+stubs) — the online walk never produced a report for them, and nothing looked on disk.
 """
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 import time
@@ -27,8 +34,12 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "automation"))
 sys.path.insert(0, str(ROOT / "backend"))
-from update import (DATA, REPORTS, SEBI_AJAX, fetch_and_analyze, http,  # noqa: E402
-                    norm_tokens, pdate)
+from update import (DATA, REPORTS, SEBI_AJAX, analyze_pdf, compact_report,  # noqa: E402
+                    fetch_and_analyze, http, norm_tokens, num, pdate)
+
+# a real prospectus runs to hundreds of pages; SEBI's "RHP" list also links 1-page
+# notices (Bharti Infratel, MSTC in the local archive), which score a meaningless 50
+MIN_PAGES = 50
 
 ROW_RE = re.compile(
     r'<td>([A-Z][a-z]{2} \d{2}, \d{4})</td>\s*<td><a href=[\'"]'
@@ -65,7 +76,28 @@ def sebi_archive(pages):
     return entries
 
 
-def queue(reanalyze=False, skip_since=None):
+def local_index(folder: Path) -> dict[frozenset, Path]:
+    """Name-token set -> PDF. A name two files share is dropped rather than guessed."""
+    idx: dict[frozenset, Path] = {}
+    dup: set[frozenset] = set()
+    for f in folder.glob("*.pdf"):
+        toks = frozenset(norm_tokens(f.stem.replace("_", " ")))
+        if toks in idx:
+            dup.add(toks)
+        idx[toks] = f
+    return {k: v for k, v in idx.items() if k not in dup}
+
+
+def analyze_local(pdf: Path, out_json: Path, offer_price=None) -> bool:
+    """fetch_and_analyze for a PDF already on disk. Returns False for a notice stub."""
+    rep = analyze_pdf(str(pdf), offer_price=num(offer_price) if offer_price is not None else None)
+    if ((rep.get("meta") or {}).get("page_count") or 0) < MIN_PAGES:
+        return False
+    out_json.write_text(json.dumps(compact_report(rep), ensure_ascii=False), encoding="utf-8")
+    return True
+
+
+def queue(reanalyze=False, skip_since=None, keep_unlabeled=False):
     """IPOs with no report, ordered by how much they can teach us: a matured 24m label
     beats a 12m, beats a 6m, beats a listing gain, beats nothing.
 
@@ -95,7 +127,7 @@ def queue(reanalyze=False, skip_since=None):
         has = lambda k: o is not None and pd.notna(o.get(k))   # noqa: E731
         weight = (3 if has("ret_24m") else 2 if has("ret_12m") else
                   1 if has("ret_6m") else 0)
-        if weight == 0 and not reanalyze:
+        if weight == 0 and not reanalyze and not keep_unlabeled:
             continue                       # no outcome => cannot test the score against it
         rows.append({"cg_ipo_id": cid, "company": r["company"], "open_dt": r["open_dt"],
                      "weight": weight,
@@ -121,6 +153,40 @@ def queue(reanalyze=False, skip_since=None):
               .drop(columns=["rank_in_year"]).reset_index(drop=True))
 
 
+def local_backfill(q: pd.DataFrame, folder: Path, limit: int) -> None:
+    idx = local_index(folder)
+    print(f"\n{len(idx)} PDFs in {folder}")
+    done = failed = nomatch = stub = 0
+    t0 = time.time()
+    for _, r in q.iterrows():
+        if done >= limit:
+            break
+        # exact token-set equality, not subset: with no filing date to check, a subset
+        # match is what would put "XYZ Ltd" on "XYZ Cement Ltd"
+        pdf = idx.get(frozenset(norm_tokens(r["company"])))
+        if pdf is None:
+            nomatch += 1
+            continue
+        try:
+            if not analyze_local(pdf, REPORTS / f"{r['cg_ipo_id']}.json",
+                                 offer_price=r.get("offer_price")):
+                stub += 1
+                print(f"  STUB {r['company'][:40]}: under {MIN_PAGES} pages, not written")
+                continue
+            done += 1
+            rate = (time.time() - t0) / done
+            print(f"  [{done}/{limit}] {r['company'][:44]:46} "
+                  f"({r['open_dt'].date() if pd.notna(r['open_dt']) else '?'})  {rate:.0f}s/report",
+                  flush=True)
+        except Exception as e:                                   # noqa: BLE001
+            failed += 1
+            print(f"  FAIL {r['company'][:40]}: {str(e)[:60]}", flush=True)
+
+    print(f"\nanalyzed {done}  |  {failed} failed  |  {stub} notice stubs  |  "
+          f"{nomatch} had no local PDF")
+    print(f"reports on disk now: {len(list(REPORTS.glob('*.json')))}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=150)
@@ -132,18 +198,25 @@ def main():
                     help="resume an interrupted --reanalyze: skip reports whose file mtime is at/after "
                          "this local datetime (only sound if every write since then used the current "
                          "extractor)")
+    ap.add_argument("--local", metavar="DIR", type=Path,
+                    help="analyze PDFs already in DIR (named after the company) instead of walking "
+                         "SEBI; unlabeled IPOs are included, since a local run costs no downloads")
     a = ap.parse_args()
 
     skip_since = datetime.fromisoformat(a.skip_written_since) if a.skip_written_since else None
-    q = queue(reanalyze=a.reanalyze, skip_since=skip_since)
+    q = queue(reanalyze=a.reanalyze, skip_since=skip_since, keep_unlabeled=a.local is not None)
     have = len(list(REPORTS.glob("*.json")))
     print(f"reports on disk: {have}   "
-          f"{'to RE-ANALYZE' if a.reanalyze else 'missing-with-an-outcome'}: {len(q)}")
+          f"{'to RE-ANALYZE' if a.reanalyze else 'missing' if a.local else 'missing-with-an-outcome'}"
+          f": {len(q)}")
     if q.empty:
         return
     print(q["weight"].value_counts().rename({3: "has 24m", 2: "has 12m", 1: "has 6m"}).to_string())
     if a.list:
         print(q.head(30).to_string())
+        return
+    if a.local:
+        local_backfill(q, a.local, a.limit)
         return
 
     print(f"\nwalking SEBI archive ({a.pages} pages)...")

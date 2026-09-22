@@ -8664,7 +8664,8 @@
    "retail": 1.1,
    "qib_bar": 35.7,
    "retail_bar": 9.46,
-   "ret_6m_from_listing": -2.6
+   "ret_6m_from_listing": -2.6,
+   "ret_12m_from_listing": 3.5
   },
   {
    "cg_ipo_id": "2064",
@@ -9899,6 +9900,17 @@
    "retail": 0.32,
    "qib_bar": 65.69,
    "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "2563",
+   "company": "Varmora Granito Ltd. O",
+   "opened": "2026-09-22",
+   "recorded_at": "2026-09-22T07:57:51.600568+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.14,
+   "qib_bar": 87.42,
+   "retail_bar": 13.83
   }
  ],
  "scoreboard": {
@@ -9913,10 +9925,10 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 77,
-   "n_rest": 496,
+   "n_rest": 497,
    "rule_median": 3.8,
-   "rest_median": -12.6,
-   "edge_pp": 16.4,
+   "rest_median": -12.4,
+   "edge_pp": 16.2,
    "rule_win_rate": 0.57,
    "rest_win_rate": 0.41
   }

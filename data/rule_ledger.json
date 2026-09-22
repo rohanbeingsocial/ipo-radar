@@ -7773,6 +7773,19 @@
    "ret_12m_from_listing": -18.3
   },
   {
+   "cg_ipo_id": "1985",
+   "company": "Hexaware Technologies Ltd.",
+   "opened": "2025-02-12",
+   "recorded_at": "2026-08-15T03:14:31.675839+00:00",
+   "rule_says": "no",
+   "qib": 9.55,
+   "retail": 0.11,
+   "qib_bar": 87.6,
+   "retail_bar": 20.23,
+   "ret_6m_from_listing": 1.5,
+   "ret_12m_from_listing": -29.2
+  },
+  {
    "cg_ipo_id": "1988",
    "company": "Quality Power Electrical Equipments Ltd.",
    "opened": "2025-02-14",
@@ -7877,6 +7890,19 @@
    "ret_12m_from_listing": -16.4
   },
   {
+   "cg_ipo_id": "2202",
+   "company": "Oswal Pumps Ltd.",
+   "opened": "2025-06-13",
+   "recorded_at": "2026-08-15T03:14:31.686688+00:00",
+   "rule_says": "BUY-CANDIDATE",
+   "qib": 88.08,
+   "retail": 3.6,
+   "qib_bar": 81.83,
+   "retail_bar": 14.55,
+   "ret_6m_from_listing": -14.9,
+   "ret_12m_from_listing": -32.4
+  },
+  {
    "cg_ipo_id": "1971",
    "company": "Arisinfra Solutions Ltd.",
    "opened": "2025-06-18",
@@ -7916,6 +7942,19 @@
    "ret_12m_from_listing": -56.2
   },
   {
+   "cg_ipo_id": "2189",
+   "company": "Ellenbarrie Industrial Gases Ltd.",
+   "opened": "2025-06-24",
+   "recorded_at": "2026-08-15T03:14:31.690469+00:00",
+   "rule_says": "no",
+   "qib": 63.13,
+   "retail": 2.2,
+   "qib_bar": 80.64,
+   "retail_bar": 11.77,
+   "ret_6m_from_listing": -35.7,
+   "ret_12m_from_listing": -51.2
+  },
+  {
    "cg_ipo_id": "2110",
    "company": "HDB Financial Services Ltd.",
    "opened": "2025-06-25",
@@ -7927,6 +7966,19 @@
    "retail_bar": 13.16,
    "ret_6m_from_listing": -8.9,
    "ret_12m_from_listing": -12.0
+  },
+  {
+   "cg_ipo_id": "2073",
+   "company": "Sambhv Steel Tubes Ltd.",
+   "opened": "2025-06-25",
+   "recorded_at": "2026-08-15T03:14:31.694326+00:00",
+   "rule_says": "no",
+   "qib": 66.36,
+   "retail": 8.56,
+   "qib_bar": 72.97,
+   "retail_bar": 11.26,
+   "ret_6m_from_listing": -1.6,
+   "ret_12m_from_listing": 18.1
   },
   {
    "cg_ipo_id": "2074",
@@ -8042,7 +8094,8 @@
    "retail": 29.73,
    "qib_bar": 31.73,
    "retail_bar": 6.83,
-   "ret_6m_from_listing": -10.6
+   "ret_6m_from_listing": -10.6,
+   "ret_12m_from_listing": -8.1
   },
   {
    "cg_ipo_id": "2036",
@@ -8054,7 +8107,8 @@
    "retail": 53.81,
    "qib_bar": 48.11,
    "retail_bar": 6.83,
-   "ret_6m_from_listing": 37.5
+   "ret_6m_from_listing": 37.5,
+   "ret_12m_from_listing": 241.9
   },
   {
    "cg_ipo_id": "2030",
@@ -8066,7 +8120,8 @@
    "retail": 2.2,
    "qib_bar": 48.11,
    "retail_bar": 6.83,
-   "ret_6m_from_listing": -29.0
+   "ret_6m_from_listing": -29.0,
+   "ret_12m_from_listing": -19.4
   },
   {
    "cg_ipo_id": "2448",
@@ -8078,7 +8133,8 @@
    "retail": 7.76,
    "qib_bar": 48.11,
    "retail_bar": 6.83,
-   "ret_6m_from_listing": 6.5
+   "ret_6m_from_listing": 6.5,
+   "ret_12m_from_listing": -10.3
   },
   {
    "cg_ipo_id": "2049",
@@ -8090,7 +8146,8 @@
    "retail": 34.36,
    "qib_bar": 48.11,
    "retail_bar": 6.83,
-   "ret_6m_from_listing": -12.8
+   "ret_6m_from_listing": -12.8,
+   "ret_12m_from_listing": -19.8
   },
   {
    "cg_ipo_id": "2027",
@@ -8102,7 +8159,21 @@
    "retail": 21.77,
    "qib_bar": 48.11,
    "retail_bar": 6.83,
-   "ret_6m_from_listing": -22.1
+   "ret_6m_from_listing": -22.1,
+   "ret_12m_from_listing": -27.3
+  },
+  {
+   "cg_ipo_id": "2180",
+   "company": "Highway Infrastructure Ltd.",
+   "opened": "2025-08-05",
+   "recorded_at": "2026-08-15T03:14:31.711897+00:00",
+   "rule_says": "no",
+   "qib": 432.71,
+   "retail": 164.48,
+   "qib_bar": 64.75,
+   "retail_bar": 7.29,
+   "ret_6m_from_listing": -53.7,
+   "ret_12m_from_listing": -62.8
   },
   {
    "cg_ipo_id": "2230",
@@ -8114,7 +8185,21 @@
    "retail": 1.91,
    "qib_bar": 72.97,
    "retail_bar": 9.31,
-   "ret_6m_from_listing": -18.1
+   "ret_6m_from_listing": -18.1,
+   "ret_12m_from_listing": -10.5
+  },
+  {
+   "cg_ipo_id": "2125",
+   "company": "All Time Plastics Ltd.",
+   "opened": "2025-08-07",
+   "recorded_at": "2026-08-15T03:14:31.714346+00:00",
+   "rule_says": "no",
+   "qib": 10.3,
+   "retail": 5.36,
+   "qib_bar": 69.66,
+   "retail_bar": 8.16,
+   "ret_6m_from_listing": -6.9,
+   "ret_12m_from_listing": -23.4
   },
   {
    "cg_ipo_id": "2059",
@@ -8126,7 +8211,8 @@
    "retail": 1.38,
    "qib_bar": 76.28,
    "retail_bar": 10.03,
-   "ret_6m_from_listing": -25.6
+   "ret_6m_from_listing": -25.6,
+   "ret_12m_from_listing": 44.4
   },
   {
    "cg_ipo_id": "2035",
@@ -8138,7 +8224,8 @@
    "retail": 57.75,
    "qib_bar": 76.28,
    "retail_bar": 10.03,
-   "ret_6m_from_listing": -53.6
+   "ret_6m_from_listing": -53.6,
+   "ret_12m_from_listing": -38.3
   },
   {
    "cg_ipo_id": "2018",
@@ -8150,7 +8237,8 @@
    "retail": 21.92,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": 56.9
+   "ret_6m_from_listing": 56.9,
+   "ret_12m_from_listing": 160.4
   },
   {
    "cg_ipo_id": "2318",
@@ -8162,7 +8250,8 @@
    "retail": 42.55,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": -37.8
+   "ret_6m_from_listing": -37.8,
+   "ret_12m_from_listing": -21.8
   },
   {
    "cg_ipo_id": "2152",
@@ -8174,7 +8263,8 @@
    "retail": 7.98,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": -48.0
+   "ret_6m_from_listing": -48.0,
+   "ret_12m_from_listing": -49.1
   },
   {
    "cg_ipo_id": "2032",
@@ -8186,7 +8276,8 @@
    "retail": 10.49,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": -39.9
+   "ret_6m_from_listing": -39.9,
+   "ret_12m_from_listing": -41.6
   },
   {
    "cg_ipo_id": "2069",
@@ -8198,7 +8289,8 @@
    "retail": 5.09,
    "qib_bar": 81.38,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": -55.4
+   "ret_6m_from_listing": -55.4,
+   "ret_12m_from_listing": -47.3
   },
   {
    "cg_ipo_id": "2126",
@@ -8210,7 +8302,8 @@
    "retail": 11.56,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": -33.8
+   "ret_6m_from_listing": -33.8,
+   "ret_12m_from_listing": -30.4
   },
   {
    "cg_ipo_id": "2053",
@@ -8222,7 +8315,8 @@
    "retail": 47.26,
    "qib_bar": 80.12,
    "retail_bar": 11.25,
-   "ret_6m_from_listing": 18.1
+   "ret_6m_from_listing": 18.1,
+   "ret_12m_from_listing": 53.9
   },
   {
    "cg_ipo_id": "2001",
@@ -8234,7 +8328,8 @@
    "retail": 54.96,
    "qib_bar": 76.28,
    "retail_bar": 11.66,
-   "ret_6m_from_listing": -32.1
+   "ret_6m_from_listing": -32.1,
+   "ret_12m_from_listing": 24.5
   },
   {
    "cg_ipo_id": "2003",
@@ -8246,7 +8341,8 @@
    "retail": 27.26,
    "qib_bar": 76.28,
    "retail_bar": 12.42,
-   "ret_6m_from_listing": 9.3
+   "ret_6m_from_listing": 9.3,
+   "ret_12m_from_listing": 18.7
   },
   {
    "cg_ipo_id": "2425",
@@ -8258,7 +8354,8 @@
    "retail": 41.49,
    "qib_bar": 76.28,
    "retail_bar": 12.42,
-   "ret_6m_from_listing": -27.4
+   "ret_6m_from_listing": -27.4,
+   "ret_12m_from_listing": 0.3
   },
   {
    "cg_ipo_id": "2117",
@@ -8270,7 +8367,8 @@
    "retail": 164.89,
    "qib_bar": 76.28,
    "retail_bar": 12.42,
-   "ret_6m_from_listing": -37.5
+   "ret_6m_from_listing": -37.5,
+   "ret_12m_from_listing": -45.4
   },
   {
    "cg_ipo_id": "2015",
@@ -8282,7 +8380,8 @@
    "retail": 1.31,
    "qib_bar": 65.81,
    "retail_bar": 12.42,
-   "ret_6m_from_listing": -9.7
+   "ret_6m_from_listing": -9.7,
+   "ret_12m_from_listing": 6.2
   },
   {
    "cg_ipo_id": "2161",
@@ -8294,7 +8393,8 @@
    "retail": 47.85,
    "qib_bar": 56.2,
    "retail_bar": 12.42,
-   "ret_6m_from_listing": -60.3
+   "ret_6m_from_listing": -60.3,
+   "ret_12m_from_listing": -54.1
   },
   {
    "cg_ipo_id": "2227",
@@ -8306,7 +8406,8 @@
    "retail": 1.28,
    "qib_bar": 65.81,
    "retail_bar": 14.12,
-   "ret_6m_from_listing": -19.9
+   "ret_6m_from_listing": -19.9,
+   "ret_12m_from_listing": -17.3
   },
   {
    "cg_ipo_id": "2082",
@@ -8318,7 +8419,8 @@
    "retail": 2.81,
    "qib_bar": 65.81,
    "retail_bar": 14.12,
-   "ret_6m_from_listing": -12.9
+   "ret_6m_from_listing": -12.9,
+   "ret_12m_from_listing": -4.9
   },
   {
    "cg_ipo_id": "2042",
@@ -8330,7 +8432,8 @@
    "retail": 21.78,
    "qib_bar": 65.81,
    "retail_bar": 14.12,
-   "ret_6m_from_listing": -43.4
+   "ret_6m_from_listing": -43.4,
+   "ret_12m_from_listing": -23.7
   },
   {
    "cg_ipo_id": "2045",
@@ -8342,7 +8445,8 @@
    "retail": 1.17,
    "qib_bar": 65.81,
    "retail_bar": 14.12,
-   "ret_6m_from_listing": -42.1
+   "ret_6m_from_listing": -42.1,
+   "ret_12m_from_listing": -42.3
   },
   {
    "cg_ipo_id": "2011",
@@ -8354,7 +8458,8 @@
    "retail": 10.76,
    "qib_bar": 65.81,
    "retail_bar": 14.12,
-   "ret_6m_from_listing": 46.1
+   "ret_6m_from_listing": 46.1,
+   "ret_12m_from_listing": 132.4
   },
   {
    "cg_ipo_id": "2174",
@@ -8366,7 +8471,8 @@
    "retail": 51.69,
    "qib_bar": 56.2,
    "retail_bar": 11.16,
-   "ret_6m_from_listing": -55.7
+   "ret_6m_from_listing": -55.7,
+   "ret_12m_from_listing": -54.8
   },
   {
    "cg_ipo_id": "2075",
@@ -8389,7 +8495,8 @@
    "retail": 9.46,
    "qib_bar": 56.2,
    "retail_bar": 11.16,
-   "ret_6m_from_listing": -48.2
+   "ret_6m_from_listing": -48.2,
+   "ret_12m_from_listing": -8.1
   },
   {
    "cg_ipo_id": "2028",
@@ -8401,7 +8508,8 @@
    "retail": 5.11,
    "qib_bar": 56.2,
    "retail_bar": 11.16,
-   "ret_6m_from_listing": -6.2
+   "ret_6m_from_listing": -6.2,
+   "ret_12m_from_listing": 13.9
   },
   {
    "cg_ipo_id": "2023",
@@ -8413,7 +8521,8 @@
    "retail": 1.74,
    "qib_bar": 42.44,
    "retail_bar": 9.98,
-   "ret_6m_from_listing": -25.4
+   "ret_6m_from_listing": -25.4,
+   "ret_12m_from_listing": 29.4
   },
   {
    "cg_ipo_id": "2212",
@@ -8425,7 +8534,8 @@
    "retail": 0.99,
    "qib_bar": 42.44,
    "retail_bar": 9.98,
-   "ret_6m_from_listing": -29.9
+   "ret_6m_from_listing": -29.9,
+   "ret_12m_from_listing": -26.0
   },
   {
    "cg_ipo_id": "2345",
@@ -8437,7 +8547,8 @@
    "retail": 3.81,
    "qib_bar": 42.44,
    "retail_bar": 9.98,
-   "ret_6m_from_listing": 49.3
+   "ret_6m_from_listing": 49.3,
+   "ret_12m_from_listing": -5.7
   },
   {
    "cg_ipo_id": "2432",
@@ -8449,7 +8560,8 @@
    "retail": 47.04,
    "qib_bar": 37.91,
    "retail_bar": 9.3,
-   "ret_6m_from_listing": -53.2
+   "ret_6m_from_listing": -53.2,
+   "ret_12m_from_listing": -21.0
   },
   {
    "cg_ipo_id": "2231",
@@ -8461,7 +8573,8 @@
    "retail": 11.5,
    "qib_bar": 37.91,
    "retail_bar": 9.3,
-   "ret_6m_from_listing": -18.9
+   "ret_6m_from_listing": -18.9,
+   "ret_12m_from_listing": -20.6
   },
   {
    "cg_ipo_id": "2306",
@@ -8473,7 +8586,8 @@
    "retail": 1.09,
    "qib_bar": 38.63,
    "retail_bar": 10.49,
-   "ret_6m_from_listing": -30.4
+   "ret_6m_from_listing": -30.4,
+   "ret_12m_from_listing": -29.0
   },
   {
    "cg_ipo_id": "2624",
@@ -8485,7 +8599,8 @@
    "retail": 2.09,
    "qib_bar": 38.63,
    "retail_bar": 10.49,
-   "ret_6m_from_listing": -19.0
+   "ret_6m_from_listing": -19.0,
+   "ret_12m_from_listing": -19.8
   },
   {
    "cg_ipo_id": "1998",
@@ -8497,7 +8612,8 @@
    "retail": 1.47,
    "qib_bar": 38.63,
    "retail_bar": 10.49,
-   "ret_6m_from_listing": -45.7
+   "ret_6m_from_listing": -45.7,
+   "ret_12m_from_listing": -30.6
   },
   {
    "cg_ipo_id": "2407",
@@ -8509,7 +8625,8 @@
    "retail": 2.77,
    "qib_bar": 38.63,
    "retail_bar": 10.49,
-   "ret_6m_from_listing": -6.9
+   "ret_6m_from_listing": -6.9,
+   "ret_12m_from_listing": 0.0
   },
   {
    "cg_ipo_id": "2290",
@@ -8521,7 +8638,8 @@
    "retail": 23.14,
    "qib_bar": 35.86,
    "retail_bar": 9.46,
-   "ret_6m_from_listing": -6.6
+   "ret_6m_from_listing": -6.6,
+   "ret_12m_from_listing": 3.1
   },
   {
    "cg_ipo_id": "2014",
@@ -8533,7 +8651,8 @@
    "retail": 0.62,
    "qib_bar": 35.86,
    "retail_bar": 10.49,
-   "ret_6m_from_listing": -23.7
+   "ret_6m_from_listing": -23.7,
+   "ret_12m_from_listing": 7.0
   },
   {
    "cg_ipo_id": "2317",
@@ -8545,7 +8664,8 @@
    "retail": 1.1,
    "qib_bar": 35.7,
    "retail_bar": 9.46,
-   "ret_6m_from_listing": -2.6
+   "ret_6m_from_listing": -2.6,
+   "ret_12m_from_listing": 3.5
   },
   {
    "cg_ipo_id": "2064",
@@ -8570,6 +8690,18 @@
    "qib_bar": 33.72,
    "retail_bar": 8.57,
    "ret_6m_from_listing": 38.6
+  },
+  {
+   "cg_ipo_id": "2428",
+   "company": "Canara Robeco Asset Management Co.Ltd.",
+   "opened": "2025-10-09",
+   "recorded_at": "2026-08-15T03:14:31.761245+00:00",
+   "rule_says": "no",
+   "qib": 25.92,
+   "retail": 1.91,
+   "qib_bar": 35.78,
+   "retail_bar": 8.27,
+   "ret_6m_from_listing": -10.6
   },
   {
    "cg_ipo_id": "2429",
@@ -8666,6 +8798,18 @@
    "qib_bar": 35.86,
    "retail_bar": 9.15,
    "ret_6m_from_listing": -27.0
+  },
+  {
+   "cg_ipo_id": "2518",
+   "company": "Emmvee Photovoltaic Power Ltd.",
+   "opened": "2025-11-11",
+   "recorded_at": "2026-08-15T03:14:31.770819+00:00",
+   "rule_says": "no",
+   "qib": 1.26,
+   "retail": 1.1,
+   "qib_bar": 35.78,
+   "retail_bar": 8.57,
+   "ret_6m_from_listing": 18.6
   },
   {
    "cg_ipo_id": "2509",
@@ -8884,6 +9028,30 @@
    "ret_6m_from_listing": 107.5
   },
   {
+   "cg_ipo_id": "2026",
+   "company": "Aye Finance Ltd.",
+   "opened": "2026-02-09",
+   "recorded_at": "2026-08-15T03:14:31.794160+00:00",
+   "rule_says": "no",
+   "qib": 1.62,
+   "retail": 0.81,
+   "qib_bar": 26.75,
+   "retail_bar": 7.31,
+   "ret_6m_from_listing": 34.1
+  },
+  {
+   "cg_ipo_id": "2569",
+   "company": "Fractal Analytics Ltd.",
+   "opened": "2026-02-09",
+   "recorded_at": "2026-08-15T03:14:31.795470+00:00",
+   "rule_says": "no",
+   "qib": 4.41,
+   "retail": 1.1,
+   "qib_bar": 26.75,
+   "retail_bar": 7.31,
+   "ret_6m_from_listing": -1.5
+  },
+  {
    "cg_ipo_id": "2019",
    "company": "Gaudium IVF & Women Health Ltd.",
    "opened": "2026-02-20",
@@ -8892,7 +9060,8 @@
    "qib": 1.62,
    "retail": 7.6,
    "qib_bar": 30.22,
-   "retail_bar": 8.36
+   "retail_bar": 8.36,
+   "ret_6m_from_listing": 63.2
   },
   {
    "cg_ipo_id": "2502",
@@ -8903,7 +9072,8 @@
    "qib": 3.94,
    "retail": 76.63,
    "qib_bar": 30.22,
-   "retail_bar": 7.58
+   "retail_bar": 7.58,
+   "ret_6m_from_listing": -43.5
   },
   {
    "cg_ipo_id": "2573",
@@ -8914,7 +9084,8 @@
    "qib": 2.99,
    "retail": 0.07,
    "qib_bar": 30.22,
-   "retail_bar": 7.58
+   "retail_bar": 7.58,
+   "ret_6m_from_listing": 49.4
   },
   {
    "cg_ipo_id": "2475",
@@ -8925,7 +9096,8 @@
    "qib": 1.1,
    "retail": 1.37,
    "qib_bar": 26.75,
-   "retail_bar": 7.31
+   "retail_bar": 7.31,
+   "ret_6m_from_listing": 35.9
   },
   {
    "cg_ipo_id": "2479",
@@ -8936,7 +9108,8 @@
    "qib": 3.0,
    "retail": 0.35,
    "qib_bar": 24.34,
-   "retail_bar": 6.21
+   "retail_bar": 6.21,
+   "ret_6m_from_listing": 180.7
   },
   {
    "cg_ipo_id": "2794",
@@ -8947,7 +9120,8 @@
    "qib": 8.46,
    "retail": 0.2,
    "qib_bar": 24.34,
-   "retail_bar": 5.24
+   "retail_bar": 5.24,
+   "ret_6m_from_listing": 122.1
   },
   {
    "cg_ipo_id": "2067",
@@ -8958,7 +9132,8 @@
    "qib": 2.51,
    "retail": 0.27,
    "qib_bar": 24.34,
-   "retail_bar": 5.24
+   "retail_bar": 5.24,
+   "ret_6m_from_listing": 52.6
   },
   {
    "cg_ipo_id": "2039",
@@ -8969,7 +9144,8 @@
    "qib": 14.3,
    "retail": 0.6,
    "qib_bar": 17.05,
-   "retail_bar": 4.46
+   "retail_bar": 4.46,
+   "ret_6m_from_listing": -26.8
   },
   {
    "cg_ipo_id": "2031",
@@ -8980,7 +9156,8 @@
    "qib": 2.66,
    "retail": 0.42,
    "qib_bar": 18.16,
-   "retail_bar": 4.46
+   "retail_bar": 4.46,
+   "ret_6m_from_listing": 75.6
   },
   {
    "cg_ipo_id": "2456",
@@ -8991,7 +9168,8 @@
    "qib": 3.48,
    "retail": 0.35,
    "qib_bar": 18.16,
-   "retail_bar": 4.46
+   "retail_bar": 4.46,
+   "ret_6m_from_listing": 54.2
   },
   {
    "cg_ipo_id": "2501",
@@ -9002,7 +9180,9 @@
    "qib": 1.18,
    "retail": 1.44,
    "qib_bar": 13.19,
-   "retail_bar": 3.68
+   "retail_bar": 3.68,
+   "ret_6m_from_listing": -27.5,
+   "ret_12m_from_listing": -27.5
   },
   {
    "cg_ipo_id": "2681",
@@ -9013,7 +9193,8 @@
    "qib": 1.73,
    "retail": 0.12,
    "qib_bar": 13.19,
-   "retail_bar": 3.68
+   "retail_bar": 3.68,
+   "ret_6m_from_listing": 28.4
   },
   {
    "cg_ipo_id": "2570",
@@ -9024,7 +9205,8 @@
    "qib": 4.74,
    "retail": 0.16,
    "qib_bar": 13.19,
-   "retail_bar": 3.68
+   "retail_bar": 3.68,
+   "ret_6m_from_listing": 45.8
   },
   {
    "cg_ipo_id": "2676",
@@ -9157,26 +9339,598 @@
    "retail": 0.85,
    "qib_bar": 7.76,
    "retail_bar": 3.25
+  },
+  {
+   "cg_ipo_id": "2675",
+   "company": "Alpine Texworld Ltd. O",
+   "opened": "2026-07-14",
+   "recorded_at": "2026-07-14T05:18:51.977484+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.05,
+   "qib_bar": 10.27,
+   "retail_bar": 3.43
+  },
+  {
+   "cg_ipo_id": "2949",
+   "company": "SBI Funds Management Ltd. O",
+   "opened": "2026-07-14",
+   "recorded_at": "2026-07-14T05:18:51.978756+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.16,
+   "qib_bar": 10.27,
+   "retail_bar": 3.43
+  },
+  {
+   "cg_ipo_id": "1999",
+   "company": "Caliber Mining & Logistics Ltd. O",
+   "opened": "2026-07-17",
+   "recorded_at": "2026-07-17T05:30:52.568362+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.47,
+   "qib_bar": 10.27,
+   "retail_bar": 3.43
+  },
+  {
+   "cg_ipo_id": "2574",
+   "company": "Lohia Corp Ltd. O",
+   "opened": "2026-07-23",
+   "recorded_at": "2026-07-23T05:42:42.498177+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.25,
+   "qib_bar": 13.19,
+   "retail_bar": 3.65
+  },
+  {
+   "cg_ipo_id": "2682",
+   "company": "Indo-MIM Ltd. O",
+   "opened": "2026-07-23",
+   "recorded_at": "2026-07-23T05:42:42.499372+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.22,
+   "qib_bar": 13.19,
+   "retail_bar": 3.65
+  },
+  {
+   "cg_ipo_id": "2688",
+   "company": "Xtranet Technologies Ltd. O",
+   "opened": "2026-07-23",
+   "recorded_at": "2026-07-23T05:42:42.500586+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.5,
+   "qib_bar": 13.19,
+   "retail_bar": 3.65
+  },
+  {
+   "cg_ipo_id": "2956",
+   "company": "Manipal Health Enterprises Ltd. O",
+   "opened": "2026-07-29",
+   "recorded_at": "2026-07-29T05:43:54.644696+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.11,
+   "qib_bar": 9.11,
+   "retail_bar": 3.76
+  },
+  {
+   "cg_ipo_id": "2492",
+   "company": "Juniper Green Energy Ltd. O",
+   "opened": "2026-07-30",
+   "recorded_at": "2026-07-31T05:52:37.205379+00:00",
+   "rule_says": "no",
+   "qib": 1.05,
+   "retail": 0.17,
+   "qib_bar": 9.11,
+   "retail_bar": 3.76
+  },
+  {
+   "cg_ipo_id": "2800",
+   "company": "MV Electrosystems Ltd. O",
+   "opened": "2026-07-30",
+   "recorded_at": "2026-07-31T05:52:37.206613+00:00",
+   "rule_says": "no",
+   "qib": 0.88,
+   "retail": 21.54,
+   "qib_bar": 9.11,
+   "retail_bar": 3.76
+  },
+  {
+   "cg_ipo_id": "2860",
+   "company": "Ardee Industries Ltd. O",
+   "opened": "2026-08-05",
+   "recorded_at": "2026-08-05T05:32:51.418701+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.65,
+   "qib_bar": 9.11,
+   "retail_bar": 3.32
+  },
+  {
+   "cg_ipo_id": "2565",
+   "company": "Technocraft Ventures Ltd. O",
+   "opened": "2026-08-07",
+   "recorded_at": "2026-08-08T03:55:13.051634+00:00",
+   "rule_says": "no",
+   "qib": 4.47,
+   "retail": 1.01,
+   "qib_bar": 9.11,
+   "retail_bar": 3.32
+  },
+  {
+   "cg_ipo_id": "2583",
+   "company": "LEAP India Ltd. O",
+   "opened": "2026-08-07",
+   "recorded_at": "2026-08-08T03:55:13.052631+00:00",
+   "rule_says": "no",
+   "qib": 0.64,
+   "retail": 0.14,
+   "qib_bar": 9.11,
+   "retail_bar": 3.32
+  },
+  {
+   "cg_ipo_id": "2579",
+   "company": "Molbio Diagnostics Ltd. O",
+   "opened": "2026-08-10",
+   "recorded_at": "2026-08-11T04:02:53.312650+00:00",
+   "rule_says": "no",
+   "qib": 1.0,
+   "retail": 0.77,
+   "qib_bar": 8.46,
+   "retail_bar": 3.17
+  },
+  {
+   "cg_ipo_id": "2859",
+   "company": "Dhoot Transmission Ltd. O",
+   "opened": "2026-08-10",
+   "recorded_at": "2026-08-11T04:02:53.313824+00:00",
+   "rule_says": "no",
+   "qib": 0.06,
+   "retail": 0.76,
+   "qib_bar": 8.46,
+   "retail_bar": 3.17
+  },
+  {
+   "cg_ipo_id": "2541",
+   "company": "Milky Mist Dairy Food Ltd. O",
+   "opened": "2026-08-11",
+   "recorded_at": "2026-08-12T04:24:44.393596+00:00",
+   "rule_says": "no",
+   "qib": 0.41,
+   "retail": 1.01,
+   "qib_bar": 8.82,
+   "retail_bar": 3.18
+  },
+  {
+   "cg_ipo_id": "2450",
+   "company": "Shiprocket Ltd. O",
+   "opened": "2026-08-12",
+   "recorded_at": "2026-08-13T04:28:18.888396+00:00",
+   "rule_says": "no",
+   "qib": 0.02,
+   "retail": 3.49,
+   "qib_bar": 13.19,
+   "retail_bar": 3.54
+  },
+  {
+   "cg_ipo_id": "2659",
+   "company": "Behari Lal Engineering Ltd. O",
+   "opened": "2026-08-12",
+   "recorded_at": "2026-08-13T04:28:18.889399+00:00",
+   "rule_says": "no",
+   "qib": 0.98,
+   "retail": 2.74,
+   "qib_bar": 13.19,
+   "retail_bar": 3.54
+  },
+  {
+   "cg_ipo_id": "2469",
+   "company": "Lalithaa Jewellery Mart Ltd. O",
+   "opened": "2026-08-17",
+   "recorded_at": "2026-08-18T03:19:37.988504+00:00",
+   "rule_says": "no",
+   "qib": 0.71,
+   "retail": 0.81,
+   "qib_bar": 16.02,
+   "retail_bar": 4.08
+  },
+  {
+   "cg_ipo_id": "2826",
+   "company": "Horizon Industrial Parks Ltd. O",
+   "opened": "2026-08-17",
+   "recorded_at": "2026-08-18T03:19:37.989672+00:00",
+   "rule_says": "no",
+   "qib": 0.19,
+   "retail": 0.21,
+   "qib_bar": 16.02,
+   "retail_bar": 4.08
+  },
+  {
+   "cg_ipo_id": "2002",
+   "company": "Sunshine Pictures Ltd. O",
+   "opened": "2026-08-18",
+   "recorded_at": "2026-08-19T03:27:51.656244+00:00",
+   "rule_says": "no",
+   "qib": 0.03,
+   "retail": 5.99,
+   "qib_bar": 10.59,
+   "retail_bar": 3.25
+  },
+  {
+   "cg_ipo_id": "2663",
+   "company": "Shankesh Jewellers Ltd. O",
+   "opened": "2026-08-18",
+   "recorded_at": "2026-08-19T03:27:51.657133+00:00",
+   "rule_says": "no",
+   "qib": 0.03,
+   "retail": 0.53,
+   "qib_bar": 10.59,
+   "retail_bar": 3.25
+  },
+  {
+   "cg_ipo_id": "2527",
+   "company": "Gaja Alternative Asset Management Ltd. O",
+   "opened": "2026-08-19",
+   "recorded_at": "2026-08-20T03:22:33.001103+00:00",
+   "rule_says": "no",
+   "qib": 0.1,
+   "retail": 1.27,
+   "qib_bar": 8.82,
+   "retail_bar": 3.25
+  },
+  {
+   "cg_ipo_id": "2668",
+   "company": "Tempsens Instruments (India) Ltd. O",
+   "opened": "2026-08-20",
+   "recorded_at": "2026-08-21T03:31:48.007727+00:00",
+   "rule_says": "no",
+   "qib": 0.05,
+   "retail": 6.48,
+   "qib_bar": 8.82,
+   "retail_bar": 3.23
+  },
+  {
+   "cg_ipo_id": "2673",
+   "company": "Augmont Enterprises Ltd. O",
+   "opened": "2026-08-21",
+   "recorded_at": "2026-08-22T03:18:27.533674+00:00",
+   "rule_says": "no",
+   "qib": 1.85,
+   "retail": 2.94,
+   "qib_bar": 10.59,
+   "retail_bar": 3.25
+  },
+  {
+   "cg_ipo_id": "2510",
+   "company": "Skyways Air Services Ltd. O",
+   "opened": "2026-08-24",
+   "recorded_at": "2026-08-25T03:30:50.669171+00:00",
+   "rule_says": "no",
+   "qib": 0.46,
+   "retail": 1.66,
+   "qib_bar": 13.19,
+   "retail_bar": 3.54
+  },
+  {
+   "cg_ipo_id": "2591",
+   "company": "Hy-Tech Engineers Ltd. O",
+   "opened": "2026-08-24",
+   "recorded_at": "2026-08-25T03:30:50.670203+00:00",
+   "rule_says": "no",
+   "qib": 0.5,
+   "retail": 11.53,
+   "qib_bar": 13.19,
+   "retail_bar": 3.54
+  },
+  {
+   "cg_ipo_id": "2815",
+   "company": "Symbiotec Pharmalab Ltd. O",
+   "opened": "2026-08-24",
+   "recorded_at": "2026-08-25T03:30:50.671037+00:00",
+   "rule_says": "no",
+   "qib": 0.37,
+   "retail": 1.01,
+   "qib_bar": 13.19,
+   "retail_bar": 3.54
+  },
+  {
+   "cg_ipo_id": "2500",
+   "company": "Annu Projects Ltd. O",
+   "opened": "2026-08-25",
+   "recorded_at": "2026-08-26T03:36:20.699138+00:00",
+   "rule_says": "no",
+   "qib": 0.57,
+   "retail": 0.28,
+   "qib_bar": 8.82,
+   "retail_bar": 3.65
+  },
+  {
+   "cg_ipo_id": "2013",
+   "company": "Lumino Industries Ltd. O",
+   "opened": "2026-08-27",
+   "recorded_at": "2026-08-27T13:01:11.972585+00:00",
+   "rule_says": "no",
+   "qib": 0.04,
+   "retail": 2.08,
+   "qib_bar": 16.02,
+   "retail_bar": 5.54
+  },
+  {
+   "cg_ipo_id": "1198",
+   "company": "ESDS Software Solution Ltd. O",
+   "opened": "2026-08-28",
+   "recorded_at": "2026-08-28T14:34:27.121074+00:00",
+   "rule_says": "no",
+   "qib": 0.01,
+   "retail": 2.84,
+   "qib_bar": 16.02,
+   "retail_bar": 6.78
+  },
+  {
+   "cg_ipo_id": "2435",
+   "company": "Priority Jewels Ltd. O",
+   "opened": "2026-08-28",
+   "recorded_at": "2026-08-28T14:34:27.122149+00:00",
+   "rule_says": "no",
+   "qib": 0.44,
+   "retail": 3.07,
+   "qib_bar": 16.02,
+   "retail_bar": 6.78
+  },
+  {
+   "cg_ipo_id": "2622",
+   "company": "Purple Style Labs Ltd. O",
+   "opened": "2026-08-31",
+   "recorded_at": "2026-08-31T08:50:08.190120+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.41,
+   "qib_bar": 16.02,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2827",
+   "company": "Deepa Jewellers Ltd. O",
+   "opened": "2026-09-01",
+   "recorded_at": "2026-09-01T07:59:02.106252+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.89,
+   "qib_bar": 14.8,
+   "retail_bar": 5.54
+  },
+  {
+   "cg_ipo_id": "2787",
+   "company": "Rays of Belief Ltd. O",
+   "opened": "2026-09-01",
+   "recorded_at": "2026-09-01T07:59:02.107302+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 3.87,
+   "qib_bar": 14.8,
+   "retail_bar": 5.54
+  },
+  {
+   "cg_ipo_id": "2127",
+   "company": "Pranav Constructions Ltd. O",
+   "opened": "2026-09-07",
+   "recorded_at": "2026-09-07T07:31:12.383087+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 3.22,
+   "qib_bar": 22.87,
+   "retail_bar": 7.27
+  },
+  {
+   "cg_ipo_id": "2594",
+   "company": "Glass Wall Systems (India) Ltd. O",
+   "opened": "2026-09-08",
+   "recorded_at": "2026-09-08T07:28:33.923777+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.62,
+   "qib_bar": 22.87,
+   "retail_bar": 7.27
+  },
+  {
+   "cg_ipo_id": "2775",
+   "company": "Prasol Chemicals Ltd. O",
+   "opened": "2026-09-08",
+   "recorded_at": "2026-09-08T07:28:33.924666+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.42,
+   "qib_bar": 22.87,
+   "retail_bar": 7.27
+  },
+  {
+   "cg_ipo_id": "2856",
+   "company": "Kanohar Electricals Ltd. O",
+   "opened": "2026-09-08",
+   "recorded_at": "2026-09-08T07:28:33.925536+00:00",
+   "rule_says": "no",
+   "qib": 0.01,
+   "retail": 1.52,
+   "qib_bar": 22.87,
+   "retail_bar": 7.27
+  },
+  {
+   "cg_ipo_id": "2086",
+   "company": "LCC Projects Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.306849+00:00",
+   "rule_says": "no",
+   "qib": 0.55,
+   "retail": 0.62,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2514",
+   "company": "Steamhouse India Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.308030+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.35,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2524",
+   "company": "Manipal Payment & Identity Solutions Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.309180+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.42,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2558",
+   "company": "Asset Reconstruction Co.(India) Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.310365+00:00",
+   "rule_says": "no",
+   "qib": 0.09,
+   "retail": 0.28,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2971",
+   "company": "Rentomojo Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.311573+00:00",
+   "rule_says": "no",
+   "qib": 0.4,
+   "retail": 0.76,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2020",
+   "company": "Karamtara Engineering Ltd. O",
+   "opened": "2026-09-09",
+   "recorded_at": "2026-09-09T07:33:55.312749+00:00",
+   "rule_says": "no",
+   "qib": 1.26,
+   "retail": 0.54,
+   "qib_bar": 22.87,
+   "retail_bar": 6.82
+  },
+  {
+   "cg_ipo_id": "2834",
+   "company": "Veegaland Developers Ltd. O",
+   "opened": "2026-09-10",
+   "recorded_at": "2026-09-10T07:32:55.327121+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.52,
+   "qib_bar": 26.09,
+   "retail_bar": 8.59
+  },
+  {
+   "cg_ipo_id": "2483",
+   "company": "Manika Plastech Ltd. O",
+   "opened": "2026-09-11",
+   "recorded_at": "2026-09-11T07:28:22.331760+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.45,
+   "qib_bar": 38.3,
+   "retail_bar": 9.2
+  },
+  {
+   "cg_ipo_id": "2225",
+   "company": "Hero Motors Ltd. O",
+   "opened": "2026-09-16",
+   "recorded_at": "2026-09-16T07:52:07.274847+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.62,
+   "qib_bar": 65.69,
+   "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2803",
+   "company": "Jindal Supreme (India) Ltd. O",
+   "opened": "2026-09-16",
+   "recorded_at": "2026-09-16T07:52:07.276031+00:00",
+   "rule_says": "no",
+   "qib": 1.01,
+   "retail": 6.77,
+   "qib_bar": 65.69,
+   "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2822",
+   "company": "SS Retail Ltd. O",
+   "opened": "2026-09-16",
+   "recorded_at": "2026-09-16T07:52:07.277189+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.31,
+   "qib_bar": 65.69,
+   "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2805",
+   "company": "Sonaselection India Ltd. O",
+   "opened": "2026-09-17",
+   "recorded_at": "2026-09-17T07:55:37.415461+00:00",
+   "rule_says": "no",
+   "qib": 0.11,
+   "retail": 0.49,
+   "qib_bar": 65.69,
+   "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "3151",
+   "company": "National Stock Exchange of India Ltd. (NSE IPO) O",
+   "opened": "2026-09-17",
+   "recorded_at": "2026-09-17T07:55:37.416677+00:00",
+   "rule_says": "no",
+   "qib": 0.18,
+   "retail": 0.32,
+   "qib_bar": 65.69,
+   "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "2563",
+   "company": "Varmora Granito Ltd. O",
+   "opened": "2026-09-22",
+   "recorded_at": "2026-09-22T07:57:51.600568+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.14,
+   "qib_bar": 87.42,
+   "retail_bar": 13.83
   }
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
-   "n_rule": 81,
-   "n_rest": 514,
-   "rule_median": 10.1,
-   "rest_median": -4.8,
-   "edge_pp": 14.9,
+   "n_rule": 82,
+   "n_rest": 536,
+   "rule_median": 9.9,
+   "rest_median": -4.5,
+   "edge_pp": 14.4,
    "rule_win_rate": 0.59,
-   "rest_win_rate": 0.44
+   "rest_win_rate": 0.45
   },
   "ret_12m_from_listing": {
-   "n_rule": 73,
-   "n_rest": 452,
-   "rule_median": 7.2,
-   "rest_median": -11.8,
-   "edge_pp": 19.0,
-   "rule_win_rate": 0.59,
-   "rest_win_rate": 0.42
+   "n_rule": 77,
+   "n_rest": 497,
+   "rule_median": 3.8,
+   "rest_median": -12.4,
+   "edge_pp": 16.2,
+   "rule_win_rate": 0.57,
+   "rest_win_rate": 0.41
   }
  },
  "scoreboard_note": "Includes the backtest period, so it is NOT yet an out-of-sample record. The calls recorded from 2026-07-12 onward are the ones that count; until enough of those mature, this rule is unproven. Research only \u2014 not investment advice."

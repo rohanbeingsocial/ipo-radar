@@ -8677,7 +8677,8 @@
    "retail": 3.55,
    "qib_bar": 31.73,
    "retail_bar": 9.15,
-   "ret_6m_from_listing": -11.2
+   "ret_6m_from_listing": -11.2,
+   "ret_12m_from_listing": 0.5
   },
   {
    "cg_ipo_id": "2254",
@@ -9911,6 +9912,50 @@
    "retail": 0.14,
    "qib_bar": 87.42,
    "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "3007",
+   "company": "Adroit Industries (India) Ltd. O",
+   "opened": "2026-09-23",
+   "recorded_at": "2026-09-23T08:02:20.623852+00:00",
+   "rule_says": "no",
+   "qib": 0.01,
+   "retail": 3.92,
+   "qib_bar": 87.42,
+   "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2647",
+   "company": "Elevate Campuses Ltd. O",
+   "opened": "2026-09-23",
+   "recorded_at": "2026-09-23T08:02:20.625041+00:00",
+   "rule_says": "no",
+   "qib": 0.11,
+   "retail": 0.1,
+   "qib_bar": 87.42,
+   "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2287",
+   "company": "Swastika Infra Ltd. O",
+   "opened": "2026-09-23",
+   "recorded_at": "2026-09-23T08:02:20.626236+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.46,
+   "qib_bar": 87.42,
+   "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2140",
+   "company": "ArMee Infotech Ltd. O",
+   "opened": "2026-09-23",
+   "recorded_at": "2026-09-23T08:02:20.627416+00:00",
+   "rule_says": "no",
+   "qib": 1.0,
+   "retail": 0.3,
+   "qib_bar": 87.42,
+   "retail_bar": 13.33
   }
  ],
  "scoreboard": {
@@ -9924,12 +9969,12 @@
    "rest_win_rate": 0.45
   },
   "ret_12m_from_listing": {
-   "n_rule": 77,
+   "n_rule": 78,
    "n_rest": 497,
-   "rule_median": 3.8,
+   "rule_median": 3.5,
    "rest_median": -12.4,
-   "edge_pp": 16.2,
-   "rule_win_rate": 0.57,
+   "edge_pp": 15.9,
+   "rule_win_rate": 0.58,
    "rest_win_rate": 0.41
   }
  },

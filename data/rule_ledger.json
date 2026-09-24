@@ -9956,6 +9956,28 @@
    "retail": 0.3,
    "qib_bar": 87.42,
    "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2000",
+   "company": "A-One Steels India Ltd. O",
+   "opened": "2026-09-24",
+   "recorded_at": "2026-09-24T07:48:28.013502+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.47,
+   "qib_bar": 65.69,
+   "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2936",
+   "company": "Moneyview Ltd. O",
+   "opened": "2026-09-24",
+   "recorded_at": "2026-09-24T07:48:28.014696+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.05,
+   "qib_bar": 65.69,
+   "retail_bar": 13.33
   }
  ],
  "scoreboard": {

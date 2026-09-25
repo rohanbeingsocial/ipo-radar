@@ -8690,7 +8690,8 @@
    "retail": 37.4,
    "qib_bar": 33.72,
    "retail_bar": 8.57,
-   "ret_6m_from_listing": 38.6
+   "ret_6m_from_listing": 38.6,
+   "ret_12m_from_listing": 166.3
   },
   {
    "cg_ipo_id": "2428",
@@ -8702,7 +8703,8 @@
    "retail": 1.91,
    "qib_bar": 35.78,
    "retail_bar": 8.27,
-   "ret_6m_from_listing": -10.6
+   "ret_6m_from_listing": -10.6,
+   "ret_12m_from_listing": -23.8
   },
   {
    "cg_ipo_id": "2429",
@@ -9218,7 +9220,8 @@
    "qib": 3.65,
    "retail": 1.54,
    "qib_bar": 7.76,
-   "retail_bar": 3.25
+   "retail_bar": 3.25,
+   "ret_6m_from_listing": -14.8
   },
   {
    "cg_ipo_id": "2576",
@@ -9978,21 +9981,65 @@
    "retail": 1.05,
    "qib_bar": 65.69,
    "retail_bar": 13.33
+  },
+  {
+   "cg_ipo_id": "2298",
+   "company": "Runwal Enterprises Ltd. O",
+   "opened": "2026-09-25",
+   "recorded_at": "2026-09-25T08:14:48.254679+00:00",
+   "rule_says": "no",
+   "qib": 0.5,
+   "retail": 0.12,
+   "qib_bar": 49.42,
+   "retail_bar": 12.74
+  },
+  {
+   "cg_ipo_id": "2497",
+   "company": "German Green Steel & Power Ltd. O",
+   "opened": "2026-09-25",
+   "recorded_at": "2026-09-25T08:14:48.255474+00:00",
+   "rule_says": "no",
+   "qib": 1.13,
+   "retail": 0.9,
+   "qib_bar": 49.42,
+   "retail_bar": 12.74
+  },
+  {
+   "cg_ipo_id": "2532",
+   "company": "Orient Cables (India) Ltd. O",
+   "opened": "2026-09-25",
+   "recorded_at": "2026-09-25T08:14:48.256223+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.49,
+   "qib_bar": 49.42,
+   "retail_bar": 12.74
+  },
+  {
+   "cg_ipo_id": "2543",
+   "company": "Acevector Ltd. (Snapdeal IPO) O",
+   "opened": "2026-09-25",
+   "recorded_at": "2026-09-25T08:14:48.256978+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.33,
+   "qib_bar": 49.42,
+   "retail_bar": 12.74
   }
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
    "n_rule": 82,
-   "n_rest": 536,
+   "n_rest": 537,
    "rule_median": 9.9,
-   "rest_median": -4.5,
-   "edge_pp": 14.4,
+   "rest_median": -4.6,
+   "edge_pp": 14.5,
    "rule_win_rate": 0.59,
    "rest_win_rate": 0.45
   },
   "ret_12m_from_listing": {
    "n_rule": 78,
-   "n_rest": 497,
+   "n_rest": 499,
    "rule_median": 3.5,
    "rest_median": -12.4,
    "edge_pp": 15.9,

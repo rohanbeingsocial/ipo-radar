@@ -8716,7 +8716,8 @@
    "retail": 0.42,
    "qib_bar": 35.86,
    "retail_bar": 9.46,
-   "ret_6m_from_listing": 34.4
+   "ret_6m_from_listing": 34.4,
+   "ret_12m_from_listing": 31.8
   },
   {
    "cg_ipo_id": "2150",
@@ -10025,6 +10026,28 @@
    "retail": 0.33,
    "qib_bar": 49.42,
    "retail_bar": 12.74
+  },
+  {
+   "cg_ipo_id": "2858",
+   "company": "SRIT India Ltd. O",
+   "opened": "2026-09-28",
+   "recorded_at": "2026-09-28T08:54:19.998681+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.1,
+   "qib_bar": 46.03,
+   "retail_bar": 12.74
+  },
+  {
+   "cg_ipo_id": "2657",
+   "company": "Shah Investor's Home Ltd. O",
+   "opened": "2026-09-28",
+   "recorded_at": "2026-09-28T08:54:19.999632+00:00",
+   "rule_says": "no",
+   "qib": 0.5,
+   "retail": 0.16,
+   "qib_bar": 46.03,
+   "retail_bar": 12.74
   }
  ],
  "scoreboard": {
@@ -10039,10 +10062,10 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 78,
-   "n_rest": 499,
+   "n_rest": 500,
    "rule_median": 3.5,
-   "rest_median": -12.4,
-   "edge_pp": 15.9,
+   "rest_median": -12.2,
+   "edge_pp": 15.8,
    "rule_win_rate": 0.58,
    "rest_win_rate": 0.41
   }

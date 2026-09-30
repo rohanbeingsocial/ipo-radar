@@ -12,7 +12,9 @@ from __future__ import annotations
 import csv
 import json
 import os
+import re
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -86,13 +88,19 @@ def nifty_daily(from_date: str, to_date: str):
 
 
 def nifty_minutes(day: str):
-    """[(epoch, o, h, l, c)] 1-minute candles for NIFTY 50 on one day, or []."""
+    """[(epoch, o, h, l, c)] 1-minute candles for NIFTY 50 on one day; [] when Dhan has
+    none for that day; None when the request itself failed (rate limit, expired token),
+    so callers don't mistake a throttled call for a day without data."""
     try:
         d = _post("/charts/intraday", {"securityId": NIFTY_ID, "exchangeSegment": "IDX_I",
                                        "instrument": "INDEX", "interval": "1", "oi": False,
                                        "fromDate": f"{day} 09:15:00", "toDate": f"{day} 15:30:00"})
+    except urllib.error.HTTPError as e:
+        # Dhan answers a day outside its history with a 400 "no data" error
+        body = e.read().decode("utf-8", "replace") if e.fp else ""
+        return [] if e.code == 400 and re.search(r"(?i)no data|DH-905|DH-907", body) else None
     except Exception:  # noqa: BLE001
-        return []
+        return None
     return _candles(d)
 
 

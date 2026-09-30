@@ -134,6 +134,13 @@ def refresh_listing(dates, log=print, max_new=400) -> pd.DataFrame:
     """Fetch the 10:00 NIFTY level for listing dates not cached yet (Dhan only).
     Days Dhan has no minutes for are cached as empty so they aren't retried daily."""
     have = load_listing()
+    # an empty day cached from 2017 on is suspect (Dhan's minute history starts mid-2017;
+    # throttled calls used to be cached as empty): ask again once, then keep the answer
+    if not have.empty and "checked" not in have.columns:
+        have["checked"] = None
+    if not have.empty:
+        redo = (have["source"] == "none") & (have.index >= pd.Timestamp("2017-01-01")) & have["checked"].isna()
+        have = have[~redo]
     # newest first: Dhan keeps minute candles only from ~2018, so old dates are the ones that come back empty
     want = sorted({pd.Timestamp(d).normalize() for d in dates if pd.notna(d)} - set(have.index), reverse=True)
     today = pd.Timestamp.now(tz=IST).tz_localize(None).normalize()
@@ -142,8 +149,17 @@ def refresh_listing(dates, log=print, max_new=400) -> pd.DataFrame:
     if not want or not dhan.creds():
         return have
     rows = {}
+    errors = 0
     for d in want:
+        time.sleep(0.6)            # Dhan throttles bursts of chart requests
         mins = dhan.nifty_minutes(d.strftime("%Y-%m-%d"))
+        if mins is None:           # the request failed: leave the day uncached, retry next run
+            errors += 1
+            if errors >= 5:
+                time.sleep(30)
+                errors = 0
+            continue
+        errors = 0
         # the hand sheet's 2024 rows equal the close of the 10:00 one-minute candle
         # exactly (16 of 16); fall back to the last candle before it if 10:00 is missing
         at = None
@@ -153,7 +169,7 @@ def refresh_listing(dates, log=print, max_new=400) -> pd.DataFrame:
                 at = c
             else:
                 break
-        rows[d] = {"at_10am": at, "source": "dhan_1m" if at is not None else "none"}
+        rows[d] = {"at_10am": at, "source": "dhan_1m" if at is not None else "none", "checked": 1}
     new = pd.DataFrame.from_dict(rows, orient="index")
     df = (new if have.empty else pd.concat([have, new])).sort_index()
     df.to_csv(LISTING, index_label="date")

@@ -623,8 +623,33 @@ def record(entry):
     HISTORY.write_text(json.dumps(hist, indent=1), encoding="utf-8")
 
 
+def analyzer_versions() -> dict:
+    """{analyzer_version: report count} over docs/data/reports (None = written before
+    reports recorded their version)."""
+    out: dict = {}
+    for p in REPORTS.glob("*.json"):
+        try:
+            v = (json.loads(p.read_text(encoding="utf-8")).get("meta") or {}).get("analyzer_version")
+        except ValueError:
+            continue
+        out[v] = out.get(v, 0) + 1
+    return out
+
+
 def main():
     force = "--force" in sys.argv
+    # RHP scores from different analyzer versions are not comparable (an extractor fix
+    # moves most issuers' scores), so a model must never be fitted on a mix. The daily
+    # job analyzes new IPOs with the current analyzer; until automation/vm/reanalyze.sh
+    # has brought the rest up to it, keep the incumbent models.
+    # A handful of prospectuses can never be re-fetched (dead links, corrupt PDFs), so
+    # up to 2% of reports may stay behind on an older version.
+    versions = analyzer_versions()
+    main_share = max(versions.values()) / sum(versions.values()) if versions else 1.0
+    if main_share < 0.98 and "--allow-mixed" not in sys.argv:
+        print(f"reports come from {len(versions)} analyzer versions {versions}: not retraining. "
+              "Re-analyze the corpus first (automation/vm/reanalyze.sh).")
+        return
     m = build_frame()
     print(f"rows: {len(m)}   with RHP features: {int(m['has_rhp'].sum())}   "
           f"with fundamentals: {int(m['ROE'].notna().sum())}   "

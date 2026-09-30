@@ -7,6 +7,7 @@ columns to fiscal years from header cells, and normalize everything to ₹ crore
 """
 from __future__ import annotations
 
+import math
 import re
 
 import pdfplumber
@@ -14,8 +15,13 @@ import pdfplumber
 # metric -> row-label regex (case-insensitive). Order matters: first match wins,
 # and more specific labels come before generic ones.
 ROW_SYNONYMS: list[tuple[str, str]] = [
-    # "Income from Operations" is the pre-Ind-AS (roughly pre-2017) P&L wording
-    ("revenue", r"(?:revenue|income)\s+from\s+operations?"),
+    # Financial-services P&Ls (Ind-AS Division III) print "Revenue from operations" as a
+    # header over interest / fee lines and the figure on "Total revenue from operations";
+    # that row also looked like "total income". It wins over the plain row (_derive_metrics).
+    ("revenue_total", r"^total\s+revenue\s+from\s+operations?"),
+    # "Income from Operations" is the pre-Ind-AS (roughly pre-2017) P&L wording;
+    # "Revenue from contracts with customers" is Ind AS 115's
+    ("revenue", r"(?:revenue|income)\s+from\s+operations?|^revenue\s+from\s+contracts?\s+with\s+customers"),
     ("other_income", r"^other\s+income"),
     ("total_income", r"^total\s+(?:income|revenue)"),
     ("cost_of_materials", r"cost\s+of\s+(?:materials|goods)"),
@@ -70,7 +76,18 @@ STATEMENT_ANCHORS = [
 UNIT_FACTORS = {"lakhs": 0.01, "lacs": 0.01, "lakh": 0.01,
                 "crores": 1.0, "crore": 1.0, "cr": 1.0,
                 "millions": 0.1, "million": 0.1, "mn": 0.1,
-                "billions": 100.0, "billion": 100.0}
+                "billions": 100.0, "billion": 100.0,
+                "thousands": 1e-4, "thousand": 1e-4, "'000": 1e-4,
+                "rupees": 1e-7}
+
+# "(Amount in Rs.)", "(Figures in ₹)": whole rupees. Older and smaller issuers print full
+# figures (House of Pearl: "Sales of goods 4,302,401,882"); read as crore that is 10^7 off.
+_RUPEE_UNIT_RE = re.compile(
+    r"(?:amounts?|figures)\s+(?:are\s+)?in\s+(?:rs\.?|₹|`|inr|rupees|indian\s+rupees)\s*(?:\)|$|\.\s|,)"
+    r"|\(\s*(?:in\s+)?(?:rs\.?|₹|`|inr|rupees)\s*\)", re.I | re.M)
+_THOUSAND_UNIT_RE = re.compile(
+    r"(?:₹|`|rs\.?|inr|rupees)\s*(?:in\s+)?(?:thousands?|'000|’000)|in\s+(?:thousands?|'000)\s+(?:of\s+)?(?:₹|rs\.?|rupees)",
+    re.I)
 
 _FY_PAT = r"(?:march\s+31(?:st)?,?\s*|31(?:st)?\s+(?:of\s+)?march,?\s*|fiscal\s+|financial\s+year\s+|fy\s*)((?:20)?\d{2})"
 FY_HEADER_RE = re.compile(_FY_PAT, re.I)
@@ -120,6 +137,10 @@ def detect_unit(text: str) -> tuple[str, float] | None:
     if m:
         unit = m.group(1).lower()
         return unit, UNIT_FACTORS.get(unit, 1.0)
+    if _THOUSAND_UNIT_RE.search(text):
+        return "thousands", UNIT_FACTORS["thousands"]
+    if _RUPEE_UNIT_RE.search(text):
+        return "rupees", UNIT_FACTORS["rupees"]
     return None
 
 
@@ -378,14 +399,78 @@ def find_statement_pages(pages: list[dict], sections: dict) -> list[int]:
     return sorted(set(candidates))
 
 
+# Line items whose size tracks the size of the business: they line up the scale of a
+# page with no unit marker against pages that have one.
+_SCALE_METRICS = {"revenue", "total_income", "pat", "pbt", "net_worth", "total_assets",
+                  "share_capital", "reserves_surplus", "total_debt", "ebitda", "other_income",
+                  "current_assets", "current_liabilities", "receivables", "inventory"}
+_MAX_LINE_ITEM_CR = 5e6      # no issuer's biggest line item (a bank's total assets) is near Rs 50 lakh cr
+
+
+def _page_factors(cands: list[tuple], resolved: dict[int, tuple[str, float]]) -> dict[int, tuple[str, float]]:
+    """Unit for every page that produced a value.
+
+    Marked pages (own or nearest marker in their run) keep their unit. An unmarked page
+    used to inherit whatever unit the previous page had — or crore — so a statement in
+    whole rupees next to a "(₹ in million)" summary came out 10^7 too large (Sadbhav's
+    PAT: Rs 51,129,601 "crore"). Now, in order:
+      1. the power of ten that makes its figures equal the same (year, line item) on a
+         marked page — the same statement printed in another unit;
+      2. whole rupees, when its biggest figure can't be crore / the nearby unit;
+      3. the unit of the nearest marked page before it (else after it): statements
+         sit next to their own summary (CMS Info Systems' unmarked P&L follows a
+         "₹ million" page while the offer summary is in crore — the document-wide
+         majority would have made its revenue 10x);
+      4. crore (no marker anywhere in the document)."""
+    out = dict(resolved)
+    marked_vals: dict[tuple[str, str], float] = {}
+    counts: dict[tuple[str, float], int] = {}
+    for fy, metric, n, raw, _conf in cands:
+        if n in resolved:
+            marked_vals.setdefault((fy, metric), raw * resolved[n][1])
+            counts[resolved[n]] = counts.get(resolved[n], 0) + 1
+    dominant = max(counts, key=counts.get) if counts else ("crores", 1.0)
+
+    by_page: dict[int, list[tuple[str, str, float]]] = {}
+    for fy, metric, n, raw, _conf in cands:
+        if n not in resolved:
+            by_page.setdefault(n, []).append((fy, metric, raw))
+    for n, vals in by_page.items():
+        ks = []
+        for fy, metric, raw in vals:
+            ref = marked_vals.get((fy, metric))
+            if ref and raw and (ref > 0) == (raw > 0) and abs(ref) > 0.5 and abs(raw) > 1:
+                lg = math.log10(abs(ref / raw))
+                if abs(lg - round(lg)) < 0.02:
+                    ks.append(round(lg))
+        if ks:
+            k = max(set(ks), key=ks.count)
+            if ks.count(k) >= max(2, len(ks) // 2) or (len(ks) == 1 and k in (-7, -5, -4, -2, -1, 0)):
+                out[n] = ("inferred", 10.0 ** k)
+                continue
+        before = [m for m in resolved if m < n]
+        after = [m for m in resolved if m > n]
+        near = resolved[max(before)] if before else resolved[min(after)] if after else dominant
+        big = max((abs(raw) for fy, metric, raw in vals if metric in _SCALE_METRICS), default=0.0)
+        if big * near[1] > _MAX_LINE_ITEM_CR and 0.1 <= big * UNIT_FACTORS["rupees"] <= _MAX_LINE_ITEM_CR:
+            out[n] = ("rupees", UNIT_FACTORS["rupees"])
+        else:
+            out[n] = near
+    return out
+
+
 def extract_financials(pdf_path: str, pages: list[dict], sections: dict) -> dict:
     """Returns {"series": {fiscal_label: {metric: value_cr}}, "fiscal_order": [...],
-    "unit": str, "source_pages": {metric: page}, "confidence": {metric: float}}"""
+    "unit": str, "source_pages": {metric: page}, "confidence": {metric: float},
+    "value_pages": {fiscal_label: {metric: (page, unit)}}}"""
     anchor_pages = find_statement_pages(pages, sections)
     series: dict[str, dict[str, float]] = {}
+    value_pages: dict[str, dict[str, tuple[int, str]]] = {}
     source_pages: dict[str, int] = {}
     confidence: dict[str, float] = {}
-    unit_name, factor = "crores", 1.0  # default when no unit marker found
+    # (fy, metric, page, raw value, confidence) in the order the pages are read; the
+    # unit is applied after the whole scan, once every page's scale is known
+    cands: list[tuple[str, str, int, float, float]] = []
 
     with pdfplumber.open(pdf_path) as pdf:
         # each anchor page + following 3 pages (statements span pages)
@@ -413,8 +498,6 @@ def extract_financials(pdf_path: str, pages: list[dict], sections: dict) -> dict
         for n in scan:
             page = pdf.pages[n - 1]
             page_text = pages[n - 1]["text"]
-            if n in resolved:
-                unit_name, factor = resolved[n]
             if prev_n is not None and n != prev_n + 1:
                 carried_fy = []
             prev_n = n
@@ -449,27 +532,29 @@ def extract_financials(pdf_path: str, pages: list[dict], sections: dict) -> dict
                         if ci >= len(row):
                             continue
                         val = parse_number(row[ci])
-                        if val is None:
-                            continue
-                        fy_series = series.setdefault(fy, {})
-                        if metric not in fy_series:  # first (statement) value wins
-                            fy_series[metric] = round(val * factor, 2)
-                            source_pages.setdefault(metric, n)
-                            confidence.setdefault(metric, 0.9)
+                        if val is not None:
+                            cands.append((fy, metric, n, val, 0.9))
 
             # Borderless statements (no ruling lines) defeat extract_tables;
-            # fall back to parsing the page text. Table values win via the
-            # metric-not-in-series guard above.
+            # fall back to parsing the page text. Table values win: they come first.
             if carried_fy:
                 for metric, vals in _rows_from_text(page_text, carried_fy):
                     for fy, val in zip(carried_fy, vals):
                         if val is None or fy.startswith("STUB"):
                             continue
-                        fy_series = series.setdefault(fy, {})
-                        if metric not in fy_series:
-                            fy_series[metric] = round(val * factor, 2)
-                            source_pages.setdefault(metric, n)
-                            confidence.setdefault(metric, 0.7)
+                        cands.append((fy, metric, n, val, 0.7))
+
+    factors = _page_factors(cands, resolved)
+    for fy, metric, n, raw, conf in cands:
+        fy_series = series.setdefault(fy, {})
+        if metric not in fy_series:  # first (statement) value wins
+            unit, f = factors.get(n, ("crores", 1.0))
+            fy_series[metric] = round(raw * f, 2)
+            value_pages.setdefault(fy, {})[metric] = (n, unit)
+            source_pages.setdefault(metric, n)
+            confidence.setdefault(metric, conf)
+    units = [factors[n][0] for n in sorted({c[2] for c in cands}) if n in factors]
+    unit_name = max(set(units), key=units.count) if units else "crores"
 
     # A stray fiscal label from a notes/adjustments table stores a value or two
     # under a year the statements never had — and a phantom LATEST year hijacks
@@ -486,11 +571,13 @@ def extract_financials(pdf_path: str, pages: list[dict], sections: dict) -> dict
     fiscal_order = sorted(series.keys(), key=lambda l: int(l[2:]), reverse=True)
     return {"series": series, "fiscal_order": fiscal_order, "unit": unit_name,
             "source_pages": source_pages, "confidence": confidence,
-            "anchor_pages": anchor_pages}
+            "anchor_pages": anchor_pages, "value_pages": value_pages}
 
 
 def _derive_metrics(series: dict[str, dict[str, float]]) -> None:
     for fy, m in series.items():
+        if "revenue_total" in m:
+            m["revenue"] = m.pop("revenue_total")
         if "total_debt" not in m and ("borrowings_lt" in m or "borrowings_st" in m):
             m["total_debt"] = round(m.get("borrowings_lt", 0) + m.get("borrowings_st", 0), 2)
         if "total_debt" not in m and ("loans_secured" in m or "loans_unsecured" in m):
@@ -498,7 +585,12 @@ def _derive_metrics(series: dict[str, dict[str, float]]) -> None:
         if "ebitda" not in m and all(k in m for k in ("pbt", "finance_costs", "depreciation")):
             m["ebitda"] = round(m["pbt"] + m["finance_costs"] + m["depreciation"], 2)
         if "revenue" not in m and "total_income" in m:
-            m["revenue"] = round(m["total_income"] - m.get("other_income", 0), 2)
+            # other income is rarely most of the income; when it looks like it, the two
+            # rows came from different tables (Mahindra Holidays: 49.1 - 48.9 = "revenue"
+            # 0.2, a 49,900% margin), so leave revenue unknown rather than derive junk
+            rev = m["total_income"] - m.get("other_income", 0)
+            if m["total_income"] > 0 and rev >= 0.2 * m["total_income"]:
+                m["revenue"] = round(rev, 2)
         if "net_worth" not in m and "share_capital" in m and "reserves_surplus" in m:
             # the old A&L's "Net worth" is a bare section header with an unlabeled
             # value row; capital + reserves is the same figure minus small items
@@ -520,5 +612,7 @@ def cagr(fin: dict, metric: str) -> float | None:
     latest, oldest = get_metric(fin, metric, 0), get_metric(fin, metric, len(order) - 1)
     years = len(order) - 1
     if latest is None or oldest is None or oldest <= 0 or latest <= 0:
+        return None
+    if not 1e-3 <= latest / oldest <= 1e3:   # three orders of magnitude = years read in different units
         return None
     return (latest / oldest) ** (1 / years) - 1

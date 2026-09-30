@@ -18,6 +18,14 @@ def _safe_div(a: float | None, b: float | None) -> float | None:
     return a / b
 
 
+def _bounded(v: float | None, lo: float, hi: float) -> float | None:
+    return v if v is not None and lo <= v <= hi else None
+
+
+def _margin(num: float | None, rev: float | None, hi: float) -> float | None:
+    return _bounded(_safe_div(num, rev if (rev or 0) > 0 else None), -1.5, hi)
+
+
 def compute_ratios(fin: dict) -> dict:
     """All classic ratios, latest fiscal year, with the raw inputs kept for evidence."""
     r: dict = {}
@@ -27,12 +35,20 @@ def compute_ratios(fin: dict) -> dict:
     cfo, pbt, fc = get_metric(fin, "cfo"), get_metric(fin, "pbt"), get_metric(fin, "finance_costs")
     ta = get_metric(fin, "total_assets")
 
-    r["operating_margin"] = _safe_div(ebitda, rev)
-    r["net_margin"] = _safe_div(pat, rev)
-    r["roe"] = _safe_div(pat, nw)
+    # A ratio outside these bounds is an extraction error (a line item read from another
+    # table or in another unit), not a company: an EBITDA margin can't pass 100%, and
+    # ROE / D/E on zero or negative net worth mean nothing. Unknown beats impossible:
+    # scoring excludes missing inputs instead of scoring garbage (Laxmi India Finance's
+    # "1500% PAT margin", Sadbhav's 729,000x).
+    pos_rev = rev if (rev or 0) > 0 else None
+    pos_nw = nw if (nw or 0) > 0 else None
+    r["operating_margin"] = _bounded(_safe_div(ebitda, pos_rev), -1.5, 1.0)
+    r["net_margin"] = _bounded(_safe_div(pat, pos_rev), -1.5, 1.5)
+    r["roe"] = _bounded(_safe_div(pat, pos_nw), -3.0, 3.0)
     ebit = (pbt + fc) if (pbt is not None and fc is not None) else None
-    r["roce"] = _safe_div(ebit, (nw + debt) if (nw is not None and debt is not None) else None)
-    r["debt_equity"] = _safe_div(debt, nw)
+    cap = (nw + debt) if (nw is not None and debt is not None) else None
+    r["roce"] = _bounded(_safe_div(ebit, cap if (cap or 0) > 0 else None), -3.0, 3.0)
+    r["debt_equity"] = _bounded(_safe_div(debt, pos_nw), 0.0, 30.0)
     r["current_ratio"] = _safe_div(ca, cl)
     r["asset_turnover"] = _safe_div(rev, ta)
     r["cfo_to_pat"] = _safe_div(cfo, pat) if (pat or 0) > 0 else None
@@ -44,8 +60,8 @@ def compute_ratios(fin: dict) -> dict:
     order = fin.get("fiscal_order") or []
     r["margin_series"] = [
         {"fy": fy,
-         "net_margin": _safe_div(fin["series"][fy].get("pat"), fin["series"][fy].get("revenue")),
-         "operating_margin": _safe_div(fin["series"][fy].get("ebitda"), fin["series"][fy].get("revenue"))}
+         "net_margin": _margin(fin["series"][fy].get("pat"), fin["series"][fy].get("revenue"), 1.5),
+         "operating_margin": _margin(fin["series"][fy].get("ebitda"), fin["series"][fy].get("revenue"), 1.0)}
         for fy in order
     ]
     return {k: v for k, v in r.items() if v is not None or k in ("margin_series",)}

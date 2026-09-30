@@ -207,9 +207,12 @@ Total liabilities and equity
     fy = fin._fy_labels_from_text(page)
     assert fy == ["FY26", "FY25", "FY24"]
     rows = dict(fin._rows_from_text(page, fy))
-    # heading "Revenue from operations" has no value lines -> the totals row,
-    # which also matches the revenue synonym, must supply the figures
-    assert rows["revenue"] == [43894.88, 35977.57, 26905.58]
+    # heading "Revenue from operations" has no value lines -> the totals row
+    # supplies the figures, and becomes revenue once metrics are derived
+    assert rows["revenue_total"] == [43894.88, 35977.57, 26905.58]
+    series = {"FY26": {"revenue_total": 43894.88, "total_income": 49761.06}}
+    fin._derive_metrics(series)
+    assert series["FY26"]["revenue"] == 43894.88 and "revenue_total" not in series["FY26"]
     assert rows["total_income"] == [49761.06, 42361.51, 34260.79]
     assert rows["pat"] == [21001.61, 18052.51, 13422.35]
     assert rows["net_worth"] == [59630.62, 82975.33, 67477.47]
@@ -444,3 +447,39 @@ def test_market_signals_migration_adds_columns(tmp_path):
     app_db._migrate(eng)
     cols = {col["name"] for col in inspect(eng).get_columns("market_signals")}
     assert {"sub_bnii", "sub_snii", "day1_gain"} <= cols
+
+
+def test_unit_markers_for_rupees_and_thousands():
+    # whole-rupee statements ("Sales of goods 4,302,401,882") were read as crore
+    assert fin.detect_unit("Summarized Restated Profit and Loss Statement (Amount in Rs.) Particulars")[0] == "rupees"
+    assert fin.detect_unit("Balance sheet (₹ in thousands)")[0] == "thousands"
+    assert fin.detect_unit("STATEMENTS OF RESTATED ASSETS AND LIABILITIES (Rs. In Lacs)")[0] == "lacs"
+    assert fin.detect_unit("(₹ in million, unless otherwise stated)")[0] == "million"
+
+
+def test_unmarked_page_scale_is_inferred_not_inherited():
+    resolved = {10: ("million", 0.1)}
+    cands = [("FY15", "total_income", 10, 1073.1, 0.9), ("FY15", "net_worth", 10, 8297.0, 0.9),
+             # page 20 prints the same statement in whole rupees, no marker
+             ("FY15", "total_income", 20, 1073100000.0, 0.9), ("FY15", "net_worth", 20, 8297000000.0, 0.9),
+             # page 30: another entity's statement in rupees, nothing to line up with
+             ("FY15", "pat", 30, 51129601.0, 0.9),
+             # page 12: unmarked, ordinary magnitudes -> nearest marked page's unit
+             ("FY15", "pbt", 12, 700.0, 0.9)]
+    f = fin._page_factors(cands, resolved)
+    assert f[20] == ("inferred", pytest.approx(1e-7))   # Rs 1,073,100,000 = 1,073.1 million = 107.31 cr
+    assert f[30] == ("rupees", 1e-7)
+    assert f[12] == ("million", 0.1)
+
+
+def test_revenue_not_derived_from_mismatched_rows():
+    series = {"FY09": {"total_income": 49.1, "other_income": 48.9}}
+    fin._derive_metrics(series)
+    assert "revenue" not in series["FY09"]
+
+
+def test_impossible_ratios_are_withheld():
+    series = {"FY25": {"revenue": 2.4, "pat": 36.0, "ebitda": 50.0, "net_worth": -3.1, "total_debt": 345.0}}
+    r = valuation.compute_ratios({"series": series, "fiscal_order": ["FY25"]})
+    assert "net_margin" not in r and "operating_margin" not in r      # 1500% margins
+    assert "debt_equity" not in r and "roe" not in r                  # negative net worth

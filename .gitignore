@@ -28,3 +28,4 @@ docs/*.md
 
 # raw scraped pages (re-parse without refetching) — large, rebuildable
 data/cache/
+.venv/

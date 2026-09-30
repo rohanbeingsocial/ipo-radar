@@ -18,6 +18,7 @@ find "$LOG_DIR" -name '*.log' -mtime +60 -delete
 
 cd "$REPO"
 PY="$REPO/.venv/bin/python"
+export PYTHONUNBUFFERED=1                         # stream progress into the log as it happens
 export RHP_MAX_PER_RUN="${RHP_MAX_PER_RUN:-30}"   # prospectus downloads + analyses per run
 export CG_MAX_FETCH="${CG_MAX_FETCH:-300}"        # Chittorgarh IPO pages per run
 export DHAN_ENV_FILE="${DHAN_ENV_FILE:-$HOME/iposeller/.env}"

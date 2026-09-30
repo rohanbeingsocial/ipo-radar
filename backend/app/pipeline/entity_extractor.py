@@ -93,6 +93,12 @@ def extract_issue_details(pages: list[dict], sections: dict,
     if m:
         out["ofs_cr"] = _to_crore(m.group(1), m.group(2))
 
+    # India's largest IPO ever raised ~Rs 27,900 cr. A bigger number is a share count or a
+    # rupee figure read as crore ("OFS Rs 35,663,585 cr"); keep it out of the OFS-share rule.
+    for k in ("fresh_issue_cr", "ofs_cr"):
+        if out.get(k) is not None and not (0 <= out[k] <= 50_000):
+            out[k] = None
+
     if out.get("fresh_issue_cr") is not None or out.get("ofs_cr") is not None:
         out["total_issue_cr"] = round((out.get("fresh_issue_cr") or 0) + (out.get("ofs_cr") or 0), 2)
 
@@ -487,19 +493,43 @@ def extract_dividend(pages: list[dict], sections: dict) -> dict:
     return out
 
 
+# A pledge disclosure must SAY shares are pledged. Most sentences that mention promoters
+# and pledges say the opposite: the lock-in covenant ("have agreed not to sell, transfer,
+# charge, pledge..."), SEBI's rule that locked-in shares "can be pledged only with banks",
+# nil statements ("none of the Equity Shares held by our Promoters are pledged") and risk
+# factors about what promoters might do later. The old line-window regex took all of those
+# as pledges (63% of 787 reports scored 0/10 on no_pledging) and cut "None of the" off
+# when it sat on the previous line.
+_PLEDGE_AFFIRM = re.compile(
+    r"(?:have|has|had)\s+(?:been\s+)?pledged|(?:are|is|were|was)\s+(?:currently\s+|presently\s+)?pledged"
+    r"|pledged\s+(?:with|in\s+favou?r\s+of|to)\s|creat(?:ed|ion\s+of)\s+(?:a\s+)?pledge"
+    r"|details\s+of\s+(?:the\s+)?(?:equity\s+)?shares\s+pledged|pledge\s+(?:over|on)\s+[\d,]{4,}", re.I)
+_PLEDGE_NOT_DISCLOSURE = re.compile(
+    r"agreed\s+not|undert(?:ake|aking|aken|ook)|will\s+not|shall\s+not|would\s+not|cannot"
+    r"|can\s+be\s+pledged|may\s+be\s+pledged|pledged\s+only|only\s+be\s+pledged|collateral\s+security\s+for"
+    r"|regulation\s+\d|guidelines|icdr|in\s+the\s+event|\bif\b|may\s+pledge|could|potential|in\s+future"
+    r"|no\s+assurance|released|revoked|discharged|any\s+pledge|lock-?in\s+period\s+expires", re.I)
+_PLEDGE_NEGATION = re.compile(r"\b(?:none|nil|not|no|neither|nor|without)\b|free\s+from|unencumbered", re.I)
+
+
 def detect_pledging(pages: list[dict], sections: dict) -> dict:
     out = {"pledged": False, "evidence": None, "source_page": None}
     for key in ("capital_structure", "risk_factors"):
         r = _sec_range(sections, key)
         if not r:
             continue
-        hit = _search_pages(pages, r"([^\n.]{0,150}pledg\w+[^\n.]{0,150}promot\w+[^\n.]{0,100}|[^\n.]{0,150}promot\w+[^\n.]{0,80}pledg\w+[^\n.]{0,150})", r)
-        if hit:
-            snippet = re.sub(r"\s+", " ", hit[0].group(1)).strip()
-            if re.search(r"(?:none|nil|no|not)\s+(?:of\s+the\s+)?(?:equity\s+)?shares?\s+.{0,40}pledg|pledg\w+\s*:?\s*(?:nil|none)", snippet, re.I):
-                continue
-            out.update({"pledged": True, "evidence": snippet[:300], "source_page": hit[1]})
-            break
+        for p in pages[r[0] - 1:r[1]]:
+            text = re.sub(r"\s+", " ", p["text"])
+            for sent in re.split(r"(?<=[.;:])\s+(?=[A-Z(\d*^])", text):
+                if not (re.search(r"pledg", sent, re.I) and re.search(r"promot", sent, re.I)):
+                    continue
+                m = _PLEDGE_AFFIRM.search(sent)
+                if not m or _PLEDGE_NOT_DISCLOSURE.search(sent):
+                    continue
+                if _PLEDGE_NEGATION.search(sent[max(0, m.start() - 140):m.end() + 25]):
+                    continue
+                out.update({"pledged": True, "evidence": sent.strip()[:300], "source_page": p["n"]})
+                return out
     return out
 
 

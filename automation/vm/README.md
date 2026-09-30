@@ -30,5 +30,19 @@ tail -f ~/ipo-radar-logs/$(date +%F).log         # watch it
 cat ~/ipo-radar/data/run_status.json             # last run's warnings
 ```
 
+After any change under `backend/app` or `backend/tools` (the analyzer), RHP scores from
+the old and new versions must not be mixed. Every report records `meta.analyzer_version`;
+re-analyze the corpus and rebuild everything downstream as one unit:
+
+```sh
+sudo systemd-run --unit=ipo-radar-reanalyze --uid=ubuntu -p Nice=10 \
+     /home/ubuntu/ipo-radar/automation/vm/reanalyze.sh
+tail -f ~/ipo-radar-logs/reanalyze-$(date +%F).log
+```
+
+It re-downloads ~1,000 prospectuses (3 workers, ~4 h), stops taking new ones at 08:30 so
+the market-hours collector has the box, and resumes where it stopped when run again.
+Both scripts take `/tmp/ipo-radar.lock`, so the daily run waits for a re-analysis.
+
 The GitHub workflows keep a manual "Run workflow" button as a fallback. Don't give
 them a schedule again while this timer is enabled; both would commit the same files.

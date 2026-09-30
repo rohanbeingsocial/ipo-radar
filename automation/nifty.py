@@ -134,7 +134,8 @@ def refresh_listing(dates, log=print, max_new=400) -> pd.DataFrame:
     """Fetch the 10:00 NIFTY level for listing dates not cached yet (Dhan only).
     Days Dhan has no minutes for are cached as empty so they aren't retried daily."""
     have = load_listing()
-    want = sorted({pd.Timestamp(d).normalize() for d in dates if pd.notna(d)} - set(have.index))
+    # newest first: Dhan keeps minute candles only from ~2018, so old dates are the ones that come back empty
+    want = sorted({pd.Timestamp(d).normalize() for d in dates if pd.notna(d)} - set(have.index), reverse=True)
     today = pd.Timestamp.now(tz=IST).tz_localize(None).normalize()
     want = [d for d in want if d <= today and (d < today or
             datetime.now(IST).hour >= 10)][:max_new]

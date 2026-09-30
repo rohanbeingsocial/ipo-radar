@@ -189,13 +189,67 @@ def refresh_chittorgarh():
                 rows += list(cg_pages(rid, yr))
             except Exception as e:
                 print(f"  chittorgarh r{rid} y{yr} failed: {e}")
-        if not rows:
+        if not rows and rid == 25:
+            # the listing report's API has returned 0 rows since ~Jul 2026 (its page now
+            # loads client-side); listing_from_records() fills the file from the IPO pages
+            print("  chittorgarh r25 (listing) empty; filled from IPO pages instead")
+        elif not rows:
             warn(f"chittorgarh report {rid} ({name}) returned nothing")
         merged = upsert(DATA / f"{name}.csv", cg_clean(rows, id_from_field=idf))
         if "company" in merged:
             merged["company"] = merged["company"].map(clean_company)   # older rows too
             merged.to_csv(DATA / f"{name}.csv", index=False)
         print(f"  {name}: +{len(rows)} fetched, {len(merged)} total")
+
+
+def listing_from_records():
+    """Fill data/cg_listing.csv from each IPO page's "Listing Day Trading Information"
+    (cg_records.json), NSE's print where the stock listed there, else BSE's. Values the
+    listing report already supplied are kept; only gaps are filled."""
+    recs_path = DATA / "cg_records.json"
+    if not recs_path.exists():
+        return
+    recs = json.loads(recs_path.read_text(encoding="utf-8"))
+    lst = pd.read_csv(DATA / "cg_listing.csv")
+    lst["cg_ipo_id"] = sid_col(lst["cg_ipo_id"])
+    idx = {cid: i for i, cid in enumerate(lst["cg_ipo_id"])}
+    cols = {"open": "Open Price on Listing (Rs.)", "close": "Close Price on Listing (Rs.)",
+            "open_pct": "% Gain/Loss (Issue price v/s Open price on Listing)",
+            "close_pct": "% Gain/Loss (Issue price v/s close price on Listing)"}
+    added = filled = 0
+    new_rows = []
+    for cid, rec in recs.items():
+        ld = rec.get("listing_day") or {}
+        day1 = ld.get("NSE") or ld.get("BSE")
+        list_dt = pd.to_datetime(rec.get("il_ipo_listing_date"), errors="coerce")
+        offer = num(rec.get("issue_price_final"))
+        if not day1 or pd.isna(list_dt) or not np.isfinite(offer) or not offer:
+            continue
+        vals = {cols["open"]: day1.get("open"), cols["close"]: day1.get("close"),
+                cols["open_pct"]: round((day1["open"] / offer - 1) * 100, 2) if day1.get("open") else None,
+                cols["close_pct"]: round((day1["close"] / offer - 1) * 100, 2) if day1.get("close") else None,
+                "Listing Date": list_dt.strftime(DATE_FMT), "Issue Price (Rs.)": offer,
+                "ISIN": rec.get("il_isin"), "BSE Scrip Code": rec.get("il_bse_script_code"),
+                "NSE Symbol": rec.get("il_nse_script_symbol")}
+        if cid in idx:
+            i = idx[cid]
+            for k, v in vals.items():
+                if v is not None and k in lst.columns and pd.isna(lst.at[i, k]):
+                    lst.at[i, k] = v
+                    filled += 1
+                    # a gain the report left as a 0.00 placeholder next to a missing price
+                    # belongs to the price just filled
+                    pct = {cols["open"]: cols["open_pct"], cols["close"]: cols["close_pct"]}.get(k)
+                    if pct and vals.get(pct) is not None:
+                        lst.at[i, pct] = vals[pct]
+        else:
+            new_rows.append({"cg_ipo_id": cid, "company": clean_company(rec.get("company_name")),
+                             "Issue Category": "Mainboard", **vals})
+            added += 1
+    if new_rows:
+        lst = pd.concat([lst, pd.DataFrame(new_rows)], ignore_index=True)
+    lst.to_csv(DATA / "cg_listing.csv", index=False)
+    print(f"  cg_listing from IPO pages: {added} rows added, {filled} gaps filled")
 
 
 # ─────────────────────────── 2. Yahoo outcomes ───────────────────────────
@@ -324,7 +378,10 @@ def compact_report(rep: dict) -> dict:
                         "top": [{"title": f.get("title"), "severity": f.get("severity")}
                                 for f in (keep["risk"].get("findings") or [])[:5]]}
     if "forensic" in keep:
-        keep["forensic"] = {"flags": [{"name": f.get("name"), "detail": str(f.get("detail"))[:160]}
+        # the analyzer keys a flag by "rule"; reading "name" left every flag nameless
+        # ("flags": [null] on the dashboard)
+        keep["forensic"] = {"flags": [{"name": f.get("name") or f.get("rule"),
+                                       "detail": str(f.get("detail"))[:160]}
                                       for f in (keep["forensic"].get("flags") or [])]}
     cases = rep.get("cases") or {}
     keep["cases"] = {side: [{"text": c.get("text")} for c in (cases.get(side) or [])[:3]]
@@ -340,6 +397,27 @@ def compact_report(rep: dict) -> dict:
     if any(v is not None for v in fund.values()):
         keep["fundamentals"] = fund
     return keep
+
+
+def code_version() -> str:
+    """Short git commit of the analyzer that wrote a report. Scores are not comparable
+    across extractor versions, so every report records the version that produced it."""
+    try:
+        # analyzer code only: the weekly retrain commits model files under backend/app, and
+        # those must not mark every report stale
+        paths = ["backend/app", "backend/tools", ":(exclude)backend/app/*.pkl",
+                 ":(exclude)backend/app/*.json"]
+        return subprocess.run(["git", "-C", str(ROOT), "log", "-1", "--format=%h", "--", *paths],
+                              capture_output=True, text=True, timeout=10).stdout.strip() or "unknown"
+    except Exception:  # noqa: BLE001
+        return "unknown"
+
+
+def stamp_report(report: dict, source_url: str | None) -> dict:
+    meta = report.setdefault("meta", {})
+    meta.update({"source_url": source_url, "analyzed_at": datetime.now().isoformat(timespec="seconds"),
+                 "analyzer_version": code_version()})
+    return report
 
 
 def sebi_recent_entries(max_pages=8):
@@ -403,7 +481,8 @@ def fetch_and_analyze(entry_url, out_json: Path, offer_price=None) -> bool:
         # the document prints the issue P/E as "[●]". We know the real price from
         # Chittorgarh, so hand it in — otherwise the whole valuation category never scores.
         rep = analyze_pdf(str(dest), offer_price=num(offer_price) if offer_price is not None else None)
-        out_json.write_text(json.dumps(compact_report(rep), ensure_ascii=False), encoding="utf-8")
+        out_json.write_text(json.dumps(stamp_report(compact_report(rep), pdf_url), ensure_ascii=False),
+                            encoding="utf-8")
     return True
 
 
@@ -958,6 +1037,7 @@ def main():
                max_fetch=int(os.environ.get("CG_MAX_FETCH", 60)))
     if cg and cg.get("failed"):
         warn(f"{cg['failed']} Chittorgarh IPO pages failed to download")
+    _step("1c) listing prices from IPO pages", listing_from_records)
     _step("2) yahoo outcomes", refresh_outcomes)
     if seed:
         print("3) seeding reports from local API")

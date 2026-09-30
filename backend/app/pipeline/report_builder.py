@@ -45,6 +45,12 @@ def _rule_statement(r: dict) -> dict:
             "confidence": r.get("confidence", 0.9)}
 
 
+# Rules that count in the score but make no case on their own: the risk model's evidence
+# is a tally ("Findings: 2 high, 1 medium") whose findings are already itemised as bear
+# points, and a "leading/largest" line is the issuer's marketing, not a strength.
+NOT_A_CASE = {"risk_penalty_model", "market_position_claim"}
+
+
 def build_report(ctx: dict) -> dict:
     fin, ratios, issue = ctx["financials"], ctx["ratios"], ctx["issue"]
     risks, val, scoring = ctx["risks"], ctx["valuation"], ctx["scoring"]
@@ -52,7 +58,7 @@ def build_report(ctx: dict) -> dict:
     sections = ctx["sections"]
 
     all_rules = [r for c in scoring["categories"].values() for r in c["rules"]]
-    included = [r for r in all_rules if r["included"]]
+    included = [r for r in all_rules if r["included"] and r["rule"] not in NOT_A_CASE]
     strong = sorted((r for r in included if r["max_points"] >= 5 and r["points"] / r["max_points"] >= 0.72),
                     key=lambda r: -(r["points"] / r["max_points"]) * r["max_points"])
     weak = sorted((r for r in included if r["max_points"] >= 5 and r["points"] / r["max_points"] <= 0.35),

@@ -1,0 +1,12 @@
+[Unit]
+Description=IPO radar refresh every day at 20:00 IST
+
+[Timer]
+# after the close (15:30) and after subscription windows shut (17:00), so the day's
+# final subscription, listing-day prices and closing LTPs are all in
+OnCalendar=*-*-* 20:00:00 Asia/Kolkata
+Persistent=true
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target

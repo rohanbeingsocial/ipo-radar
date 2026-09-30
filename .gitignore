@@ -25,3 +25,6 @@ dossier/
 
 # internal strategy docs — docs/ holds ONLY the GitHub Pages site (index.html + data/)
 docs/*.md
+
+# raw scraped pages (re-parse without refetching) — large, rebuildable
+data/cache/

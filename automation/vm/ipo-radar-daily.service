@@ -1,0 +1,14 @@
+[Unit]
+Description=IPO radar daily refresh (data, RHP analysis, site, dataset, Kaggle)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+WorkingDirectory=/home/ubuntu/ipo-radar
+ExecStart=/home/ubuntu/ipo-radar/automation/vm/daily.sh
+# runs after market hours, but stay out of the way of anything else on the box
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=4h

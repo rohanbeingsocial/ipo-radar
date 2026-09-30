@@ -1,6 +1,7 @@
 """Publish the refreshed IPO dataset to Kaggle as a new dataset version.
 
-Runs weekly in CI (.github/workflows/kaggle-publish.yml). Needs a Kaggle
+Runs after the daily refresh on the VM (automation/vm/daily.sh) whenever the
+dataset changed; .github/workflows/kaggle-publish.yml is the manual fallback. Needs a Kaggle
 access token (kaggle.com/settings -> API -> Create New Token) in the
 KAGGLE_API_TOKEN environment variable (GitHub repo secret). The dataset
 lives at kaggle.com/datasets/<token owner>/india-mainboard-ipos-20yr and
@@ -21,6 +22,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SLUG = "india-mainboard-ipos-20yr"
 
 FILES = [
+    ROOT / "ipodata" / "finalipodata.xlsx",
+    ROOT / "ipodata" / "finalipodata.csv",
     ROOT / "ipodata" / "finalipodata_expanded_20yr.xlsx",
     ROOT / "data" / "cg_issue.csv",
     ROOT / "data" / "cg_subs.csv",
@@ -34,8 +37,8 @@ DATASET_README = """\
 # India Mainboard IPOs: 20 Years of Data
 
 NSE/BSE **mainboard** IPOs from 2004 onward — issue structure, category-wise
-subscription, listing-day prices, and post-listing price paths out to 24 months.
-Refreshed weekly from a self-updating pipeline
+subscription, listing-day prices, KPIs, market context and post-listing price
+paths out to 24 months. Refreshed daily from a self-updating pipeline
 (https://github.com/rohanbeingsocial/ipo-radar) that pulls Chittorgarh's IPO
 archives, SEBI's Red-Herring Prospectus filings, and Yahoo Finance daily and
 commits the results.
@@ -44,6 +47,8 @@ commits the results.
 
 | File | What it is |
 |---|---|
+| `finalipodata.xlsx` | **The main table**, one row per IPO, newest first. **Sheet1**: 47 columns: dates, NIFTY 50 at listing (10:00 level, previous close, change, monthly mood), sector, cap, face value, offer / GMP / estimated price, listing-day open and close with gains, LTP and LTP gain, category subscription (QIB / bNII / sNII / Retail), net worth, EBITDA margin, ROE, ROCE, D/E, PAT margin, RoNW, P/B, shares offered per category, lot size, pre/post-issue EPS and P/E, and each category's % of the issue. **Cleaned**: listed IPOs, 36 modelling columns. **Sources**: which values were computed rather than published. **ReadMe**: column definitions. |
+| `finalipodata.csv` | Sheet1 of the workbook as CSV. |
 | `finalipodata_expanded_20yr.xlsx` | The joined dataset, one row per IPO. Sheets: **Expanded** (all columns), **Original** (source template), **ReadMe** (column dictionary). |
 | `cg_issue.csv` | Issue structure: dates, price band, issue size, fresh/OFS split, ISIN, NSE/BSE codes. |
 | `cg_subs.csv` | Final subscription multiples by category: QIB, bNII, sNII, Retail, Total. |
@@ -59,6 +64,8 @@ Key columns are documented row-by-row in the workbook's **ReadMe** sheet.
 - **Chittorgarh.com** IPO archives (issue structure, subscription, listing-day prices).
 - **SEBI** Red-Herring Prospectus filings (document-level features scored by the
   open-source pipeline in the repo above).
+- **NSE** official NIFTY 50 history; **Dhan** 1-minute NIFTY 50 (10:00 level on
+  listing day) and last traded prices; **ipowatch** grey-market premium.
 - **Yahoo Finance** daily closes for post-listing paths; long-horizon coverage
   skews to survivors (delisted names drop out), so treat 24m columns accordingly.
 

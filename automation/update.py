@@ -17,6 +17,7 @@ CI run:                          python automation/update.py
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -48,11 +49,21 @@ CG_BASE = "https://webnodejs.chittorgarh.com/cloud/report/data-read"
 SEBI_AJAX = "https://www.sebi.gov.in/sebiweb/ajax/home/getnewslistinfo.jsp"
 NOW = pd.Timestamp.now().normalize()
 SITE_WINDOW_DAYS = 550          # how far back the dashboard looks
-MAX_NEW_RHP_PER_RUN = 6         # keep CI runs bounded
+MAX_NEW_RHP_PER_RUN = int(os.environ.get("RHP_MAX_PER_RUN", 6))   # the VM raises this
 MAX_NEW_DETAILS_PER_RUN = 40    # Chittorgarh detail-page / Yahoo sector fetches per run
 DETAILS_WINDOW_DAYS = 1825      # Chittorgarh only carries the KPI + reservation block
                                 # for recent IPOs (~2021 on); older pages have neither
 DATE_FMT = "%d-%b-%Y"
+
+# A step that "succeeds" while doing nothing it should have done (0 RHPs analyzed with
+# 27 missing, 0 GMPs matched with 4 IPOs open) is how the dashboard went stale unseen.
+# Such cases are collected here and written to data/run_status.json at the end.
+WARNINGS: list[str] = []
+
+
+def warn(msg):
+    WARNINGS.append(msg)
+    print(f"  WARNING: {msg}")
 
 
 def http(url, data=None, timeout=60, tries=3, referer="https://www.chittorgarh.com/"):
@@ -116,6 +127,18 @@ def cg_pages(report_id, year):
         time.sleep(0.4)
 
 
+_BADGE = re.compile(r"^(.*?(?:Ltd\.?|Limited|\)|Bank|Trust|InvIT|REIT))\s+[A-Z]{1,3}$")
+
+
+def clean_company(name):
+    """Chittorgarh appends a status badge to live issues ("Moneyview Ltd. P",
+    "Varmora Granito Ltd. O", "... LT", "... CT"); it isn't part of the name and
+    breaks every name match downstream."""
+    s = re.sub(r"\s+", " ", str(name or "")).strip()
+    m = _BADGE.match(s)
+    return m.group(1) if m else s
+
+
 def cg_clean(rows, id_from_field=None):
     out = []
     for r in rows:
@@ -125,7 +148,7 @@ def cg_clean(rows, id_from_field=None):
         rec["cg_ipo_id"] = m.group(1) if m else ""
         m2 = re.search(r'href="(https://www\.chittorgarh\.com/ipo/[^"]+)"', comp)
         rec["detail_url"] = m2.group(1) if m2 else ""
-        rec["company"] = strip_html(comp)
+        rec["company"] = clean_company(strip_html(comp))
         for k, v in r.items():
             if k == "Company":
                 continue
@@ -166,7 +189,12 @@ def refresh_chittorgarh():
                 rows += list(cg_pages(rid, yr))
             except Exception as e:
                 print(f"  chittorgarh r{rid} y{yr} failed: {e}")
+        if not rows:
+            warn(f"chittorgarh report {rid} ({name}) returned nothing")
         merged = upsert(DATA / f"{name}.csv", cg_clean(rows, id_from_field=idf))
+        if "company" in merged:
+            merged["company"] = merged["company"].map(clean_company)   # older rows too
+            merged.to_csv(DATA / f"{name}.csv", index=False)
         print(f"  {name}: +{len(rows)} fetched, {len(merged)} total")
 
 
@@ -336,21 +364,38 @@ PDF_RES = [re.compile(r'href=[\'"](https://www\.sebi\.gov\.in/sebi_data/[^\'"]+\
            re.compile(r'href=[\'"]([^\'"]+\.pdf)[\'"]', re.I)]
 
 
-def fetch_and_analyze(entry_url, out_json: Path, offer_price=None) -> bool:
+def _pdf_url(entry_url):
+    """A prospectus link is either the PDF itself (BSE / NSE / company site) or a SEBI
+    filing page that embeds it."""
+    if re.search(r"\.(pdf|zip)($|\?)", entry_url, re.I) or "/download/" in entry_url:
+        return entry_url
     detail = http(entry_url, referer="https://www.sebi.gov.in/").decode("utf-8", "replace")
-    pdf_url = None
     for rx in PDF_RES:
         hit = rx.search(detail)
         if hit:
-            pdf_url = urllib.parse.urljoin(entry_url, hit.group(1))
-            break
-    if not pdf_url:
-        raise RuntimeError("no pdf link")
+            return urllib.parse.urljoin(entry_url, hit.group(1))
+    raise RuntimeError("no pdf link")
+
+
+def fetch_and_analyze(entry_url, out_json: Path, offer_price=None) -> bool:
+    pdf_url = _pdf_url(entry_url)
+    referer = ("https://www.bseindia.com/" if "bseindia" in pdf_url else
+               "https://www.nseindia.com/" if "nseindia" in pdf_url else "https://www.sebi.gov.in/")
     with tempfile.TemporaryDirectory() as td:
         dest = Path(td) / "rhp.pdf"
-        r = subprocess.run(["curl", "-sL", "-A", UA["User-Agent"], "--retry", "4",
+        r = subprocess.run(["curl", "-sL", "-A", UA["User-Agent"], "-e", referer, "--retry", "4",
                             "--retry-all-errors", "-C", "-", "--max-time", "600",
                             "-o", str(dest), pdf_url], capture_output=True)
+        if r.returncode == 0 and dest.exists() and dest.read_bytes()[:2] == b"PK":
+            # NSE ships its RHPs zipped (nsearchives .../RHP_<SYMBOL>.zip): take the biggest PDF
+            import zipfile
+            with zipfile.ZipFile(dest) as z:
+                pdfs = sorted((i for i in z.infolist() if i.filename.lower().endswith(".pdf")),
+                              key=lambda i: i.file_size, reverse=True)
+                if not pdfs:
+                    raise RuntimeError("zip without a pdf")
+                data = z.read(pdfs[0])
+            dest.write_bytes(data)
         if r.returncode != 0 or not dest.exists() or dest.stat().st_size < 100_000 \
                 or not dest.read_bytes()[:5].startswith(b"%PDF"):
             raise RuntimeError("bad pdf download")
@@ -362,40 +407,77 @@ def fetch_and_analyze(entry_url, out_json: Path, offer_price=None) -> bool:
     return True
 
 
+RHP_FAILURES = DATA / "rhp_failures.json"
+RHP_RETRY_DAYS = 7
+
+
 def ensure_rhp_reports():
+    """Analyze the prospectus of every IPO that has no report yet, newest first.
+
+    The document comes from the link on the IPO's Chittorgarh page (cg_records.json:
+    the RHP, else the final prospectus). Matching names against SEBI's "RHP filed
+    with RoC" listing is only the fallback: that listing stopped at 4 Sep 2026 while
+    SEBI kept posting the documents under Public Issues, so it silently found nothing
+    for three weeks of IPOs."""
     issue = pd.read_csv(DATA / "cg_issue.csv")
     issue["cg_ipo_id"] = issue["cg_ipo_id"].astype(str)
     issue["open_dt"] = pdate(issue["Opening Date"])
-    recent = issue[issue["open_dt"] >= NOW - timedelta(days=270)]
-    missing = [r for _, r in recent.iterrows()
-               if not (REPORTS / f"{r['cg_ipo_id']}.json").exists()]
+    started = issue[issue["open_dt"] <= NOW + timedelta(days=10)].sort_values("open_dt", ascending=False)
+    missing = [r for _, r in started.iterrows() if not (REPORTS / f"{r['cg_ipo_id']}.json").exists()]
     if not missing:
         print("  rhp reports: nothing new")
         return
-    try:
-        entries = sebi_recent_entries()
-    except Exception as e:
-        print(f"  sebi listing failed ({e}); will retry next run")
-        return
-    done = 0
+    recs = json.loads((DATA / "cg_records.json").read_text(encoding="utf-8")) \
+        if (DATA / "cg_records.json").exists() else {}
+    fails = json.loads(RHP_FAILURES.read_text(encoding="utf-8")) if RHP_FAILURES.exists() else {}
+    entries = None
+    done = tried = 0
     for r in missing:
         if done >= MAX_NEW_RHP_PER_RUN:
             break
-        toks = norm_tokens(r["company"])
-        cands = [e for e in entries if set(toks) <= e["toks"]
-                 and (pd.isna(r["open_dt"]) or
-                      r["open_dt"] - timedelta(days=200) <= e["date"] <= r["open_dt"] + timedelta(days=45))]
-        if not cands:
+        cid = r["cg_ipo_id"]
+        last = fails.get(cid, {}).get("at")
+        if last and (NOW - pd.Timestamp(last)).days < RHP_RETRY_DAYS:
             continue
-        cands.sort(key=lambda e: abs((e["date"] - (r["open_dt"] or e["date"])).days))
-        try:
-            fetch_and_analyze(cands[0]["url"], REPORTS / f"{r['cg_ipo_id']}.json",
-                              offer_price=r.get("Issue Price (Rs.)"))
-            done += 1
-            print(f"  analyzed RHP: {r['company'][:45]}")
-        except Exception as e:
-            print(f"  RHP failed {r['company'][:40]}: {e}")
-    print(f"  rhp reports: {done} new")
+        rec = recs.get(cid, {})
+        urls = [u for u in (rec.get("prospectus_rhp"), rec.get("final_prospectus"))
+                if isinstance(u, str) and u.startswith("http")]
+        if not urls and pd.notna(r["open_dt"]) and r["open_dt"] >= NOW - timedelta(days=270):
+            if entries is None:
+                try:
+                    entries = sebi_recent_entries()
+                except Exception as e:  # noqa: BLE001
+                    entries = []
+                    warn(f"SEBI RHP listing failed ({e})")
+            toks = norm_tokens(r["company"])
+            cands = [e for e in entries if set(toks) <= e["toks"]
+                     and r["open_dt"] - timedelta(days=200) <= e["date"] <= r["open_dt"] + timedelta(days=45)]
+            cands.sort(key=lambda e: abs((e["date"] - r["open_dt"]).days))
+            urls = [c["url"] for c in cands[:1]]
+        if not urls:
+            continue
+        tried += 1
+        err = None
+        for u in urls:
+            try:
+                fetch_and_analyze(u, REPORTS / f"{cid}.json", offer_price=r.get("Issue Price (Rs.)"))
+                done += 1
+                fails.pop(cid, None)
+                print(f"  analyzed RHP: {r['company'][:45]}")
+                err = None
+                break
+            except Exception as e:  # noqa: BLE001
+                err = f"{type(e).__name__}: {e}"
+        if err:
+            fails[cid] = {"at": str(NOW.date()), "error": err[:200], "urls": urls}
+            print(f"  RHP failed {r['company'][:40]}: {err[:120]}")
+    RHP_FAILURES.write_text(json.dumps(fails, indent=1, sort_keys=True), encoding="utf-8")
+    left = len(missing) - done
+    print(f"  rhp reports: {done} new, {tried - done} failed, {left} still without a report")
+    recent_missing = [r for r in missing if pd.notna(r["open_dt"]) and r["open_dt"] >= NOW - timedelta(days=60)
+                      and not (REPORTS / f"{r['cg_ipo_id']}.json").exists()]
+    if recent_missing and done == 0:
+        warn(f"{len(recent_missing)} IPOs from the last 60 days have no RHP report and none was added")
 
 
 # ─────────────── 3b. enrichment: sector · reservation · GMP ───────────────
@@ -611,13 +693,16 @@ def parse_ipowatch(html):
     out = {}
     for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.S):
         txt = _space_text(tr)
-        if "Mainboard" not in txt:
+        # the table used to tag rows "Mainboard"/"SME"; since Sep 2026 it has no type
+        # column (rows read "Vishal Nirmiti ₹6 🟢 ₹220 ₹226 (2.73%) ..."), so only skip
+        # rows that say SME — callers match names against mainboard IPOs anyway
+        if re.search(r"\bSME\b", txt):
             continue
-        m = re.match(r"(.+?)\s+₹\s*([\d,]+)", txt)
+        m = re.match(r"(.+?)\s+(-?)₹\s*(-?[\d,]+(?:\.\d+)?)", txt)
         if not m:
             continue
         name = re.sub(r"\s+IPO$", "", m.group(1)).strip()
-        gmp = num(m.group(2))
+        gmp = num(m.group(3)) * (-1 if m.group(2) else 1)
         key = " ".join(norm_tokens(name))
         if key and np.isfinite(gmp):
             out[key] = gmp
@@ -656,7 +741,7 @@ def refresh_gmp():
                     referer="https://ipowatch.in/").decode("utf-8", "replace")
         table = parse_ipowatch(html)
     except Exception as e:
-        print(f"  gmp source failed ({e}); skipping")
+        warn(f"GMP source failed ({e})")
         return
     cache = pd.read_csv(GMP_CSV, dtype={"cg_ipo_id": str}) if GMP_CSV.exists() \
         else pd.DataFrame(columns=["cg_ipo_id"])
@@ -680,6 +765,9 @@ def refresh_gmp():
         hits += 1
     pd.DataFrame(have.values()).to_csv(GMP_CSV, index=False)
     print(f"  gmp: {hits} open IPOs matched, {len(have)} cached")
+    open_now = live[(live["open_dt"] <= NOW) & (live["close_dt"] >= NOW)]
+    if len(open_now) and hits == 0:
+        warn(f"GMP matched none of the {len(open_now)} IPOs open today (source table changed?)")
 
 
 # ─────────────────────────── 4. site payload ───────────────────────────
@@ -840,45 +928,56 @@ def seed_from_local_api():
     print(f"  seeded {got} reports from local corpus")
 
 
+def _step(label, fn, *a, **kw):
+    print(label)
+    try:
+        return fn(*a, **kw)
+    except Exception as e:  # noqa: BLE001 - one source failing never stops the run
+        warn(f"{label.split(')', 1)[-1].strip()} failed: {type(e).__name__}: {e}")
+        return None
+
+
+def write_run_status(started):
+    status = {"run_at": started.isoformat(timespec="seconds"),
+              "finished_at": datetime.now().isoformat(timespec="seconds"),
+              "warnings": WARNINGS}
+    (DATA / "run_status.json").write_text(json.dumps(status, indent=1), encoding="utf-8")
+
+
 def main():
+    started = datetime.now()
     seed = "--seed" in sys.argv
-    print("1) chittorgarh refresh")
-    try:
-        refresh_chittorgarh()
-    except Exception as e:
-        print(f"  FAILED: {e}")
-    print("2) yahoo outcomes")
-    try:
-        refresh_outcomes()
-    except Exception as e:
-        print(f"  FAILED: {e}")
+    import cg_record
+    import finalsheet
+    import nifty
+
+    _step("1) chittorgarh refresh", refresh_chittorgarh)
+    # every IPO's own page: face value, lot size, shares offered, KPIs, financials,
+    # listing-day prices and the prospectus link the RHP step needs
+    cg = _step("1b) chittorgarh IPO pages", cg_record.refresh,
+               max_fetch=int(os.environ.get("CG_MAX_FETCH", 60)))
+    if cg and cg.get("failed"):
+        warn(f"{cg['failed']} Chittorgarh IPO pages failed to download")
+    _step("2) yahoo outcomes", refresh_outcomes)
     if seed:
         print("3) seeding reports from local API")
         seed_from_local_api()
     else:
-        print("3) sebi rhp fetch+analyze")
-        try:
-            ensure_rhp_reports()
-        except Exception as e:
-            print(f"  FAILED: {e}")
-    print("3b) sector / reservation")
-    try:
-        refresh_details()
-    except Exception as e:
-        print(f"  FAILED: {e}")
-    print("3c) grey-market premium")
-    try:
-        refresh_gmp()
-    except Exception as e:
-        print(f"  FAILED: {e}")
+        _step("3) rhp fetch+analyze", ensure_rhp_reports)
+    _step("3b) sector / reservation", refresh_details)
+    _step("3c) grey-market premium", refresh_gmp)
+    import gmp_history
+    _step("3d) grey-market history", gmp_history.refresh)
     print("4) site payload")
     build_site()
-    print("5) excel rebuild")
-    try:
-        rebuild_excel()
-    except Exception as e:
-        print(f"  FAILED: {e}")
-    print("done")
+    _step("5) excel rebuild", rebuild_excel)
+    _step("5b) nifty 50", nifty.refresh_daily)
+    lst = pd.read_csv(DATA / "cg_issue.csv")["Listing Date"]
+    _step("5c) nifty at listing", nifty.refresh_listing, pdate(lst))
+    _step("5d) last traded prices", finalsheet.refresh_ltp)
+    _step("5e) finalipodata sheet", finalsheet.build)
+    write_run_status(started)
+    print(f"done ({len(WARNINGS)} warnings)")
 
 
 if __name__ == "__main__":

@@ -10048,6 +10048,28 @@
    "retail": 0.16,
    "qib_bar": 46.03,
    "retail_bar": 12.74
+  },
+  {
+   "cg_ipo_id": "2665",
+   "company": "Vishal Nirmiti Ltd. O",
+   "opened": "2026-09-30",
+   "recorded_at": "2026-09-30T08:51:31.240916+00:00",
+   "rule_says": "no",
+   "qib": 1.0,
+   "retail": 0.05,
+   "qib_bar": 46.03,
+   "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "2974",
+   "company": "Nityas Gems & Jewellery Ltd. O",
+   "opened": "2026-09-30",
+   "recorded_at": "2026-09-30T08:51:31.241985+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.41,
+   "qib_bar": 46.03,
+   "retail_bar": 13.83
   }
  ],
  "scoreboard": {

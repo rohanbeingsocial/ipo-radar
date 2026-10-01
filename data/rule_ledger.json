@@ -109,7 +109,9 @@
    "qib": 1.16,
    "retail": 0.32,
    "qib_bar": 7.01,
-   "retail_bar": 4.96
+   "retail_bar": 4.96,
+   "ret_6m_from_listing": -49.2,
+   "ret_12m_from_listing": -68.2
   },
   {
    "cg_ipo_id": "69",
@@ -1039,7 +1041,9 @@
    "qib": 5.17,
    "retail": 1.09,
    "qib_bar": 24.17,
-   "retail_bar": 10.15
+   "retail_bar": 10.15,
+   "ret_6m_from_listing": -90.9,
+   "ret_12m_from_listing": -93.1
   },
   {
    "cg_ipo_id": "169",
@@ -1240,7 +1244,9 @@
    "qib": 1.34,
    "retail": 0.4,
    "qib_bar": 6.83,
-   "retail_bar": 6.11
+   "retail_bar": 6.11,
+   "ret_6m_from_listing": -97.3,
+   "ret_12m_from_listing": -94.5
   },
   {
    "cg_ipo_id": "190",
@@ -1388,7 +1394,9 @@
    "qib": 10.63,
    "retail": 2.9,
    "qib_bar": 2.84,
-   "retail_bar": 3.04
+   "retail_bar": 3.04,
+   "ret_6m_from_listing": 41440.4,
+   "ret_12m_from_listing": 40203.7
   },
   {
    "cg_ipo_id": "204",
@@ -1788,7 +1796,9 @@
    "qib": 2.54,
    "retail": 0.16,
    "qib_bar": 1.75,
-   "retail_bar": 2.5
+   "retail_bar": 2.5,
+   "ret_6m_from_listing": -18.7,
+   "ret_12m_from_listing": -46.1
   },
   {
    "cg_ipo_id": "239",
@@ -1812,7 +1822,9 @@
    "qib": 7.97,
    "retail": 2.81,
    "qib_bar": 1.4,
-   "retail_bar": 2.31
+   "retail_bar": 2.31,
+   "ret_6m_from_listing": 77384.7,
+   "ret_12m_from_listing": 51228.5
   },
   {
    "cg_ipo_id": "243",
@@ -1869,7 +1881,9 @@
    "qib": 4.28,
    "retail": 10.03,
    "qib_bar": 1.62,
-   "retail_bar": 2.31
+   "retail_bar": 2.31,
+   "ret_6m_from_listing": -42.3,
+   "ret_12m_from_listing": -55.1
   },
   {
    "cg_ipo_id": "250",
@@ -2415,7 +2429,9 @@
    "qib": 0.26,
    "retail": 0.61,
    "qib_bar": 3.27,
-   "retail_bar": 5.21
+   "retail_bar": 5.21,
+   "ret_6m_from_listing": 6.6,
+   "ret_12m_from_listing": 3.5
   },
   {
    "cg_ipo_id": "303",
@@ -2822,7 +2838,9 @@
    "qib": 1.49,
    "retail": 2.05,
    "qib_bar": 0.83,
-   "retail_bar": 3.18
+   "retail_bar": 3.18,
+   "ret_6m_from_listing": -41.4,
+   "ret_12m_from_listing": -62.5
   },
   {
    "cg_ipo_id": "358",
@@ -3067,7 +3085,9 @@
    "qib": 1.98,
    "retail": 1.16,
    "qib_bar": 1.04,
-   "retail_bar": 2.76
+   "retail_bar": 2.76,
+   "ret_6m_from_listing": -28.8,
+   "ret_12m_from_listing": -5.8
   },
   {
    "cg_ipo_id": "481",
@@ -8483,7 +8503,9 @@
    "qib": 37.19,
    "retail": 9.15,
    "qib_bar": 56.2,
-   "retail_bar": 11.16
+   "retail_bar": 11.16,
+   "ret_6m_from_listing": -48.0,
+   "ret_12m_from_listing": -43.6
   },
   {
    "cg_ipo_id": "2048",
@@ -10074,21 +10096,21 @@
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
-   "n_rule": 82,
-   "n_rest": 537,
-   "rule_median": 9.9,
-   "rest_median": -4.6,
-   "edge_pp": 14.5,
-   "rule_win_rate": 0.59,
-   "rest_win_rate": 0.45
+   "n_rule": 86,
+   "n_rest": 544,
+   "rule_median": 8.6,
+   "rest_median": -4.7,
+   "edge_pp": 13.3,
+   "rule_win_rate": 0.57,
+   "rest_win_rate": 0.44
   },
   "ret_12m_from_listing": {
-   "n_rule": 78,
-   "n_rest": 500,
-   "rule_median": 3.5,
-   "rest_median": -12.2,
-   "edge_pp": 15.8,
-   "rule_win_rate": 0.58,
+   "n_rule": 82,
+   "n_rest": 507,
+   "rule_median": 3.3,
+   "rest_median": -12.8,
+   "edge_pp": 16.1,
+   "rule_win_rate": 0.56,
    "rest_win_rate": 0.41
   }
  },

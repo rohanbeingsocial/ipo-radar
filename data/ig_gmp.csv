@@ -226,8 +226,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1844,Western Carriers (India),2024-09-24,16.0,172.0,188.0,24-Sep-2024 10:26:43 AM
 1841,P N Gadgil Jewellers,2024-09-17,303.5,480.0,783.5,17-Sep-2024 10:30:43 AM
 1837,Tolins Tyres,2024-09-16,30.0,226.0,256.0,16-Sep-2024 10:27:42 AM
-1822,Bajaj Housing Finance,2024-09-16,72.0,70.0,142.0,16-Sep-2024 10:28:42 AM
 1839,Kross,2024-09-16,24.5,240.0,264.5,16-Sep-2024 10:27:42 AM
+1822,Bajaj Housing Finance,2024-09-16,72.0,70.0,142.0,16-Sep-2024 10:28:42 AM
 1835,Shree Tirupati Balajee,2024-09-12,27.0,83.0,110.0,12-Sep-2024 10:29:42 AM
 1829,Gala Precision Engineering,2024-09-09,245.0,529.0,774.0,9-Sep-2024 10:26:42 AM
 1825,Baazar Style Retail,2024-09-06,33.0,389.0,422.0,6-Sep-2024 10:26:42 AM
@@ -241,8 +241,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1798,Ceigall India,2024-08-08,17.5,401.0,418.5,8-Aug-2024 11:26:43 AM
 1794,Akums Drugs and Pharmaceuticals,2024-08-06,43.0,679.0,722.0,6-Aug-2024 10:23:41 AM
 1779,Sanstar,2024-07-26,25.0,95.0,120.0,26-Jul-2024 10:27:41 AM
-1767,Bansal Wire,2024-07-10,70.0,256.0,326.0,10-Jul-2024 10:24:43 AM
 1766,Emcure Pharma,2024-07-10,300.0,1008.0,1308.0,10-Jul-2024 10:23:43 AM
+1767,Bansal Wire,2024-07-10,70.0,256.0,326.0,10-Jul-2024 10:24:43 AM
 1758,Vraj Iron and Steel,2024-07-03,50.0,207.0,257.0,3-Jul-2024 10:27:42 AM
 1580,Allied Blenders and Distillers,2024-07-02,59.0,281.0,340.0,2-Jul-2024 10:31:42 AM
 1749,Stanley lifestyles,2024-06-28,173.0,369.0,542.0,28-Jun-2024 10:23:42 AM
@@ -268,9 +268,9 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1654,Juniper Hotels,2024-02-28,0.0,360.0,360.0,28-Feb-2024 09:30:00 AM
 1646,Vibhor Steel Tubes,2024-02-20,140.0,151.0,291.0,20-Feb-2024 09:31:02 AM
 1643,Entero Healthcare Solutions,2024-02-16,2.0,1258.0,1260.0,16-Feb-2024 09:25:59 AM
-1634,Rashi Peripherals,2024-02-14,34.0,311.0,345.0,14-Feb-2024 09:32:03 AM
-1641,Capital Small Finance Bank,2024-02-14,0.0,468.0,468.0,14-Feb-2024 09:25:03 AM
 1640,Jana Small Finance Bank,2024-02-14,16.0,414.0,430.0,14-Feb-2024 09:24:03 AM
+1641,Capital Small Finance Bank,2024-02-14,0.0,468.0,468.0,14-Feb-2024 09:25:03 AM
+1634,Rashi Peripherals,2024-02-14,34.0,311.0,345.0,14-Feb-2024 09:32:03 AM
 1635,Apeejay Surrendra Park,2024-02-12,38.0,155.0,193.0,12-Feb-2024 09:29:00 AM
 1632,BLS E-Services,2024-02-06,155.0,135.0,290.0,6-Feb-2024 09:27:06 AM
 1616,Nova Agri Tech,2024-01-31,13.0,41.0,54.0,31-Jan-2024 09:27:00 AM
@@ -281,9 +281,9 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1597,Azad Engineering,2023-12-28,195.0,524.0,719.0,28-Dec-2023 09:32:49 AM
 1585,Happy Forgings,2023-12-27,235.0,850.0,1085.0,27-Dec-2023 06:03:11 AM
 1588,RBZ Jewellers,2023-12-27,0.0,100.0,100.0,27-Dec-2023 06:03:11 AM
-1589,Suraj Estate Developers,2023-12-26,15.0,360.0,375.0,26-Dec-2023 09:27:53 AM
 1587,Motisons Jewellers,2023-12-26,70.0,55.0,125.0,26-Dec-2023 09:26:53 AM
 1582,Muthoot Microfin,2023-12-26,27.0,291.0,318.0,26-Dec-2023 09:27:53 AM
+1589,Suraj Estate Developers,2023-12-26,15.0,360.0,375.0,26-Dec-2023 09:27:53 AM
 1593,Inox India,2023-12-21,440.0,660.0,1100.0,21-Dec-2023 09:32:52 AM
 1477,India Shelter Finance Corporation,2023-12-20,157.0,493.0,650.0,20-Dec-2023 09:30:52 AM
 1581,DOMS,2023-12-20,510.0,790.0,1300.0,20-Dec-2023 09:31:52 AM
@@ -337,8 +337,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1355,Radiant Cash Management,2023-01-04,6.0,94.0,105.0,4-Jan-2023 08:00:08 AM
 1346,Elin Electronics,2022-12-30,4.0,247.0,251.0,30-Dec-2022 09:04:00 AM
 1354,KFin Technologies,2022-12-29,-3.0,366.0,363.0,29-Dec-2022 09:42:41 AM
-1350,Abans Holdings,2022-12-23,3.0,270.0,273.0,23-Dec-2022 08:52:37 AM
 1338,Landmark Cars,2022-12-23,-15.0,506.0,491.0,23-Dec-2022 08:52:55 AM
+1350,Abans Holdings,2022-12-23,3.0,270.0,273.0,23-Dec-2022 08:52:37 AM
 1345,Sula Vineyards,2022-12-22,-15.0,357.0,342.0,22-Dec-2022 09:15:57 AM
 1324,Uniparts India,2022-12-12,41.0,577.0,618.0,12-Dec-2022 08:51:13 AM
 1339,Dharmaj Crop Guard,2022-12-08,38.0,237.0,275.0,8-Dec-2022 09:23:30 AM
@@ -394,8 +394,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1151,Aditya Birla AMC,2021-10-11,35.0,712.0,747.0,11-Oct-2021 09:49:07 AM
 1153,Paras Defence,2021-10-01,220.0,175.0,395.0,1-Oct-2021 10:18:39 AM
 1149,Sansera Engineering,2021-09-24,60.0,744.0,804.0,24-Sep-2021 10:16:49 AM
-1145,Vijaya Diagnostic,2021-09-14,-10.0,531.0,521.0,14-Sep-2021 10:17:57 AM
 1143,Ami Organics,2021-09-14,155.0,610.0,765.0,14-Sep-2021 10:18:17 AM
+1145,Vijaya Diagnostic,2021-09-14,-10.0,531.0,521.0,14-Sep-2021 10:17:57 AM
 1141,Chemplast Sanmar,2021-08-24,-15.0,541.0,526.0,24-Aug-2021 10:19:11 AM
 1140,Aptus Value Housing Finance,2021-08-24,-12.0,353.0,341.0,24-Aug-2021 10:19:33 AM
 1133,Nuvoco Vistas Corporation,2021-08-23,-12.0,570.0,558.0,23-Aug-2021 08:40:42 PM
@@ -408,8 +408,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1124,Glenmark Life Sciences,2021-08-06,82.0,720.0,802.0,6-Aug-2021 10:35:03 AM
 1127,Tatva Chintan Pharma,2021-07-29,1110.0,1083.0,2193.0,29-Jul-2021 10:33:55 AM
 1126,Zomato,2021-07-23,22.0,76.0,98.0,23-Jul-2021 10:07:05 AM
-1123,Clean Science and Technology,2021-07-19,615.0,900.0,1515.0,19-Jul-2021 10:06:01 AM
 1122,G R Infraprojects,2021-07-19,575.0,837.0,1412.0,19-Jul-2021 10:06:33 AM
+1123,Clean Science and Technology,2021-07-19,615.0,900.0,1515.0,19-Jul-2021 10:06:01 AM
 1119,India Pesticides,2021-07-05,35.0,296.0,331.0,4-Jul-2021 01:00:19 PM
 1114,Dodla Dairy,2021-06-28,80.0,428.0,508.0,26-Jun-2021 12:54:36 PM
 1115,KIMS,2021-06-28,75.0,825.0,900.0,26-Jun-2021 12:54:50 PM
@@ -436,8 +436,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1072,Gland Pharma,2020-11-20,118.0,1500.0,1618.0,18-Nov-2020 02:54:54 PM
 1040,Equitas SFB,2020-11-02,1.0,33.0,34.0,22-Oct-2020 10:39:53 AM
 1062,Likhitha Infrastructure,2020-10-15,6.0,120.0,126.0,13-Oct-2020 01:40:43 PM
-1064,Mazagon Dock,2020-10-12,105.0,145.0,250.0,12-Oct-2020 10:07:13 AM
 1052,UTI AMC,2020-10-12,-14.0,554.0,540.0,12-Oct-2020 10:06:54 AM
+1064,Mazagon Dock,2020-10-12,105.0,145.0,250.0,12-Oct-2020 10:07:13 AM
 1057,Angel Broking,2020-10-05,-5.0,306.0,301.0,30-Sep-2020 11:56:47 PM
 1055,CAMS,2020-10-01,328.0,1230.0,1558.0,30-Sep-2020 11:57:15 PM
 1060,Chemcon,2020-10-01,310.0,340.0,650.0,30-Sep-2020 11:57:09 PM

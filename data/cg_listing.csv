@@ -184,7 +184,7 @@ cg_ipo_id,detail_url,company,id,Issue Category,Opening Date,Listing Date,Listing
 2822,,SS Retail Ltd.,2822.0,Mainboard,16-Sep-2026,23-Sep-2026,"BSE, NSE",INE1EQW01028,544934.0,SSRETAIL,ss-retail-ipo,424.0,624.0,47.17,748.8,76.6,,0.0,,2026-09-16,,,,,
 2805,,Sonaselection India Ltd.,2805.0,Mainboard,17-Sep-2026,24-Sep-2026,"BSE, NSE",INE0LLZ01011,544938.0,SONA,sonaselection-india-ipo,99.0,102.31,3.34,107.42,8.51,,0.0,,2026-09-17,,,,,
 3151,,National Stock Exchange of India Ltd.,3151.0,Mainboard,17-Sep-2026,24-Sep-2026,BSE,INE721I01024,544937.0,,nse-ipo,1785.0,1800.0,0.84,1818.0,1.85,,0.0,,2026-09-17,,,,,
-2000,,A-One Steels India Ltd.,2000.0,Mainboard,24-Sep-2026,,"BSE, NSE",,,,a-one-steels-ipo,,,,,0.0,,0.0,,2026-09-24,,,,,
+2000,,A-One Steels India Ltd.,2000.0,Mainboard,24-Sep-2026,01-Oct-2026,"BSE, NSE",INE0OTC01025,544952.0,AONESTEELS,a-one-steels-ipo,405.0,455.0,12.35,416.55,2.85,,0.0,,2026-09-24,,,,,
 3077,,Educomp Solutions Ltd.,3077.0,Mainboard,19-Dec-2005,13-Jan-2006,"BSE, NSE",INE216H01027,532696.0,EDUCOMP,educomp-solutions-ipo,125.0,155.0,24.0,285.35,128.28,,-99.25,2006-01-13T00:00:00.000Z,2005-12-19,INE216H01027,532696.0,EDUCOMP,0.94,0.96
 3076,,Celebrity Fashions Ltd.,3076.0,Mainboard,19-Dec-2005,12-Jan-2006,"BSE, NSE",INE185H01016,532695.0,CELEBRITY,celebrity-fashions-ipo,180.0,236.3,31.28,229.65,27.58,,-95.89,2006-01-12T00:00:00.000Z,2005-12-19,INE185H01016,532695.0,CELEBRITY,7.4,7.52
 3079,,Bartronics India Ltd.,3079.0,Mainboard,20-Dec-2005,12-Jan-2006,"BSE, NSE",INE855F01042,532694.0,ASMS,bartronics-india-ipo,75.0,106.0,41.33,110.6,47.47,,-90.61,2006-01-12T00:00:00.000Z,2005-12-20,INE855F01042,532694.0,ASMS,7.04,7.04
@@ -982,3 +982,4 @@ cg_ipo_id,detail_url,company,id,Issue Category,Opening Date,Listing Date,Listing
 2563,,Varmora Granito Ltd.,,Mainboard,,29-Sep-2026,,INE0M5301040,544942.0,VARMORA,,148.0,155.0,4.73,152.19,2.83,,,,,,,,,
 2647,,Elevate Campuses Ltd.,,Mainboard,,30-Sep-2026,,INE147X01013,544945.0,ELEVATE,,362.0,355.1,-1.91,322.95,-10.79,,,,,,,,,
 3007,,Adroit Industries (India) Ltd.,,Mainboard,,30-Sep-2026,,INE505M01015,544950.0,ADROITIND,,134.0,235.0,75.37,248.39,85.37,,,,,,,,,
+2936,,Moneyview Ltd.,,Mainboard,,01-Oct-2026,,INE0PTN01011,544953.0,MONEYVIEW,,34.0,55.0,61.76,53.88,58.47,,,,,,,,,

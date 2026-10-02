@@ -38138,8 +38138,22 @@ null
 "kpi_roe": "1.69%",
 "kpi_ronw": "1.25%",
 "latest_fy_dt": "March 31, 2026",
-"listing_day_closing_price": "$NaN",
-"market_cap": "₹3,128.01 Cr",
+"listing_day": {
+"BSE": {
+"close": 417.0,
+"high": 469.45,
+"low": 393.45,
+"open": 462.0
+},
+"NSE": {
+"close": 416.55,
+"high": 470.0,
+"low": 393.7,
+"open": 455.0
+}
+},
+"listing_day_closing_price": 416.55,
+"market_cap": "₹3,217.21 Cr",
 "market_cap_pre": "2772.84",
 "market_lot_size": 37,
 "pe_ratio": 21.76,
@@ -48629,6 +48643,7 @@ null,
 "2287": {
 "company_name": "Swastika Infra Ltd.",
 "face_value": 10,
+"final_prospectus": "https://www.srujanalpha.com/_files/ugd/d6ac2b_51ed24fdb5dc42e09f310b1afddabfab.pdf",
 "financials": {
 "basis": "Restated",
 "periods": [
@@ -49178,6 +49193,7 @@ null
 "2298": {
 "company_name": "Runwal Enterprises Ltd.",
 "face_value": 2,
+"final_prospectus": "https://runwal-enterprises-media.s3.ap-south-1.amazonaws.com/images/investor-relations/ipo/ipo/REL-Prospectus.pdf",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -49224,6 +49240,10 @@ null
 }
 },
 "id": 2298,
+"il_bse_script_code": 544959,
+"il_ipo_listing_date": "October 5, 2026",
+"il_isin": "INE804W01029",
+"il_nse_script_symbol": "RUNWALENTR",
 "ipo_industry": "78",
 "issue_category": "Mainline",
 "issue_close_date": "September 29, 2026",
@@ -49233,7 +49253,7 @@ null
 "issue_price_upper": 305,
 "issue_process_type": "BB",
 "issue_size_fresh_in_shares": 16398962,
-"issue_size_in_amt": "4999999560.00",
+"issue_size_in_amt": "4999999574.00",
 "issue_size_in_shares": 16398962,
 "issue_size_ofs_in_shares": 0,
 "kpi_as_of_date": "2026-03-31",
@@ -49257,18 +49277,18 @@ null
 "prospectus_rhp": "https://www.sebi.gov.in/filings/public-issues/sep-2026/runwal-enterprises-limited-rhp_104683.html",
 "shares_offered_anchor_investor": 4883605,
 "shares_offered_big_nii": 1627869,
-"shares_offered_emp": 120275,
+"shares_offered_emp": 120274,
 "shares_offered_market_maker": 0,
-"shares_offered_nii": 2441803,
+"shares_offered_nii": 2441804,
 "shares_offered_nii_percentage_temp": "Not less than 15% of the Issue",
 "shares_offered_others": 0,
-"shares_offered_qib": 3255739,
-"shares_offered_qib_ex_anchor": 3255739,
+"shares_offered_qib": 3255738,
+"shares_offered_qib_ex_anchor": 3255738,
 "shares_offered_qib_percentage_temp": "Not more than 50% of the Net Issue",
-"shares_offered_qib_with_anchor": 8139344,
-"shares_offered_rii": 5697540,
+"shares_offered_qib_with_anchor": 8139343,
+"shares_offered_rii": 5697541,
 "shares_offered_rii_percentage_temp": "Not less than 35% of the Issue",
-"shares_offered_small_nii": 813934,
+"shares_offered_small_nii": 813935,
 "shares_offered_total": 16398962,
 "total_shareholding_post_issue": 147790398,
 "total_shareholding_pre_issue": 131391436
@@ -53892,7 +53912,9 @@ null
 },
 "id": 2497,
 "il_bse_script_code": 544957,
+"il_ipo_listing_date": "October 5, 2026",
 "il_isin": "INE0D4501011",
+"il_nse_script_symbol": "GERMAN",
 "ipo_industry": "30",
 "issue_category": "Mainline",
 "issue_close_date": "September 29, 2026",
@@ -55710,6 +55732,10 @@ null,
 }
 },
 "id": 2532,
+"il_bse_script_code": 544960,
+"il_ipo_listing_date": "October 5, 2026",
+"il_isin": "INE0J1N01028",
+"il_nse_script_symbol": "ORIENTCABL",
 "ipo_industry": "199",
 "issue_category": "Mainline",
 "issue_close_date": "September 29, 2026",
@@ -55986,6 +56012,9 @@ null
 }
 },
 "id": 2543,
+"il_bse_script_code": 544962,
+"il_ipo_listing_date": "October 5, 2026",
+"il_isin": "INE580P01029",
 "ipo_industry": "92",
 "issue_category": "Mainline",
 "issue_close_date": "September 29, 2026",
@@ -59408,6 +59437,7 @@ null,
 "2657": {
 "company_name": "Shah Investor's Home Ltd.",
 "face_value": 10,
+"final_prospectus": "https://www.sihl.in/files/investor-relations/Prospectus.pdf",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -63637,6 +63667,7 @@ null
 "2858": {
 "company_name": "SRIT India Ltd.",
 "face_value": 5,
+"final_prospectus": "https://cmsapi.choiceindia.com/assets/1db12236-7d4e-46a2-ab6a-5e2c7aa40b2f",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -68700,8 +68731,22 @@ null
 "kpi_roe": "13.63%",
 "kpi_ronw": "12.52%",
 "latest_fy_dt": "March 31, 2026",
-"listing_day_closing_price": "$NaN",
-"market_cap": "₹5,984.79 Cr",
+"listing_day": {
+"BSE": {
+"close": 54.03,
+"high": 62.0,
+"low": 50.25,
+"open": 55.61
+},
+"NSE": {
+"close": 53.88,
+"high": 62.0,
+"low": 50.27,
+"open": 55.0
+}
+},
+"listing_day_closing_price": 53.88,
+"market_cap": "₹9,484.13 Cr",
 "market_cap_pre": "5234.79",
 "market_lot_size": 441,
 "nav": "12.98",
@@ -69369,7 +69414,7 @@ null
 "promoter_shareholding_post_issue": "43.51%",
 "promoter_shareholding_pre_issue": "58.1%",
 "prospectus_drhp": "https://nsearchives.nseindia.com/corporate/Registration_30032026163754_NITYASGEMSANDJEWELLERYLIMITEDDRHP.pdf",
-"prospectus_rhp": "https://www.chittorgarh.net/reports/ipo_notes/va20260924_nityas-gems_rhp_final.pdf",
+"prospectus_rhp": "https://nsearchives.nseindia.com/content/ipo/RHP_NITYAS.zip",
 "shares_offered_anchor_investor": 0,
 "shares_offered_big_nii": 1435600,
 "shares_offered_emp": 100000,

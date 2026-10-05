@@ -39734,7 +39734,7 @@ null,
 "2020": {
 "company_name": "Karamtara Engineering Ltd.",
 "face_value": 10,
-"final_prospectus": "https://karamtara.com/wp-content/uploads/2026/09/Karamtara-Engineering-Limited-Prospectus.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/sep-2026/karamtara-engineering-limited-prospectus_104682.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -45159,7 +45159,7 @@ null,
 "2127": {
 "company_name": "Pranav Constructions Ltd.",
 "face_value": 10,
-"final_prospectus": "https://www.pranavconstructions.com/investor-corner/pdf/Prospectus.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/sep-2026/pranav-constructions-limited-prospectus_104488.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -47402,7 +47402,7 @@ null,
 "2225": {
 "company_name": "Hero Motors Ltd.",
 "face_value": 10,
-"final_prospectus": "https://www.heromotors.com/Uploads/image/191imguf_HeroMotorsLimited-Prospectus-FinalFilingversion(Signed).pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/sep-2026/hero-motors-limited-prospectus_104589.html",
 "financials": {
 "basis": "Restated",
 "periods": [
@@ -49252,9 +49252,9 @@ null
 "issue_price_lower": 290,
 "issue_price_upper": 305,
 "issue_process_type": "BB",
-"issue_size_fresh_in_shares": 16398962,
-"issue_size_in_amt": "4999999574.00",
-"issue_size_in_shares": 16398962,
+"issue_size_fresh_in_shares": 16397393,
+"issue_size_in_amt": "4999999558.23",
+"issue_size_in_shares": 16397393,
 "issue_size_ofs_in_shares": 0,
 "kpi_as_of_date": "2026-03-31",
 "kpi_debt_equity": "3.29",
@@ -49264,14 +49264,14 @@ null
 "kpi_ronw": "27.24%",
 "latest_fy_dt": "March 31, 2026",
 "listing_day_closing_price": "$NaN",
-"market_cap": "₹4,507.61 Cr",
+"market_cap": "₹4,507.56 Cr",
 "market_cap_pre": "4007.44",
 "market_lot_size": 49,
 "nav": "61.43",
 "pe_ratio": 21.57,
 "post_pe_ratio": 24.26,
 "price_to_book_value": "4.97",
-"promoter_shareholding_post_issue": "84.60%",
+"promoter_shareholding_post_issue": "84.61%",
 "promoter_shareholding_pre_issue": "95.16%",
 "prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/apr-2025/runwal-enterprises-limited_93291.html",
 "prospectus_rhp": "https://www.sebi.gov.in/filings/public-issues/sep-2026/runwal-enterprises-limited-rhp_104683.html",
@@ -49290,7 +49290,7 @@ null
 "shares_offered_rii_percentage_temp": "Not less than 35% of the Issue",
 "shares_offered_small_nii": 813935,
 "shares_offered_total": 16398962,
-"total_shareholding_post_issue": 147790398,
+"total_shareholding_post_issue": 147788829,
 "total_shareholding_pre_issue": 131391436
 },
 "23": {
@@ -62550,7 +62550,7 @@ null
 "2803": {
 "company_name": "Jindal Supreme (India) Ltd.",
 "face_value": 10,
-"final_prospectus": "https://www.sarthi.in/wp-content/uploads/2026/09/Jindal-Supreme-India-Limited-Prospectus.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/sep-2026/jindal-supreme-india-limited-prospectus_104621.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -62678,7 +62678,7 @@ null
 "2805": {
 "company_name": "Sonaselection India Ltd.",
 "face_value": 10,
-"final_prospectus": "https://nsearchives.nseindia.com/corporate/FP_INE0LLZ01011_22SEP2026.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/oct-2026/sonaselection-india-limited-prospectus_104876.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -63025,7 +63025,7 @@ null
 "2822": {
 "company_name": "SS Retail Ltd.",
 "face_value": 10,
-"final_prospectus": "https://ssmobile.com/aboutus/investor/assets/RHP/SS%20Retail%20Limited%20-%20Prospectus.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/sep-2026/ss-retail-limited-prospectus_104599.html",
 "financials": {
 "basis": "Restated Standalone",
 "periods": [
@@ -63715,6 +63715,8 @@ null
 }
 },
 "id": 2858,
+"il_bse_script_code": 544965,
+"il_isin": "INE307K01028",
 "ipo_industry": "175",
 "issue_category": "Mainline",
 "issue_close_date": "September 30, 2026",
@@ -75660,7 +75662,7 @@ null,
 "3151": {
 "company_name": "National Stock Exchange of India Ltd.",
 "face_value": 1,
-"final_prospectus": "https://www.chittorgarh.net/reports/ipo_notes/national-stock-exchange-of-india-ltd-prospectus.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/sep-2026/national-stock-exchange-of-india-ltd-prospectus_104637.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -75767,6 +75769,88 @@ null,
 "shares_offered_total": 126436650,
 "total_shareholding_post_issue": 2475000000,
 "total_shareholding_pre_issue": 2475000000
+},
+"3152": {
+"company_name": "Jio Platforms Ltd.",
+"face_value": 10,
+"financials": {
+"basis": "Restated Consolidated",
+"periods": [
+"31 Mar 2026",
+"31 Mar 2025",
+"31 Mar 2024"
+],
+"rows": {
+"Assets": [
+615594.0,
+581233.8,
+539580.4
+],
+"EBITDA": [
+76255.4,
+64170.0,
+54958.7
+],
+"NET Worth": [
+334013.4,
+304022.4,
+277866.1
+],
+"Profit After Tax": [
+30052.7,
+26120.3,
+21434.0
+],
+"Total Borrowing": [
+70781.0,
+73060.3,
+54348.9
+],
+"Total Income": [
+149759.1,
+129333.0,
+110175.4
+]
+}
+},
+"id": 3152,
+"ipo_industry": "196",
+"issue_category": "Mainline",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 270000000,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 270000000,
+"issue_size_ofs_in_shares": 0,
+"kpi_as_of_date": "2025-03-31",
+"kpi_ebitda": "51.91%",
+"kpi_eps": "33.62",
+"kpi_eps_post": "32.63",
+"kpi_pat_margin": "20.46%",
+"kpi_roce": "10.76%",
+"kpi_ronw": "9.42%",
+"latest_fy_dt": "March 31, 2026",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "373.66",
+"promoter_shareholding_pre_issue": "66.43%",
+"prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/jun-2026/jio-platforms-ltd-drhp_102248.html",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not less than 15% of the Net Issue",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not more than 50% of the Net Issue",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not less than 35% of the Net Issue",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 9209030830,
+"total_shareholding_pre_issue": 8939030830
 },
 "316": {
 "company_name": "Readymade Steel India Ltd.",

@@ -49193,7 +49193,7 @@ null
 "2298": {
 "company_name": "Runwal Enterprises Ltd.",
 "face_value": 2,
-"final_prospectus": "https://runwal-enterprises-media.s3.ap-south-1.amazonaws.com/images/investor-relations/ipo/ipo/REL-Prospectus.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/oct-2026/runwal-enterprises-limited-prospectus_104856.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -56007,7 +56007,7 @@ null,
 "2543": {
 "company_name": "Acevector Ltd.",
 "face_value": 1,
-"final_prospectus": "https://www.iiflcapital.com/institutional-equities/Upload/InvestmentBanking/Prospects/Acevector_Limited_-_Prospectus.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/sep-2026/acevector-limited-prospectus_104868.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -60137,7 +60137,7 @@ null,
 "2665": {
 "company_name": "Vishal Nirmiti Ltd.",
 "face_value": 10,
-"final_prospectus": "https://www.saffronadvisor.com/files/offer-documents/Prospectus_Vishal_Nirmiti_Limited.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/oct-2026/vishal-nirmiti-limited-prospectus_105057.html",
 "financials": {
 "basis": "Restated",
 "periods": [
@@ -60184,10 +60184,15 @@ null,
 }
 },
 "id": 2665,
+"il_bse_script_code": 544973,
+"il_ipo_listing_date": "October 8, 2026",
+"il_isin": "INE1O5L01025",
+"il_nse_script_symbol": "VNL",
 "ipo_industry": "152",
 "issue_category": "Mainline",
 "issue_close_date": "October 5, 2026",
 "issue_open_date": "September 30, 2026",
+"issue_price_final": 220,
 "issue_price_lower": 208,
 "issue_price_upper": 220,
 "issue_process_type": "BB",
@@ -69532,7 +69537,7 @@ null
 "2974": {
 "company_name": "Nityas Gems & Jewellery Ltd.",
 "face_value": 5,
-"final_prospectus": "https://cmsapi.choiceindia.com/assets/097ca87f-fb82-4fd8-a450-8e716be47a27",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/oct-2026/nityas-gems-and-jewellery-limited-prospectus_105059.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -69579,6 +69584,10 @@ null
 }
 },
 "id": 2974,
+"il_bse_script_code": 544974,
+"il_ipo_listing_date": "October 8, 2026",
+"il_isin": "INE211501023",
+"il_nse_script_symbol": "NITYAS",
 "ipo_industry": "53",
 "issue_category": "Mainline",
 "issue_close_date": "October 5, 2026",
@@ -69588,7 +69597,7 @@ null
 "issue_price_upper": 75,
 "issue_process_type": "BB",
 "issue_size_fresh_in_shares": 14456000,
-"issue_size_in_amt": "1083500000.00",
+"issue_size_in_amt": "1083499997.11",
 "issue_size_in_shares": 14456000,
 "issue_size_ofs_in_shares": 0,
 "kpi_as_of_date": "2026-03-31",

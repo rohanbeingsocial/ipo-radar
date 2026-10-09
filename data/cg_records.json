@@ -51973,6 +51973,114 @@ null
 "total_shareholding_post_issue": 67755700,
 "total_shareholding_pre_issue": 56818200
 },
+"2455": {
+"company_name": "Fusion CX Ltd.",
+"face_value": 1,
+"financials": {
+"basis": "Restated Consolidated",
+"periods": [
+"30 Jun 2026",
+"31 Mar 2026",
+"31 Mar 2025",
+"31 Mar 2024"
+],
+"rows": {
+"Assets": [
+1367.85,
+1385.15,
+1143.25,
+768.02
+],
+"EBITDA": [
+95.09,
+329.87,
+197.78,
+104.62
+],
+"NET Worth": [
+610.84,
+552.46,
+354.58,
+270.15
+],
+"Profit After Tax": [
+55.7,
+169.84,
+74.31,
+36.26
+],
+"Reserves and Surplus": [
+607.01,
+547.97,
+345.76,
+258.54
+],
+"Total Borrowing": [
+238.13,
+266.86,
+306.73,
+210.61
+],
+"Total Income": [
+503.85,
+1851.83,
+1352.03,
+1021.53
+]
+}
+},
+"id": 2455,
+"ipo_industry": "193",
+"issue_category": "Mainline",
+"issue_close_date": "October 16, 2026",
+"issue_open_date": "October 14, 2026",
+"issue_price_lower": 275,
+"issue_price_upper": 289,
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 17301038,
+"issue_size_in_amt": "7019999873.00",
+"issue_size_in_shares": 24290657,
+"issue_size_ofs_in_shares": 6989619,
+"kpi_as_of_date": "2026-03-31",
+"kpi_debt_equity": "0.53",
+"kpi_ebitda": "19.48%",
+"kpi_eps": "13.37",
+"kpi_eps_post": "15.43",
+"kpi_pat_margin": "9.34%",
+"kpi_roce": "71.59%",
+"kpi_roe": "30.30%",
+"kpi_ronw": "30.74%",
+"latest_fy_dt": "March 31, 2026",
+"listing_day_closing_price": "$NaN",
+"market_cap": "₹4,172.01 Cr",
+"market_cap_pre": "3672.01",
+"market_lot_size": 51,
+"nav": "43.73",
+"pe_ratio": 21.62,
+"post_pe_ratio": 18.73,
+"price_to_book_value": "6.61",
+"promoter_shareholding_post_issue": "81.82%",
+"promoter_shareholding_pre_issue": "99.03%",
+"prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/may-2025/fusion-cx-limited_94311.html",
+"prospectus_rhp": "https://www.chittorgarh.net/reports/ipo_notes/fusion-cx-limited-red-herring-prospectus.pdf",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not more than 15%",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not less than 75%",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not more than 10%",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 144360333,
+"total_shareholding_pre_issue": 127059295
+},
 "2456": {
 "company_name": "Central Mine Planning & Design Institute Ltd.",
 "face_value": 2,
@@ -59055,7 +59163,7 @@ null,
 "promoter_shareholding_post_issue": "85.00%",
 "promoter_shareholding_pre_issue": "100%",
 "prospectus_drhp": "https://nsearchives.nseindia.com/corporate/Registration_25092025023015_HDFIREPROTECTLTD.pdf",
-"prospectus_rhp": "https://www.iiflcapital.com/institutional-equities/Upload/InvestmentBanking/Prospects/HD_Fire_Protect_Limited_-_RHP.pdf",
+"prospectus_rhp": "https://www.bseindia.com/corporates/download/370731/IPO%20Open/RHPsigned_20261008112437.pdf",
 "shares_offered_anchor_investor": 0,
 "shares_offered_big_nii": 0,
 "shares_offered_emp": 0,
@@ -60210,8 +60318,22 @@ null,
 "kpi_roe": "33.67%",
 "kpi_ronw": "33.87%",
 "latest_fy_dt": "March 31, 2026",
-"listing_day_closing_price": "$NaN",
-"market_cap": "₹580.60 Cr",
+"listing_day": {
+"BSE": {
+"close": 204.25,
+"high": 215.0,
+"low": 204.25,
+"open": 215.0
+},
+"NSE": {
+"close": 204.25,
+"high": 215.0,
+"low": 204.25,
+"open": 215.0
+}
+},
+"listing_day_closing_price": 204.25,
+"market_cap": "₹539.03 Cr",
 "market_cap_pre": "435.60",
 "market_lot_size": 68,
 "nav": "43.61",
@@ -69609,8 +69731,22 @@ null
 "kpi_roce": "42.93%",
 "kpi_ronw": "43.75%",
 "latest_fy_dt": "March 31, 2026",
-"listing_day_closing_price": "$NaN",
-"market_cap": "₹431.95 Cr",
+"listing_day": {
+"BSE": {
+"close": 84.15,
+"high": 86.09,
+"low": 77.91,
+"open": 82.0
+},
+"NSE": {
+"close": 83.99,
+"high": 84.0,
+"low": 77.0,
+"open": 80.0
+}
+},
+"listing_day_closing_price": 83.99,
+"market_cap": "₹483.73 Cr",
 "market_cap_pre": "323.53",
 "market_lot_size": 200,
 "nav": "15.13",

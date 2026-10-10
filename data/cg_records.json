@@ -64381,6 +64381,101 @@ null
 "total_shareholding_post_issue": 315200950,
 "total_shareholding_pre_issue": 254824000
 },
+"2861": {
+"company_name": "Bonfiglioli Transmissions Ltd.",
+"face_value": 10,
+"financials": {
+"basis": "Restated",
+"periods": [
+"30 Sep 2025",
+"31 Dec 2024",
+"31 Dec 2023",
+"31 Dec 2022"
+],
+"rows": {
+"Assets": [
+1379.08,
+1269.75,
+1395.87,
+1221.75
+],
+"EBITDA": [
+253.48,
+293.06,
+244.12,
+254.44
+],
+"NET Worth": [
+925.3,
+853.09,
+805.34,
+725.37
+],
+"Profit After Tax": [
+165.19,
+194.69,
+149.53,
+171.45
+],
+"Reserves and Surplus": [
+799.97,
+727.76,
+674.21,
+594.25
+],
+"Total Borrowing": [
+null,
+null,
+110.79,
+143.74
+],
+"Total Income": [
+1467.95,
+1871.05,
+1701.98,
+1570.33
+]
+}
+},
+"id": 2861,
+"ipo_industry": "158",
+"issue_category": "Mainline",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 0,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 46998959,
+"issue_size_ofs_in_shares": 46998959,
+"kpi_as_of_date": "2024-12-31",
+"kpi_debt_equity": "0.01",
+"kpi_ebitda": "15.72%",
+"kpi_pat_margin": "10.21%",
+"kpi_roce": "30.28%",
+"kpi_roe": "23.05%",
+"kpi_ronw": "22.40%",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "45.38",
+"promoter_shareholding_post_issue": "75.00%",
+"promoter_shareholding_pre_issue": "100%",
+"prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/feb-2026/bonfiglioli-transmissions-limited_99781.html",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not less than 15% of the Offer",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not more than 50% of the Offer",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not less than 35% of the Offer",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 187995834,
+"total_shareholding_pre_issue": 187995834
+},
 "287": {
 "company_name": "A2Z Maintenance & Engineering Services Ltd.",
 "face_value": 10,

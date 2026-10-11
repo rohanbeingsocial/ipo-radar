@@ -56533,6 +56533,107 @@ null
 "total_shareholding_post_issue": 17500039,
 "total_shareholding_pre_issue": 11250000
 },
+"2550": {
+"company_name": "Sahajanand Medical Technologies Ltd.",
+"face_value": 1,
+"financials": {
+"basis": "Restated Consolidated",
+"periods": [
+"30 Jun 2026",
+"31 Mar 2026",
+"31 Mar 2025",
+"31 Mar 2024"
+],
+"rows": {
+"Assets": [
+1309.0,
+1276.43,
+1094.9,
+970.58
+],
+"EBITDA": [
+48.58,
+170.66,
+128.02,
+110.05
+],
+"NET Worth": [
+631.72,
+616.05,
+545.23,
+526.3
+],
+"Profit After Tax": [
+15.09,
+69.08,
+25.15,
+-7.35
+],
+"Reserves and Surplus": [
+706.86,
+692.48,
+580.71,
+556.57
+],
+"Total Borrowing": [
+320.63,
+269.53,
+224.96,
+175.27
+],
+"Total Income": [
+354.33,
+1218.73,
+1035.96,
+908.59
+]
+}
+},
+"id": 2550,
+"ipo_industry": "149",
+"issue_category": "Mainline",
+"issue_close_date": "October 19, 2026",
+"issue_open_date": "October 15, 2026",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 0,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 27644231,
+"issue_size_ofs_in_shares": 27644231,
+"kpi_as_of_date": "2026-03-31",
+"kpi_debt_equity": "0.27",
+"kpi_ebitda": "14.10%",
+"kpi_eps": "6.80",
+"kpi_eps_post": "5.94",
+"kpi_pat_margin": "5.71%",
+"kpi_roce": "11.57%",
+"kpi_roe": "10.35%",
+"kpi_ronw": "10.60%",
+"latest_fy_dt": "March 31, 2026",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "62.76",
+"promoter_shareholding_post_issue": "35.51%",
+"promoter_shareholding_pre_issue": "40.82%",
+"prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/jul-2025/sahajanand-medical-technologies-limited_95741.html",
+"prospectus_rhp": "https://assets.ipopremium.in/images/ipo/sahajanand_medical_technologies_ltd_mainboard_rhp_1791630001.pdf",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not less than 15% of the Net Offer",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not more than 50% of the Net Offer",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not less than 35% of the Net Offer",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 101646778,
+"total_shareholding_pre_issue": 101646778
+},
 "2551": {
 "company_name": "Lenskart Solutions Ltd.",
 "face_value": 2,
@@ -75896,6 +75997,106 @@ null,
 "total_shareholding_post_issue": 12576667,
 "total_shareholding_pre_issue": 7576667
 },
+"3091": {
+"company_name": "Zetwerk Manufacturing Business Ltd.",
+"face_value": 1,
+"financials": {
+"basis": "Restated Consolidated",
+"periods": [
+"30 Jun 2026",
+"31 Mar 2026",
+"30 Jun 2025",
+"31 Mar 2025",
+"31 Mar 2024"
+],
+"rows": {
+"Assets": [
+12016.09,
+13384.63,
+9083.09,
+10355.43,
+10330.85
+],
+"EBITDA": [
+103.16,
+421.34,
+31.11,
+322.59,
+97.03
+],
+"NET Worth": [
+4094.13,
+4813.72,
+3905.13,
+4453.76,
+4062.46
+],
+"Profit After Tax": [
+-732.98,
+-1606.17,
+-1368.47,
+-370.71,
+-917.95
+],
+"Reserves and Surplus": [
+-771.23,
+-15.96,
+3803.94,
+4355.22,
+4025.0
+],
+"Total Borrowing": [
+1942.19,
+1936.16,
+1707.21,
+1746.55,
+1232.1
+],
+"Total Income": [
+4195.7,
+16100.63,
+2702.1,
+11492.23,
+12523.46
+]
+}
+},
+"id": 3091,
+"ipo_industry": "177",
+"issue_category": "Mainline",
+"issue_close_date": "October 19, 2026",
+"issue_open_date": "October 15, 2026",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 0,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 0,
+"issue_size_ofs_in_shares": 144525036,
+"kpi_as_of_date": "2026-03-31",
+"kpi_ronw": "-21.11%",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "31.26",
+"promoter_shareholding_pre_issue": "15.86%",
+"prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/aug-2026/zetwerk-manufacturing-businesses-limited-udrhp_103643.html",
+"prospectus_rhp": "https://ir.zetwerk.com/wp-content/uploads/Zetwerk-RHP.pdf",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not more than 15% of the Net Offer",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not less than 75% of the Net Offer",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not more than 10% of the Net Offer",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 0,
+"total_shareholding_pre_issue": 1506772659
+},
 "312": {
 "company_name": "Timbor Home Ltd.",
 "face_value": 10,
@@ -76708,6 +76909,106 @@ null,
 "shares_offered_total": 8432189,
 "total_shareholding_post_issue": 33715270,
 "total_shareholding_pre_issue": 25283081
+},
+"3215": {
+"company_name": "Tonbo Imaging India Ltd.",
+"face_value": 2,
+"financials": {
+"basis": "Restated Consolidated",
+"periods": [
+"30 Jun 2026",
+"31 Mar 2026",
+"31 Mar 2025",
+"31 Mar 2024"
+],
+"rows": {
+"Assets": [
+782.87,
+782.5,
+726.36,
+574.68
+],
+"EBITDA": [
+-13.04,
+104.62,
+139.06,
+112.32
+],
+"NET Worth": [
+538.54,
+553.16,
+490.14,
+230.13
+],
+"Profit After Tax": [
+-17.74,
+50.88,
+72.76,
+68.54
+],
+"Reserves and Surplus": [
+527.08,
+541.7,
+489.41,
+168.99
+],
+"Total Borrowing": [
+129.72,
+116.06,
+78.14,
+96.36
+],
+"Total Income": [
+37.32,
+369.94,
+474.39,
+431.9
+]
+}
+},
+"id": 3215,
+"ipo_industry": "153",
+"issue_category": "Mainline",
+"issue_close_date": "October 19, 2026",
+"issue_open_date": "October 15, 2026",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 0,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 12174046,
+"issue_size_ofs_in_shares": 12174046,
+"kpi_as_of_date": "2026-03-31",
+"kpi_ebitda": "28.85%",
+"kpi_eps": "8.88",
+"kpi_eps_post": "8.88",
+"kpi_pat_margin": "13.75%",
+"kpi_roce": "14.54%",
+"kpi_roe": "9.75%",
+"kpi_ronw": "9.75%",
+"latest_fy_dt": "March 31, 2026",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "96.57",
+"promoter_shareholding_post_issue": "15.72%",
+"promoter_shareholding_pre_issue": "18.58%",
+"prospectus_drhp": "https://www.bseindia.com/corporates/download/303183/IPO%20Prior/B2_DRHP_20260805023511.zip",
+"prospectus_rhp": "https://live.jmfl.com/od/UploadedFiles/CA86AB52-0D43-437A-8D1C-6E475C6CEF01.pdf",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not less than 15% of the Offer",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not more than 50% of the Offer",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not less than 35% of the Offer",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 57282100,
+"total_shareholding_pre_issue": 57282100
 },
 "322": {
 "company_name": "Brooks Laboratories Ltd.",

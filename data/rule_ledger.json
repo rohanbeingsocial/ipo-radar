@@ -10093,6 +10093,17 @@
    "retail": 0.41,
    "qib_bar": 46.03,
    "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "2628",
+   "company": "HD Fire Protect Ltd.",
+   "opened": "2026-10-13",
+   "recorded_at": "2026-10-13T14:37:08.878953+00:00",
+   "rule_says": "no",
+   "qib": 1.04,
+   "retail": 3.84,
+   "qib_bar": 46.03,
+   "retail_bar": 14.8
   }
  ],
  "scoreboard": {

@@ -1,5 +1,7 @@
 {
- "run_at": "2026-10-13T20:01:15",
- "finished_at": "2026-10-13T20:07:06",
- "warnings": []
+ "run_at": "2026-10-14T20:01:17",
+ "finished_at": "2026-10-14T20:07:12",
+ "warnings": [
+  "2 IPOs from the last 60 days have no RHP report and none was added"
+ ]
 }

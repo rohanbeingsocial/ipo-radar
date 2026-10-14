@@ -10104,6 +10104,17 @@
    "retail": 3.84,
    "qib_bar": 46.03,
    "retail_bar": 14.8
+  },
+  {
+   "cg_ipo_id": "2455",
+   "company": "Fusion CX Ltd.",
+   "opened": "2026-10-14",
+   "recorded_at": "2026-10-14T14:37:14.141784+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 1.65,
+   "qib_bar": 46.03,
+   "retail_bar": 14.8
   }
  ],
  "scoreboard": {

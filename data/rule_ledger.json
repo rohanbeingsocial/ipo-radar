@@ -10115,6 +10115,50 @@
    "retail": 1.65,
    "qib_bar": 46.03,
    "retail_bar": 14.8
+  },
+  {
+   "cg_ipo_id": "2550",
+   "company": "Sahajanand Medical Technologies Ltd.",
+   "opened": "2026-10-15",
+   "recorded_at": "2026-10-15T14:37:47.831111+00:00",
+   "rule_says": "no",
+   "qib": 0.37,
+   "retail": 0.41,
+   "qib_bar": 46.03,
+   "retail_bar": 14.8
+  },
+  {
+   "cg_ipo_id": "3215",
+   "company": "Tonbo Imaging India Ltd.",
+   "opened": "2026-10-15",
+   "recorded_at": "2026-10-15T14:37:47.832791+00:00",
+   "rule_says": "no",
+   "qib": 3.92,
+   "retail": 3.21,
+   "qib_bar": 46.03,
+   "retail_bar": 14.8
+  },
+  {
+   "cg_ipo_id": "3091",
+   "company": "Zetwerk Manufacturing Business Ltd.",
+   "opened": "2026-10-15",
+   "recorded_at": "2026-10-15T14:37:47.834355+00:00",
+   "rule_says": "no",
+   "qib": 0.3,
+   "retail": 0.23,
+   "qib_bar": 46.03,
+   "retail_bar": 14.8
+  },
+  {
+   "cg_ipo_id": "2861",
+   "company": "Bonfiglioli Transmissions Ltd.",
+   "opened": "2026-10-15",
+   "recorded_at": "2026-10-15T14:37:47.835990+00:00",
+   "rule_says": "no",
+   "qib": 0.08,
+   "retail": 0.58,
+   "qib_bar": 46.03,
+   "retail_bar": 14.8
   }
  ],
  "scoreboard": {

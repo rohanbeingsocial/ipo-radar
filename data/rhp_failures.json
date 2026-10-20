@@ -1,4 +1,11 @@
 {
+ "2061": {
+  "at": "2026-10-20",
+  "error": "RuntimeError: bad pdf download",
+  "urls": [
+   "https://www.eaaa.in/wp-content/uploads/2026/09/Red-Herring-Prospectus.pdf"
+  ]
+ },
  "2256": {
   "at": "2026-10-14",
   "error": "RuntimeError: no pdf link",

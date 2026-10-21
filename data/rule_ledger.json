@@ -8790,7 +8790,8 @@
    "retail": 7.56,
    "qib_bar": 35.86,
    "retail_bar": 9.46,
-   "ret_6m_from_listing": 21.5
+   "ret_6m_from_listing": 21.5,
+   "ret_12m_from_listing": 56.6
   },
   {
    "cg_ipo_id": "2453",
@@ -10162,6 +10163,28 @@
    "retail": 0.58,
    "qib_bar": 46.03,
    "retail_bar": 14.8
+  },
+  {
+   "cg_ipo_id": "3152",
+   "company": "Jio Platforms Ltd.",
+   "opened": "2026-10-21",
+   "recorded_at": "2026-10-21T14:36:22.586519+00:00",
+   "rule_says": "no",
+   "qib": 9.04,
+   "retail": 0.73,
+   "qib_bar": 49.42,
+   "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "2256",
+   "company": "Paras Healthcare Ltd.",
+   "opened": "2026-10-21",
+   "recorded_at": "2026-10-21T14:36:22.588129+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.73,
+   "qib_bar": 49.42,
+   "retail_bar": 13.83
   }
  ],
  "scoreboard": {
@@ -10175,12 +10198,12 @@
    "rest_win_rate": 0.44
   },
   "ret_12m_from_listing": {
-   "n_rule": 83,
+   "n_rule": 84,
    "n_rest": 509,
    "rule_median": 3.3,
    "rest_median": -13.1,
    "edge_pp": 16.4,
-   "rule_win_rate": 0.55,
+   "rule_win_rate": 0.56,
    "rest_win_rate": 0.41
   }
  },

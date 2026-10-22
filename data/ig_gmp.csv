@@ -1,4 +1,5 @@
 cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
+2455,Fusion CX,2026-10-22,13.5,289.0,302.5,22-Oct-2026 03:37:01 PM
 2628,HD Fire Protect,2026-10-21,70.0,271.0,341.0,21-Oct-2026 03:37:02 PM
 2974,Nityas Gems & Jewellery,2026-10-08,1.0,75.0,76.0,8-Oct-2026 03:37:02 PM
 2665,Vishal Nirmiti,2026-10-08,2.0,220.0,222.0,8-Oct-2026 03:37:01 PM
@@ -39,9 +40,9 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 2435,Priority Jewels,2026-09-04,28.0,200.0,228.0,4-Sep-2026 03:30:01 PM
 2013,Lumino Industries,2026-09-03,38.0,82.0,120.0,3-Sep-2026 03:33:00 PM
 2500,Annu Projects,2026-09-02,-7.0,99.0,92.0,2-Sep-2026 03:36:01 PM
-2510,Skyways Air,2026-09-01,33.0,138.0,171.0,1-Sep-2026 03:32:00 PM
-2815,Symbiotec Pharmalab,2026-09-01,185.0,988.0,1173.0,1-Sep-2026 03:36:00 PM
 2591,Hy-Tech Engineers,2026-09-01,39.0,53.0,92.0,1-Sep-2026 03:31:00 PM
+2815,Symbiotec Pharmalab,2026-09-01,185.0,988.0,1173.0,1-Sep-2026 03:36:00 PM
+2510,Skyways Air,2026-09-01,33.0,138.0,171.0,1-Sep-2026 03:32:00 PM
 2673,Augmont Enterprises,2026-08-31,290.0,788.0,1078.0,31-Aug-2026 03:29:01 PM
 2668,Tempsens Instruments (India),2026-08-28,330.0,300.0,630.0,28-Aug-2026 03:35:01 PM
 2527,Gaja Alternative Asset Management,2026-08-26,18.5,160.0,178.5,26-Aug-2026 03:34:01 PM
@@ -49,8 +50,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 2002,Sunshine Pictures,2026-08-25,50.0,360.0,410.0,25-Aug-2026 03:30:01 PM
 2826,Horizon Industrial Parks,2026-08-24,1.5,60.0,61.5,24-Aug-2026 03:37:01 PM
 2469,Lalithaa Jewellery Mart,2026-08-24,74.0,201.0,275.0,24-Aug-2026 03:33:01 PM
-2450,Shiprocket,2026-08-19,35.0,97.0,132.0,19-Aug-2026 03:33:00 PM
 2659,Behari Lal Engineering,2026-08-19,133.0,285.0,418.0,19-Aug-2026 03:32:00 PM
+2450,Shiprocket,2026-08-19,35.0,97.0,132.0,19-Aug-2026 03:33:00 PM
 2541,Milky Mist Dairy Food,2026-08-18,19.7,140.0,159.7,18-Aug-2026 03:34:01 PM
 2859,Dhoot Transmission,2026-08-17,262.0,871.0,1133.0,17-Aug-2026 02:54:00 PM
 2579,Molbio Diagnostics,2026-08-17,116.0,807.0,923.0,17-Aug-2026 02:53:00 PM
@@ -60,27 +61,27 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 2492,Juniper Green Energy,2026-08-06,23.0,225.0,248.0,6-Aug-2026 03:37:01 PM
 2800,MV Electrosystems,2026-08-06,109.0,425.0,534.0,6-Aug-2026 03:35:01 PM
 2956,Manipal Health Enterprises,2026-08-05,7.0,590.0,597.0,5-Aug-2026 03:30:01 PM
-2682,Indo-MIM,2026-07-30,184.0,485.0,669.0,30-Jul-2026 03:36:01 PM
 2688,Xtranet Technologies,2026-07-30,14.5,127.0,141.5,30-Jul-2026 03:31:01 PM
 2574,Lohia Corp,2026-07-30,17.0,425.0,442.0,30-Jul-2026 03:30:01 PM
+2682,Indo-MIM,2026-07-30,184.0,485.0,669.0,30-Jul-2026 03:36:01 PM
 1999,Caliber Mining,2026-07-24,60.0,424.0,484.0,24-Jul-2026 03:35:01 PM
-2949,SBI Funds Management,2026-07-21,65.0,574.0,639.0,21-Jul-2026 03:35:00 PM
 2675,Alpine Texworld,2026-07-21,1.0,105.0,106.0,21-Jul-2026 03:35:00 PM
+2949,SBI Funds Management,2026-07-21,65.0,574.0,639.0,21-Jul-2026 03:35:00 PM
 2654,Laser Power & Infra,2026-07-16,39.0,214.0,253.0,16-Jul-2026 03:29:01 PM
 2670,Kusumgar,2026-07-15,161.0,419.0,580.0,15-Jul-2026 03:33:01 PM
 2592,Knack Packaging,2026-07-08,13.0,170.0,183.0,8-Jul-2026 03:30:01 PM
 2678,Aastha Spintex,2026-07-06,5.0,136.0,141.0,6-Jul-2026 03:33:01 PM
 2641,CSM Technologies,2026-07-02,0.0,113.0,113.0,2-Jul-2026 03:31:01 PM
-2686,Advit Jewels,2026-07-01,49.5,138.0,187.5,1-Jul-2026 03:34:00 PM
 2474,Waterways Leisure Tourism,2026-07-01,-51.0,808.0,757.0,1-Jul-2026 03:36:00 PM
+2686,Advit Jewels,2026-07-01,49.5,138.0,187.5,1-Jul-2026 03:34:00 PM
 2601,Turtlemint Fintech Solutions,2026-06-29,-5.0,152.0,147.0,29-Jun-2026 03:34:01 PM
 2658,Hexagon Nutrition,2026-06-12,2.75,45.0,47.75,12-Jun-2026 03:31:01 PM
 2586,CMR Green Technologies,2026-06-10,66.5,192.0,258.5,10-Jun-2026 03:31:01 PM
 2576,OnEMI Technology,2026-05-08,18.0,171.0,189.0,8-May-2026 09:15:00 PM
 2676,Om Power Transmission,2026-04-17,2.0,175.0,177.0,17-Apr-2026 02:32:00 PM
+2501,Amir Chand Jagdish Kumar,2026-04-02,3.5,212.0,215.5,2-Apr-2026 02:33:00 PM
 2570,Powerica,2026-04-02,7.0,395.0,402.0,2-Apr-2026 02:33:00 PM
 2681,Sai Parenteral's,2026-04-02,0.0,392.0,392.0,2-Apr-2026 02:37:00 PM
-2501,Amir Chand Jagdish Kumar,2026-04-02,3.5,212.0,215.5,2-Apr-2026 02:33:00 PM
 2456,Central Mine Planning,2026-03-30,5.0,172.0,177.0,30-Mar-2026 02:32:01 PM
 2031,GSP Crop Science,2026-03-24,2.0,320.0,322.0,24-Mar-2026 02:36:01 PM
 2039,Innovision,2026-03-23,-92.0,519.0,427.0,23-Mar-2026 02:34:01 PM
@@ -99,13 +100,13 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 2289,Gujarat Kidney,2025-12-30,1.5,114.0,115.5,30-Dec-2025 03:36:01 PM
 2454,KSH International,2025-12-23,-2.0,384.0,382.0,23-Dec-2025 03:31:04 PM
 2525,ICICI Prudential AMC,2025-12-19,460.0,2165.0,2625.0,19-Dec-2025 03:32:02 PM
-2297,Park Medi World,2025-12-17,0.0,162.0,162.0,17-Dec-2025 03:37:02 PM
 2548,Nephrocare Health,2025-12-17,40.0,460.0,500.0,17-Dec-2025 03:30:02 PM
+2297,Park Medi World,2025-12-17,0.0,162.0,162.0,17-Dec-2025 03:37:02 PM
 2488,Wakefit Innovations,2025-12-15,4.0,195.0,199.0,15-Dec-2025 03:34:02 PM
 2433,Corona Remedies,2025-12-15,342.5,1062.0,1404.5,15-Dec-2025 03:32:02 PM
-2465,Aequs,2025-12-10,24.0,124.0,148.0,10-Dec-2025 03:36:01 PM
 2516,Meesho,2025-12-10,42.0,111.0,153.0,10-Dec-2025 03:33:01 PM
 2005,Vidya Wires,2025-12-10,3.5,52.0,55.5,10-Dec-2025 03:35:01 PM
+2465,Aequs,2025-12-10,24.0,124.0,148.0,10-Dec-2025 03:36:01 PM
 2484,Sudeep Pharma,2025-11-28,121.0,593.0,714.0,28-Nov-2025 03:28:02 PM
 2148,Excelsoft Technologies,2025-11-26,4.0,120.0,124.0,26-Nov-2025 03:37:04 PM
 2476,Capillary Technologies,2025-11-21,55.0,577.0,632.0,21-Nov-2025 03:28:02 PM
@@ -120,8 +121,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 2470,Orkla India,2025-11-06,66.0,730.0,796.0,6-Nov-2025 03:29:02 PM
 2150,Midwest,2025-10-24,100.0,1065.0,1165.0,24-Oct-2025 03:31:09 PM
 2429,Canara HSBC Life,2025-10-17,3.0,106.0,109.0,17-Oct-2025 03:37:02 PM
-2254,Rubicon Research,2025-10-16,120.0,485.0,605.0,16-Oct-2025 03:36:40 PM
 2428,Canara Robeco,2025-10-16,20.0,266.0,286.0,16-Oct-2025 03:36:40 PM
+2254,Rubicon Research,2025-10-16,120.0,485.0,605.0,16-Oct-2025 03:36:40 PM
 2064,LG Electronics,2025-10-14,460.0,1140.0,1600.0,14-Oct-2025 03:36:03 PM
 2317,Tata Capital,2025-10-13,0.0,326.0,326.0,13-Oct-2025 02:53:02 PM
 2014,WeWork India,2025-10-10,0.0,648.0,648.0,10-Oct-2025 03:35:02 PM
@@ -150,8 +151,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 2425,Urban Co.,2025-09-17,54.0,103.0,157.0,17-Sep-2025 03:37:03 PM
 2117,Dev Accelerator,2025-09-17,6.0,61.0,67.0,17-Sep-2025 03:29:03 PM
 2001,Amanta Healthcare,2025-09-09,9.0,126.0,135.0,9-Sep-2025 03:34:01 PM
-2126,Vikran Engineering,2025-09-03,7.0,97.0,104.0,3-Sep-2025 03:37:01 PM
 2053,Anlon Healthcare,2025-09-03,1.0,91.0,92.0,3-Sep-2025 03:31:01 PM
+2126,Vikran Engineering,2025-09-03,7.0,97.0,104.0,3-Sep-2025 03:37:01 PM
 2069,Mangal Electrical,2025-08-28,-3.0,561.0,558.0,28-Aug-2025 03:29:01 PM
 2018,Shreeji Shipping Global,2025-08-26,34.0,252.0,286.0,26-Aug-2025 03:34:01 PM
 2318,Patel Retail,2025-08-26,52.0,255.0,307.0,26-Aug-2025 03:30:01 PM
@@ -163,10 +164,10 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 2125,All Time Plastics,2025-08-14,20.0,275.0,295.0,14-Aug-2025 03:31:01 PM
 2180,Highway Infrastructure,2025-08-12,24.0,70.0,94.0,12-Aug-2025 03:35:02 PM
 2448,NSDL,2025-08-06,125.0,800.0,925.0,6-Aug-2025 03:35:02 PM
-2027,Sri Lotus Developers,2025-08-06,27.0,150.0,177.0,6-Aug-2025 03:29:02 PM
 2049,M&B Engineering,2025-08-06,55.0,385.0,440.0,6-Aug-2025 03:36:02 PM
-2030,Laxmi India Finance,2025-08-05,0.0,158.0,158.0,5-Aug-2025 03:37:02 PM
+2027,Sri Lotus Developers,2025-08-06,27.0,150.0,177.0,6-Aug-2025 03:29:02 PM
 2036,Aditya Infotech,2025-08-05,305.0,675.0,980.0,5-Aug-2025 03:31:02 PM
+2030,Laxmi India Finance,2025-08-05,0.0,158.0,158.0,5-Aug-2025 03:37:02 PM
 2008,Shanti Gold International,2025-08-01,34.0,199.0,233.0,1-Aug-2025 03:32:02 PM
 2094,Brigade Hotel Ventures,2025-07-31,0.0,90.0,90.0,31-Jul-2025 11:55:00 AM
 2046,GNG Electronics,2025-07-30,85.0,237.0,322.0,30-Jul-2025 03:33:02 PM
@@ -210,9 +211,9 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1941,Concord Enviro Systems,2024-12-27,138.0,701.0,839.0,27-Dec-2024 09:30:51 AM
 1930,International Gemmological Institute,2024-12-20,159.0,417.0,576.0,20-Dec-2024 09:24:52 AM
 1926,Inventurus Knowledge Solutions,2024-12-19,421.0,1329.0,1750.0,19-Dec-2024 09:56:50 AM
-1925,Sai Life Sciences,2024-12-18,72.0,549.0,621.0,18-Dec-2024 09:25:52 AM
 1928,Mobikwik,2024-12-18,160.0,279.0,439.0,18-Dec-2024 09:30:52 AM
 1924,Vishal Mega Mart,2024-12-18,22.0,78.0,100.0,18-Dec-2024 09:26:52 AM
+1925,Sai Life Sciences,2024-12-18,72.0,549.0,621.0,18-Dec-2024 09:25:52 AM
 1918,Suraksha Clinic and Diagnostic,2024-12-06,13.0,441.0,454.0,6-Dec-2024 09:29:42 AM
 1911,Enviro Infra Engineers,2024-11-29,57.0,148.0,205.0,29-Nov-2024 09:30:42 AM
 1902,NTPC Green Energy,2024-11-27,1.0,108.0,109.0,27-Nov-2024 09:31:42 AM
@@ -271,8 +272,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1663,JG Chemicals,2024-03-13,5.0,221.0,226.0,13-Mar-2024 10:33:07 AM
 1620,R K SWAMY,2024-03-12,0.0,288.0,288.0,12-Mar-2024 10:32:42 AM
 1586,Mukka Proteins,2024-03-07,35.0,28.0,63.0,7-Mar-2024 09:28:07 AM
-1638,Platinum Industries,2024-03-05,87.0,171.0,258.0,5-Mar-2024 09:03:40 AM
 1642,Exicom Tele-Systems,2024-03-05,160.0,142.0,302.0,5-Mar-2024 08:58:40 AM
+1638,Platinum Industries,2024-03-05,87.0,171.0,258.0,5-Mar-2024 09:03:40 AM
 1655,GPT Healthcare,2024-02-29,17.0,186.0,203.0,29-Feb-2024 09:29:06 AM
 1654,Juniper Hotels,2024-02-28,0.0,360.0,360.0,28-Feb-2024 09:30:00 AM
 1646,Vibhor Steel Tubes,2024-02-20,140.0,151.0,291.0,20-Feb-2024 09:31:02 AM
@@ -314,8 +315,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1513,Manoj Vaibhav Gems,2023-10-03,0.0,215.0,215.0,3-Oct-2023 10:26:43 AM
 1512,JSW Infrastructure,2023-10-03,30.0,119.0,149.0,3-Oct-2023 10:27:43 AM
 1507,Yatra Online,2023-09-28,0.0,142.0,142.0,28-Sep-2023 10:31:41 AM
-1508,Sai Silks Kalamandir,2023-09-27,7.0,222.0,229.0,27-Sep-2023 10:30:48 AM
 1382,Signatureglobal India,2023-09-27,50.0,385.0,435.0,27-Sep-2023 10:24:48 AM
+1508,Sai Silks Kalamandir,2023-09-27,7.0,222.0,229.0,27-Sep-2023 10:30:48 AM
 1505,Zaggle Prepaid Ocean Services,2023-09-22,11.0,164.0,175.0,22-Sep-2023 10:28:49 AM
 1502,SAMHI Hotels,2023-09-22,8.0,126.0,134.0,22-Sep-2023 10:31:49 AM
 1496,EMS,2023-09-21,88.0,211.0,299.0,21-Sep-2023 10:23:43 AM
@@ -429,8 +430,8 @@ cg_ipo_id,ig_name,listing_date,gmp,offer,est_price,ig_updated
 1092,Nazara Technologies,2021-03-30,740.0,1101.0,1841.0,25-Mar-2021 10:49:27 AM
 1098,Kalyan Jewellers,2021-03-26,-5.0,87.0,82.0,25-Mar-2021 10:51:33 AM
 1099,Suryoday Small Finance Bank,2021-03-26,-10.0,305.0,295.0,25-Mar-2021 10:49:49 AM
-1095,Craftsman Automation,2021-03-25,30.0,1490.0,1520.0,25-Mar-2021 10:47:39 AM
 1096,Laxmi Organic,2021-03-25,40.0,130.0,170.0,25-Mar-2021 10:47:53 AM
+1095,Craftsman Automation,2021-03-25,30.0,1490.0,1520.0,25-Mar-2021 10:47:39 AM
 1097,Anupam Rasayan,2021-03-24,60.0,555.0,615.0,24-Mar-2021 10:14:31 AM
 1088,MTAR Technologies,2021-03-15,580.0,575.0,1155.0,13-Mar-2021 11:55:17 AM
 1085,Heranba Industries Limited,2021-03-05,270.0,627.0,897.0,4-Mar-2021 09:23:46 AM

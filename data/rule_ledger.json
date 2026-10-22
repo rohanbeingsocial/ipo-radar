@@ -8803,7 +8803,8 @@
    "retail": 9.43,
    "qib_bar": 37.19,
    "retail_bar": 9.15,
-   "ret_6m_from_listing": 43.5
+   "ret_6m_from_listing": 43.5,
+   "ret_12m_from_listing": 42.5
   },
   {
    "cg_ipo_id": "2487",
@@ -10199,10 +10200,10 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 84,
-   "n_rest": 509,
+   "n_rest": 510,
    "rule_median": 3.3,
-   "rest_median": -13.1,
-   "edge_pp": 16.4,
+   "rest_median": -12.9,
+   "edge_pp": 16.2,
    "rule_win_rate": 0.56,
    "rest_win_rate": 0.41
   }

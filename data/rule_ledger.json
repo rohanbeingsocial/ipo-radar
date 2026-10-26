@@ -8816,7 +8816,8 @@
    "retail": 1.27,
    "qib_bar": 35.86,
    "retail_bar": 9.15,
-   "ret_6m_from_listing": -39.2
+   "ret_6m_from_listing": -39.2,
+   "ret_12m_from_listing": -38.2
   },
   {
    "cg_ipo_id": "2266",
@@ -10186,6 +10187,17 @@
    "retail": 0.73,
    "qib_bar": 49.42,
    "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "2061",
+   "company": "EAAA India Alternatives Ltd.",
+   "opened": "2026-10-26",
+   "recorded_at": "2026-10-26T14:35:54.632085+00:00",
+   "rule_says": "no",
+   "qib": 0.08,
+   "retail": 0.04,
+   "qib_bar": 46.03,
+   "retail_bar": 13.83
   }
  ],
  "scoreboard": {
@@ -10200,10 +10212,10 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 84,
-   "n_rest": 510,
+   "n_rest": 511,
    "rule_median": 3.3,
-   "rest_median": -12.9,
-   "edge_pp": 16.2,
+   "rest_median": -13.1,
+   "edge_pp": 16.4,
    "rule_win_rate": 0.56,
    "rest_win_rate": 0.41
   }

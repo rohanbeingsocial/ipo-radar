@@ -10198,6 +10198,28 @@
    "retail": 0.04,
    "qib_bar": 46.03,
    "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "2070",
+   "company": "SFC Environmental Technologies Ltd.",
+   "opened": "2026-10-27",
+   "recorded_at": "2026-10-27T14:36:31.219651+00:00",
+   "rule_says": "no",
+   "qib": 0.0,
+   "retail": 0.16,
+   "qib_bar": 42.87,
+   "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "2559",
+   "company": "BLS Polymers Ltd.",
+   "opened": "2026-10-27",
+   "recorded_at": "2026-10-27T14:36:31.221231+00:00",
+   "rule_says": "no",
+   "qib": 12.03,
+   "retail": 6.79,
+   "qib_bar": 42.87,
+   "retail_bar": 13.83
   }
  ],
  "scoreboard": {

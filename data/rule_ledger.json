@@ -8829,7 +8829,8 @@
    "retail": 1.14,
    "qib_bar": 35.86,
    "retail_bar": 9.15,
-   "ret_6m_from_listing": -27.0
+   "ret_6m_from_listing": -27.0,
+   "ret_12m_from_listing": -15.4
   },
   {
    "cg_ipo_id": "2518",
@@ -8841,7 +8842,8 @@
    "retail": 1.1,
    "qib_bar": 35.78,
    "retail_bar": 8.57,
-   "ret_6m_from_listing": 18.6
+   "ret_6m_from_listing": 18.6,
+   "ret_12m_from_listing": 11.1
   },
   {
    "cg_ipo_id": "2509",
@@ -10220,6 +10222,17 @@
    "retail": 6.79,
    "qib_bar": 42.87,
    "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "3100",
+   "company": "M.K.Sons Fine Jewels Ltd.",
+   "opened": "2026-10-28",
+   "recorded_at": "2026-10-28T14:36:09.191952+00:00",
+   "rule_says": "no",
+   "qib": 0.96,
+   "retail": 0.23,
+   "qib_bar": 35.71,
+   "retail_bar": 12.06
   }
  ],
  "scoreboard": {
@@ -10234,7 +10247,7 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 84,
-   "n_rest": 511,
+   "n_rest": 513,
    "rule_median": 3.3,
    "rest_median": -13.1,
    "edge_pp": 16.4,

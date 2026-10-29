@@ -8855,7 +8855,8 @@
    "retail": 5.37,
    "qib_bar": 35.78,
    "retail_bar": 9.29,
-   "ret_6m_from_listing": 21.8
+   "ret_6m_from_listing": 21.8,
+   "ret_12m_from_listing": -12.8
   },
   {
    "cg_ipo_id": "2025",
@@ -10233,6 +10234,17 @@
    "retail": 0.23,
    "qib_bar": 35.71,
    "retail_bar": 12.06
+  },
+  {
+   "cg_ipo_id": "2671",
+   "company": "Bombay Coated & Special Steels Ltd.",
+   "opened": "2026-10-29",
+   "recorded_at": "2026-10-29T14:37:06.436553+00:00",
+   "rule_says": "no",
+   "qib": 6.89,
+   "retail": 1.31,
+   "qib_bar": 38.3,
+   "retail_bar": 13.1
   }
  ],
  "scoreboard": {
@@ -10246,12 +10258,12 @@
    "rest_win_rate": 0.44
   },
   "ret_12m_from_listing": {
-   "n_rule": 84,
+   "n_rule": 85,
    "n_rest": 513,
    "rule_median": 3.3,
    "rest_median": -13.1,
    "edge_pp": 16.4,
-   "rule_win_rate": 0.56,
+   "rule_win_rate": 0.55,
    "rest_win_rate": 0.41
   }
  },

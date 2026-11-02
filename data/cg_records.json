@@ -43238,6 +43238,7 @@ null,
 "2070": {
 "company_name": "SFC Environmental Technologies Ltd.",
 "face_value": 2,
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/nov-2026/sfc-environmental-technologies-ltd-prospectus_105531.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -43292,6 +43293,9 @@ null,
 }
 },
 "id": 2070,
+"il_bse_script_code": 545009,
+"il_ipo_listing_date": "November 3, 2026",
+"il_isin": "INE0PKN01028",
 "ipo_industry": "206",
 "issue_category": "Mainline",
 "issue_close_date": "October 29, 2026",
@@ -76797,6 +76801,7 @@ null,
 "3100": {
 "company_name": "M.K.Sons Fine Jewels Ltd.",
 "face_value": 10,
+"final_prospectus": "https://www.afsl.co.in/pdfnew/MK_Sons_Fine_Jewels_Limited_Prospectus.pdf",
 "financials": {
 "basis": "Restated",
 "periods": [

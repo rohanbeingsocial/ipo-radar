@@ -61410,8 +61410,22 @@ null,
 "kpi_roe": "29.92%",
 "kpi_ronw": "25.12%",
 "latest_fy_dt": "March 31, 2026",
-"listing_day_closing_price": "$NaN",
-"market_cap": "₹515.16 Cr",
+"listing_day": {
+"BSE": {
+"close": 94.61,
+"high": 96.62,
+"low": 91.08,
+"open": 92.02
+},
+"NSE": {
+"close": 94.81,
+"high": 95.55,
+"low": 91.0,
+"open": 91.0
+}
+},
+"listing_day_closing_price": 94.81,
+"market_cap": "₹595.64 Cr",
 "market_cap_pre": "332.10",
 "market_lot_size": 182,
 "nav": "30.41",

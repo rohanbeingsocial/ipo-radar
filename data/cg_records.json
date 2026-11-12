@@ -63957,6 +63957,94 @@ null
 "total_shareholding_post_issue": 22600584,
 "total_shareholding_pre_issue": 16500000
 },
+"2813": {
+"company_name": "Crystal Crop Protection Ltd.",
+"face_value": 10,
+"financials": {
+"basis": "Restated Consolidated",
+"periods": [
+"30 Sep 2025",
+"31 Mar 2025",
+"31 Mar 2024",
+"31 Mar 2023"
+],
+"rows": {
+"Assets": [
+3859.23,
+3542.9,
+2541.92,
+2472.07
+],
+"EBITDA": [
+333.22,
+315.28,
+209.06,
+231.86
+],
+"NET Worth": [
+1748.9,
+1600.1,
+1488.39,
+1408.1
+],
+"Profit After Tax": [
+153.51,
+118.39,
+87.24,
+76.6
+],
+"Total Borrowing": [
+1205.24,
+947.02,
+577.29,
+612.7
+],
+"Total Income": [
+1995.86,
+2731.94,
+2271.71,
+2532.89
+]
+}
+},
+"id": 2813,
+"ipo_industry": "109",
+"issue_category": "Mainline",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 0,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 0,
+"issue_size_ofs_in_shares": 3702694,
+"kpi_as_of_date": "2025-03-31",
+"kpi_debt_equity": "0.65",
+"kpi_ebitda": "11.72%",
+"kpi_pat_margin": "4.33%",
+"kpi_roce": "16.43%",
+"kpi_roe": "8.31%",
+"kpi_ronw": "7.46%",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "125.53",
+"promoter_shareholding_pre_issue": "86.69%",
+"prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/dec-2025/crystal-crop-protection-limited-drhp_98530.html",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not less than 15% of the Net Issue",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not more than 50% of  the Net Offer",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not less than 35% of the Net Issue",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 0,
+"total_shareholding_pre_issue": 134569911
+},
 "2815": {
 "company_name": "Symbiotec Pharmalab Ltd.",
 "face_value": 2,

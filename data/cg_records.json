@@ -63963,70 +63963,90 @@ null
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
-"30 Sep 2025",
+"30 Jun 2026",
+"31 Mar 2026",
 "31 Mar 2025",
-"31 Mar 2024",
-"31 Mar 2023"
+"31 Mar 2024"
 ],
 "rows": {
 "Assets": [
-3859.23,
-3542.9,
-2541.92,
-2472.07
+4498.27,
+3927.24,
+3538.43,
+2541.92
 ],
 "EBITDA": [
-333.22,
+241.78,
+456.23,
 315.28,
-209.06,
-231.86
+209.06
 ],
 "NET Worth": [
-1748.9,
+null,
+2039.76,
 1600.1,
-1488.39,
-1408.1
+1488.39
 ],
 "Profit After Tax": [
-153.51,
+135.78,
+144.91,
 118.39,
-87.24,
-76.6
+87.24
+],
+"Reserves and Surplus": [
+1524.85,
+1386.12,
+1296.9,
+1197.23
 ],
 "Total Borrowing": [
-1205.24,
+952.02,
+820.04,
 947.02,
-577.29,
-612.7
+577.29
 ],
 "Total Income": [
-1995.86,
+1209.21,
+3180.98,
 2731.94,
-2271.71,
-2532.89
+2271.71
 ]
 }
 },
 "id": 2813,
 "ipo_industry": "109",
 "issue_category": "Mainline",
+"issue_close_date": "November 20, 2026",
+"issue_open_date": "November 18, 2026",
+"issue_price_lower": 259,
+"issue_price_upper": 272,
 "issue_process_type": "BB",
-"issue_size_fresh_in_shares": 0,
-"issue_size_in_amt": "0.00",
-"issue_size_in_shares": 0,
+"issue_size_fresh_in_shares": 13051580,
+"issue_size_in_amt": "4554864753.00",
+"issue_size_in_shares": 16754274,
 "issue_size_ofs_in_shares": 3702694,
-"kpi_as_of_date": "2025-03-31",
-"kpi_debt_equity": "0.65",
-"kpi_ebitda": "11.72%",
-"kpi_pat_margin": "4.33%",
-"kpi_roce": "16.43%",
-"kpi_roe": "8.31%",
-"kpi_ronw": "7.46%",
+"kpi_as_of_date": "2026-03-31",
+"kpi_debt_equity": "0.41",
+"kpi_ebitda": "14.47%",
+"kpi_eps": "9.65",
+"kpi_eps_post": "33.29",
+"kpi_pat_margin": "4.56%",
+"kpi_roce": "16.06%",
+"kpi_roe": "7.94%",
+"kpi_ronw": "7.14%",
+"latest_fy_dt": "March 31, 2026",
 "listing_day_closing_price": "$NaN",
-"market_cap": "To be declared",
-"nav": "125.53",
-"promoter_shareholding_pre_issue": "86.69%",
+"market_cap": "₹4,438.18 Cr",
+"market_cap_pre": "4083.17",
+"market_lot_size": 55,
+"nav": "160.03",
+"pe_ratio": 28.19,
+"post_pe_ratio": 8.17,
+"price_to_book_value": "1.70",
+"promoter_shareholding_post_issue": "75.85%",
+"promoter_shareholding_pre_issue": "84.92%",
 "prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/dec-2025/crystal-crop-protection-limited-drhp_98530.html",
+"prospectus_rhp": "https://www.iiflcapital.com/institutional-equities/upload/investmentbanking/prospects/crystal_crop_protection_limited_-_red_herring_prospectus.pdf",
 "shares_offered_anchor_investor": 0,
 "shares_offered_big_nii": 0,
 "shares_offered_emp": 0,
@@ -64042,8 +64062,8 @@ null
 "shares_offered_rii_percentage_temp": "Not less than 35% of the Net Issue",
 "shares_offered_small_nii": 0,
 "shares_offered_total": 0,
-"total_shareholding_post_issue": 0,
-"total_shareholding_pre_issue": 134569911
+"total_shareholding_post_issue": 163168280,
+"total_shareholding_pre_issue": 150116700
 },
 "2815": {
 "company_name": "Symbiotec Pharmalab Ltd.",

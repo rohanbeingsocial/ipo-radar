@@ -78245,6 +78245,105 @@ null,
 "total_shareholding_post_issue": 16414332,
 "total_shareholding_pre_issue": 10669332
 },
+"3247": {
+"company_name": "Mahanadi Coalfields Ltd.",
+"face_value": 2,
+"financials": {
+"basis": "Restated",
+"periods": [
+"30 Sep 2026",
+"31 Mar 2026",
+"31 Mar 2025",
+"31 Mar 2024"
+],
+"rows": {
+"Assets": [
+57711.68,
+55358.27,
+53590.53,
+50687.79
+],
+"EBITDA": [
+7463.98,
+16084.93,
+15331.11,
+16636.91
+],
+"NET Worth": [
+22399.8,
+21371.23,
+18343.49,
+16119.91
+],
+"Profit After Tax": [
+4880.66,
+10698.12,
+10825.12,
+11841.55
+],
+"Reserves and Surplus": [
+20945.38,
+19932.31,
+16873.51,
+14700.91
+],
+"Total Borrowing": [
+2.76,
+3.16,
+3.35,
+3.95
+],
+"Total Income": [
+17107.83,
+33899.28,
+33028.65,
+33590.34
+]
+}
+},
+"id": 3247,
+"ipo_industry": "104",
+"issue_category": "Mainline",
+"issue_close_date": "November 23, 2026",
+"issue_open_date": "November 19, 2026",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 0,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 661836300,
+"issue_size_ofs_in_shares": 661836300,
+"kpi_as_of_date": "2026-03-31",
+"kpi_ebitda": "47.45%",
+"kpi_eps": "16.16",
+"kpi_eps_post": "14.50",
+"kpi_pat_margin": "31.56%",
+"kpi_roce": "73.26%",
+"kpi_ronw": "53.87%",
+"latest_fy_dt": "March 31, 2026",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "32.29",
+"promoter_shareholding_post_issue": "90.00%",
+"promoter_shareholding_pre_issue": "100.00%",
+"prospectus_drhp": "https://nsearchives.nseindia.com/corporate/Registration_01092026212900_MCLDRHP.pdf",
+"prospectus_rhp": "https://www.axiscapital.co.in/contents/Mahanadi%20Coalfields%20Ltd%20-Red%20Herring%20Prospectus-1794636910.pdf",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not less than 15% of the Net Offer",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not more than 50% of the Net Offer",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not less than 35% of the Net Offer",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 6618363000,
+"total_shareholding_pre_issue": 6618363000
+},
 "325": {
 "company_name": "Prakash Constrowell Ltd.",
 "face_value": 10,

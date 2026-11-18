@@ -9280,7 +9280,8 @@
    "qib": 270.46,
    "retail": 27.08,
    "qib_bar": 6.25,
-   "retail_bar": 2.65
+   "retail_bar": 2.65,
+   "ret_6m_from_listing": -13.2
   },
   {
    "cg_ipo_id": "2658",
@@ -10249,12 +10250,23 @@
    "retail": 1.31,
    "qib_bar": 38.3,
    "retail_bar": 13.1
+  },
+  {
+   "cg_ipo_id": "2813",
+   "company": "Crystal Crop Protection Ltd.",
+   "opened": "2026-11-18",
+   "recorded_at": "2026-11-18T14:36:17.516278+00:00",
+   "rule_says": "no",
+   "qib": 2.11,
+   "retail": 1.38,
+   "qib_bar": 37.02,
+   "retail_bar": 13.83
   }
  ],
  "scoreboard": {
   "ret_6m_from_listing": {
    "n_rule": 87,
-   "n_rest": 544,
+   "n_rest": 545,
    "rule_median": 9.8,
    "rest_median": -4.7,
    "edge_pp": 14.5,

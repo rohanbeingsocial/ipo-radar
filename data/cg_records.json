@@ -54379,6 +54379,101 @@ null
 "total_shareholding_post_issue": 568998442,
 "total_shareholding_pre_issue": 488989292
 },
+"2493": {
+"company_name": "Foodlink F&B Holdings (India) Ltd.",
+"face_value": 2,
+"financials": {
+"basis": "Restated",
+"periods": [
+"30 Sep 2026",
+"31 Mar 2026",
+"31 Mar 2025",
+"31 Mar 2024"
+],
+"rows": {
+"Assets": [
+443.99,
+454.32,
+318.59,
+268.13
+],
+"EBITDA": [
+16.15,
+78.43,
+61.45,
+30.63
+],
+"NET Worth": [
+216.01,
+229.35,
+106.22,
+79.59
+],
+"Profit After Tax": [
+-16.15,
+29.11,
+14.26,
+-15.35
+],
+"Reserves and Surplus": [
+205.55,
+218.89,
+96.26,
+77.94
+],
+"Total Borrowing": [
+null,
+24.29,
+35.88,
+35.3
+],
+"Total Income": [
+222.18,
+572.26,
+455.4,
+380.17
+]
+}
+},
+"id": 2493,
+"ipo_industry": "81",
+"issue_category": "Mainline",
+"issue_close_date": "November 30, 2026",
+"issue_open_date": "November 26, 2026",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 0,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 0,
+"issue_size_ofs_in_shares": 8835382,
+"kpi_as_of_date": "2026-03-31",
+"kpi_debt_equity": "0.43",
+"kpi_ebitda": "13.82%",
+"kpi_pat_margin": "5.09%",
+"kpi_ronw": "17.35%",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "44.00",
+"promoter_shareholding_pre_issue": "63.4%",
+"prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/jul-2025/foodlink-fandb-holdings-india-limited_94988.html",
+"prospectus_rhp": "https://s3.ap-south-1.amazonaws.com/cms.equirus.tech/Foodlink_F_and_B_Holdings_India_Limited_Red_Herring_Prospectus_95e7e3e3b7.pdf",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not more than 15% of the Net Offer",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not less than 75% of the Offer",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not more than 10% of the Offer",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 0,
+"total_shareholding_pre_issue": 52298600
+},
 "2497": {
 "company_name": "German Green Steel & Power Ltd.",
 "face_value": 10,
@@ -78333,21 +78428,21 @@ null,
 "promoter_shareholding_pre_issue": "100.00%",
 "prospectus_drhp": "https://nsearchives.nseindia.com/corporate/Registration_01092026212900_MCLDRHP.pdf",
 "prospectus_rhp": "https://www.sebi.gov.in/filings/public-issues/nov-2026/mahanadi-coalfields-limited-rhp_105777.html",
-"shares_offered_anchor_investor": 0,
-"shares_offered_big_nii": 0,
-"shares_offered_emp": 0,
+"shares_offered_anchor_investor": 168768255,
+"shares_offered_big_nii": 56256086,
+"shares_offered_emp": 33091815,
 "shares_offered_market_maker": 0,
-"shares_offered_nii": 0,
+"shares_offered_nii": 84384129,
 "shares_offered_nii_percentage_temp": "Not less than 15% of the Net Offer",
 "shares_offered_others": 0,
-"shares_offered_qib": 0,
-"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib": 112512173,
+"shares_offered_qib_ex_anchor": 112512173,
 "shares_offered_qib_percentage_temp": "Not more than 50% of the Net Offer",
-"shares_offered_qib_with_anchor": 0,
-"shares_offered_rii": 0,
+"shares_offered_qib_with_anchor": 281280428,
+"shares_offered_rii": 196896299,
 "shares_offered_rii_percentage_temp": "Not less than 35% of the Net Offer",
-"shares_offered_small_nii": 0,
-"shares_offered_total": 0,
+"shares_offered_small_nii": 28128043,
+"shares_offered_total": 661836301,
 "total_shareholding_post_issue": 6618363000,
 "total_shareholding_pre_issue": 6618363000
 },

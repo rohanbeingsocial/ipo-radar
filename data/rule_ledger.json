@@ -8920,7 +8920,8 @@
    "retail": 19.89,
    "qib_bar": 36.52,
    "retail_bar": 8.57,
-   "ret_6m_from_listing": -2.4
+   "ret_6m_from_listing": -2.4,
+   "ret_12m_from_listing": 52.2
   },
   {
    "cg_ipo_id": "2465",
@@ -8932,7 +8933,8 @@
    "retail": 81.03,
    "qib_bar": 36.52,
    "retail_bar": 8.57,
-   "ret_6m_from_listing": 16.0
+   "ret_6m_from_listing": 16.0,
+   "ret_12m_from_listing": 53.4
   },
   {
    "cg_ipo_id": "2005",
@@ -8944,7 +8946,8 @@
    "retail": 29.98,
    "qib_bar": 36.52,
    "retail_bar": 8.57,
-   "ret_6m_from_listing": 67.9
+   "ret_6m_from_listing": 67.9,
+   "ret_12m_from_listing": 44.7
   },
   {
    "cg_ipo_id": "2488",
@@ -10261,6 +10264,17 @@
    "retail": 1.38,
    "qib_bar": 37.02,
    "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "3247",
+   "company": "Mahanadi Coalfields Ltd.",
+   "opened": "2026-11-19",
+   "recorded_at": "2026-11-19T14:36:47.555165+00:00",
+   "rule_says": "no",
+   "qib": 1.26,
+   "retail": 0.14,
+   "qib_bar": 37.02,
+   "retail_bar": 13.83
   }
  ],
  "scoreboard": {
@@ -10275,12 +10289,12 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 85,
-   "n_rest": 517,
+   "n_rest": 520,
    "rule_median": 3.3,
-   "rest_median": -13.1,
-   "edge_pp": 16.4,
+   "rest_median": -12.6,
+   "edge_pp": 15.9,
    "rule_win_rate": 0.55,
-   "rest_win_rate": 0.41
+   "rest_win_rate": 0.42
   }
  },
  "scoreboard_note": "Includes the backtest period, so it is NOT yet an out-of-sample record. The calls recorded from 2026-07-12 onward are the ones that count; until enough of those mature, this rule is unproven. Research only \u2014 not investment advice."

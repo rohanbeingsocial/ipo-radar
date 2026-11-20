@@ -9295,7 +9295,8 @@
    "qib": 19.77,
    "retail": 26.85,
    "qib_bar": 6.25,
-   "retail_bar": 2.65
+   "retail_bar": 2.65,
+   "ret_6m_from_listing": 16.6
   },
   {
    "cg_ipo_id": "2601",
@@ -10280,7 +10281,7 @@
  "scoreboard": {
   "ret_6m_from_listing": {
    "n_rule": 87,
-   "n_rest": 545,
+   "n_rest": 546,
    "rule_median": 9.8,
    "rest_median": -4.7,
    "edge_pp": 14.5,

@@ -63053,6 +63053,103 @@ null,
 "total_shareholding_post_issue": 328073770,
 "total_shareholding_pre_issue": 262500000
 },
+"2774": {
+"company_name": "Integris Medtech Ltd.",
+"face_value": 1,
+"financials": {
+"basis": "Restated Consolidated",
+"periods": [
+"30 Jun 2025",
+"31 Mar 2025",
+"31 Mar 2024",
+"31 Mar 2023"
+],
+"rows": {
+"Assets": [
+4019.62,
+3641.34,
+2989.2,
+2553.87
+],
+"EBITDA": [
+78.73,
+309.4,
+190.45,
+168.82
+],
+"NET Worth": [
+3889.99,
+2752.52,
+2681.02,
+2629.52
+],
+"Profit After Tax": [
+267.57,
+70.68,
+-4.88,
+-40.54
+],
+"Reserves and Surplus": [
+2299.84,
+1150.74,
+1135.71,
+1073.12
+],
+"Total Borrowing": [
+793.42,
+1729.46,
+813.1,
+556.54
+],
+"Total Income": [
+508.93,
+1959.58,
+1582.26,
+1369.66
+]
+}
+},
+"id": 2774,
+"ipo_industry": "148",
+"issue_category": "Mainline",
+"issue_close_date": "December 1, 2026",
+"issue_open_date": "November 27, 2026",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 0,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 0,
+"issue_size_ofs_in_shares": 10837266,
+"kpi_as_of_date": "2025-03-31",
+"kpi_ebitda": "16.26%",
+"kpi_eps": "6.52",
+"kpi_pat_margin": "3.72%",
+"kpi_roce": "14.51%",
+"kpi_roe": "5.35%",
+"kpi_ronw": "1.48%",
+"latest_fy_dt": "March 31, 2025",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "316.09",
+"promoter_shareholding_pre_issue": "83.24%",
+"prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/oct-2025/integris-medtech-limited_97425.html",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not more than 15% of the Offer",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not less than 75% of the Offer",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not more than 10% of the Offer",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 0,
+"total_shareholding_pre_issue": 108338049
+},
 "2775": {
 "company_name": "Prasol Chemicals Ltd.",
 "face_value": 2,
@@ -70790,6 +70887,84 @@ null
 "shares_offered_total": 31080978,
 "total_shareholding_post_issue": 104114824,
 "total_shareholding_pre_issue": 100400342
+},
+"2972": {
+"company_name": "Monomark Engineering (India) Ltd.",
+"face_value": 10,
+"financials": {
+"basis": "Restated",
+"periods": [
+"30 Sep 2025",
+"31 Mar 2025",
+"31 Mar 2024"
+],
+"rows": {
+"Assets": [
+343.46,
+293.52,
+240.81
+],
+"EBITDA": [
+23.7,
+39.26,
+31.89
+],
+"NET Worth": [
+37.4,
+16.64,
+9.68
+],
+"Profit After Tax": [
+12.36,
+18.21,
+14.83
+],
+"Total Income": [
+259.16,
+477.29,
+392.14
+]
+}
+},
+"id": 2972,
+"ipo_industry": "152",
+"issue_category": "Mainline",
+"issue_process_type": "BB",
+"issue_size_fresh_in_shares": 27000000,
+"issue_size_in_amt": "0.00",
+"issue_size_in_shares": 27000000,
+"issue_size_ofs_in_shares": 0,
+"kpi_as_of_date": "2025-03-31",
+"kpi_ebitda": "8.27%",
+"kpi_eps": "2.64",
+"kpi_eps_post": "2.57",
+"kpi_pat_margin": "3.83%",
+"kpi_roce": "21.95%",
+"kpi_roe": "27.31%",
+"kpi_ronw": "24.86%",
+"latest_fy_dt": "March 31, 2025",
+"listing_day_closing_price": "$NaN",
+"market_cap": "To be declared",
+"nav": "11.61",
+"promoter_shareholding_pre_issue": "91.37%",
+"prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/apr-2026/monomark-engineering-india-limited_100945.html",
+"shares_offered_anchor_investor": 0,
+"shares_offered_big_nii": 0,
+"shares_offered_emp": 0,
+"shares_offered_market_maker": 0,
+"shares_offered_nii": 0,
+"shares_offered_nii_percentage_temp": "Not less than 15% of the Issue",
+"shares_offered_others": 0,
+"shares_offered_qib": 0,
+"shares_offered_qib_ex_anchor": 0,
+"shares_offered_qib_percentage_temp": "Not more than 50% of the Issue",
+"shares_offered_qib_with_anchor": 0,
+"shares_offered_rii": 0,
+"shares_offered_rii_percentage_temp": "Not less than 35% of the Issue",
+"shares_offered_small_nii": 0,
+"shares_offered_total": 0,
+"total_shareholding_post_issue": 96041200,
+"total_shareholding_pre_issue": 69041200
 },
 "2974": {
 "company_name": "Nityas Gems & Jewellery Ltd.",

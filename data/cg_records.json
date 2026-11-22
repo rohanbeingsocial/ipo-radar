@@ -70892,35 +70892,47 @@ null
 "company_name": "Monomark Engineering (India) Ltd.",
 "face_value": 10,
 "financials": {
-"basis": "Restated",
+"basis": "Restated Consolidated",
 "periods": [
-"30 Sep 2025",
+"30 Jun 2026",
+"31 Mar 2026",
 "31 Mar 2025",
 "31 Mar 2024"
 ],
 "rows": {
 "Assets": [
-343.46,
+349.3,
+342.19,
 293.52,
 240.81
 ],
 "EBITDA": [
-23.7,
+7.7,
+48.74,
 39.26,
 31.89
 ],
 "NET Worth": [
-37.4,
-16.64,
-9.68
+119.32,
+116.74,
+73.26,
+60.11
 ],
 "Profit After Tax": [
-12.36,
+3.02,
+25.9,
 18.21,
 14.83
 ],
+"Total Borrowing": [
+92.12,
+87.34,
+84.77,
+80.16
+],
 "Total Income": [
-259.16,
+142.82,
+564.74,
 477.29,
 392.14
 ]
@@ -70929,25 +70941,29 @@ null
 "id": 2972,
 "ipo_industry": "152",
 "issue_category": "Mainline",
+"issue_close_date": "December 4, 2026",
+"issue_open_date": "December 2, 2026",
 "issue_process_type": "BB",
 "issue_size_fresh_in_shares": 27000000,
 "issue_size_in_amt": "0.00",
 "issue_size_in_shares": 27000000,
 "issue_size_ofs_in_shares": 0,
-"kpi_as_of_date": "2025-03-31",
-"kpi_ebitda": "8.27%",
-"kpi_eps": "2.64",
-"kpi_eps_post": "2.57",
-"kpi_pat_margin": "3.83%",
-"kpi_roce": "21.95%",
-"kpi_roe": "27.31%",
-"kpi_ronw": "24.86%",
-"latest_fy_dt": "March 31, 2025",
+"kpi_as_of_date": "2026-03-31",
+"kpi_ebitda": "8.67%",
+"kpi_eps": "3.75",
+"kpi_eps_post": "1.26",
+"kpi_pat_margin": "4.61%",
+"kpi_roce": "21.47%",
+"kpi_roe": "27.27%",
+"kpi_ronw": "22.19%",
+"latest_fy_dt": "March 31, 2026",
 "listing_day_closing_price": "$NaN",
 "market_cap": "To be declared",
-"nav": "11.61",
+"nav": "16.91",
+"promoter_shareholding_post_issue": "65.69%",
 "promoter_shareholding_pre_issue": "91.37%",
 "prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/apr-2026/monomark-engineering-india-limited_100945.html",
+"prospectus_rhp": "https://www.holaniconsultants.co.in/download/ipo/RHP%20Monomark.pdf",
 "shares_offered_anchor_investor": 0,
 "shares_offered_big_nii": 0,
 "shares_offered_emp": 0,

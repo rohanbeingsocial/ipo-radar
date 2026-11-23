@@ -5,5 +5,12 @@
   "urls": [
    "http://www.cmlinks.com/pub/dp/dp40437.pdf "
   ]
+ },
+ "3136": {
+  "at": "2026-11-23",
+  "error": "RuntimeError: bad pdf download",
+  "urls": [
+   "https://matangirubber.com/wp-content/uploads/2026/11/Matangi_Red-Herring-Prospectus.pdf"
+  ]
  }
 }

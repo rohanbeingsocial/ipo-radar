@@ -64163,6 +64163,7 @@ null
 "2813": {
 "company_name": "Crystal Crop Protection Ltd.",
 "face_value": 10,
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/nov-2026/crystal-crop-protection-limited-prospectus_105852.html",
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
@@ -70954,9 +70955,11 @@ null
 "issue_category": "Mainline",
 "issue_close_date": "December 4, 2026",
 "issue_open_date": "December 2, 2026",
+"issue_price_lower": 60,
+"issue_price_upper": 65,
 "issue_process_type": "BB",
 "issue_size_fresh_in_shares": 27000000,
-"issue_size_in_amt": "0.00",
+"issue_size_in_amt": "1755000000.00",
 "issue_size_in_shares": 27000000,
 "issue_size_ofs_in_shares": 0,
 "kpi_as_of_date": "2026-03-31",
@@ -70969,8 +70972,13 @@ null
 "kpi_ronw": "22.19%",
 "latest_fy_dt": "March 31, 2026",
 "listing_day_closing_price": "$NaN",
-"market_cap": "To be declared",
+"market_cap": "₹624.27 Cr",
+"market_cap_pre": "448.77",
+"market_lot_size": 225,
 "nav": "16.91",
+"pe_ratio": 17.33,
+"post_pe_ratio": 51.59,
+"price_to_book_value": "3.84",
 "promoter_shareholding_post_issue": "65.69%",
 "promoter_shareholding_pre_issue": "91.37%",
 "prospectus_drhp": "https://www.sebi.gov.in/filings/public-issues/apr-2026/monomark-engineering-india-limited_100945.html",
@@ -78653,7 +78661,7 @@ null,
 "3247": {
 "company_name": "Mahanadi Coalfields Ltd.",
 "face_value": 2,
-"final_prospectus": "https://www.axiscapital.co.in/contents/Mahanadi%20Coalfields%20Limited%20-%20Prospectus-1795453411.pdf",
+"final_prospectus": "https://www.sebi.gov.in/filings/public-issues/nov-2026/mahanadi-coalfields-ltd-prospectus_105841.html",
 "financials": {
 "basis": "Restated",
 "periods": [

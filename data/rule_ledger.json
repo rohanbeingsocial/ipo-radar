@@ -8985,7 +8985,8 @@
    "retail": 2.36,
    "qib_bar": 35.86,
    "retail_bar": 9.43,
-   "ret_6m_from_listing": 56.4
+   "ret_6m_from_listing": 56.4,
+   "ret_12m_from_listing": 39.9
   },
   {
    "cg_ipo_id": "2297",
@@ -8997,7 +8998,8 @@
    "retail": 3.32,
    "qib_bar": 35.86,
    "retail_bar": 9.43,
-   "ret_6m_from_listing": 71.8
+   "ret_6m_from_listing": 71.8,
+   "ret_12m_from_listing": 59.2
   },
   {
    "cg_ipo_id": "2525",
@@ -10278,6 +10280,17 @@
    "retail": 0.14,
    "qib_bar": 37.02,
    "retail_bar": 13.83
+  },
+  {
+   "cg_ipo_id": "2493",
+   "company": "Foodlink F&B Holdings (India) Ltd.",
+   "opened": "2026-11-26",
+   "recorded_at": "2026-11-26T14:36:39.753392+00:00",
+   "rule_says": "no",
+   "qib": 1.0,
+   "retail": 2.44,
+   "qib_bar": 35.71,
+   "retail_bar": 12.65
   }
  ],
  "scoreboard": {
@@ -10292,10 +10305,10 @@
   },
   "ret_12m_from_listing": {
    "n_rule": 85,
-   "n_rest": 522,
+   "n_rest": 524,
    "rule_median": 3.3,
-   "rest_median": -12.6,
-   "edge_pp": 15.9,
+   "rest_median": -12.2,
+   "edge_pp": 15.5,
    "rule_win_rate": 0.55,
    "rest_win_rate": 0.42
   }

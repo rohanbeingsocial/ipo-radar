@@ -42791,8 +42791,8 @@ null,
 "open": 1675.5
 }
 },
-"listing_day_closing_price": 1727.8,
-"market_cap": "₹11,171.13 Cr",
+"listing_day_closing_price": 1727.05,
+"market_cap": "₹11,166.28 Cr",
 "market_cap_pre": "10765.10",
 "market_lot_size": 9,
 "nav": "163.69",
@@ -43347,8 +43347,8 @@ null,
 "open": 355.1
 }
 },
-"listing_day_closing_price": 426.1,
-"market_cap": "₹4,173.94 Cr",
+"listing_day_closing_price": 424.85,
+"market_cap": "₹4,161.69 Cr",
 "market_cap_pre": "3082.57",
 "market_lot_size": 45,
 "nav": "86.09",
@@ -57499,8 +57499,8 @@ null
 "open": 248.0
 }
 },
-"listing_day_closing_price": 268.8,
-"market_cap": "₹1,667.42 Cr",
+"listing_day_closing_price": 269.3,
+"market_cap": "₹1,670.52 Cr",
 "market_cap_pre": "675.48",
 "market_lot_size": 100,
 "nav": "21.08",
@@ -61530,8 +61530,8 @@ null,
 "open": 91.0
 }
 },
-"listing_day_closing_price": 94.81,
-"market_cap": "₹595.64 Cr",
+"listing_day_closing_price": 94.61,
+"market_cap": "₹594.38 Cr",
 "market_cap_pre": "332.10",
 "market_lot_size": 182,
 "nav": "30.41",
@@ -64222,7 +64222,7 @@ null,
 "il_ipo_listing_date": "November 26, 2026",
 "il_isin": "INE101P01016",
 "il_nse_script_symbol": "CRYSTALCP",
-"ipo_industry": "109",
+"ipo_industry": "24",
 "issue_category": "Mainline",
 "issue_close_date": "November 20, 2026",
 "issue_open_date": "November 18, 2026",
@@ -64244,8 +64244,22 @@ null,
 "kpi_roe": "7.94%",
 "kpi_ronw": "7.14%",
 "latest_fy_dt": "March 31, 2026",
-"listing_day_closing_price": "$NaN",
-"market_cap": "₹4,438.43 Cr",
+"listing_day": {
+"BSE": {
+"close": 277.85,
+"high": 283.5,
+"low": 268.0,
+"open": 280.0
+},
+"NSE": {
+"close": 277.85,
+"high": 283.65,
+"low": 268.0,
+"open": 278.0
+}
+},
+"listing_day_closing_price": 277.85,
+"market_cap": "₹4,533.89 Cr",
 "market_cap_pre": "4083.17",
 "market_lot_size": 55,
 "nav": "160.03",
@@ -70911,44 +70925,37 @@ null
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
-"30 Jun 2026",
 "31 Mar 2026",
 "31 Mar 2025",
 "31 Mar 2024"
 ],
 "rows": {
 "Assets": [
-349.3,
 342.19,
 293.52,
 240.81
 ],
 "EBITDA": [
-7.7,
 48.74,
 39.26,
 31.89
 ],
 "NET Worth": [
-119.32,
 116.74,
 73.26,
 60.11
 ],
 "Profit After Tax": [
-3.02,
 25.9,
 18.21,
 14.83
 ],
 "Total Borrowing": [
-92.12,
 87.34,
 84.77,
 80.16
 ],
 "Total Income": [
-142.82,
 564.74,
 477.29,
 392.14
@@ -70970,7 +70977,7 @@ null
 "kpi_as_of_date": "2026-03-31",
 "kpi_ebitda": "8.67%",
 "kpi_eps": "3.75",
-"kpi_eps_post": "1.26",
+"kpi_eps_post": "2.70",
 "kpi_pat_margin": "4.61%",
 "kpi_roce": "21.47%",
 "kpi_roe": "27.27%",
@@ -70982,7 +70989,7 @@ null
 "market_lot_size": 225,
 "nav": "16.91",
 "pe_ratio": 17.33,
-"post_pe_ratio": 51.59,
+"post_pe_ratio": 24.07,
 "price_to_book_value": "3.84",
 "promoter_shareholding_post_issue": "65.69%",
 "promoter_shareholding_pre_issue": "91.37%",
@@ -78116,42 +78123,50 @@ null,
 "financials": {
 "basis": "Restated Consolidated",
 "periods": [
+"30 Jun 2026",
 "31 Mar 2026",
 "31 Mar 2025",
 "31 Mar 2024"
 ],
 "rows": {
 "Assets": [
+1437.15,
 1368.2,
 1002.31,
 780.15
 ],
 "EBITDA": [
+42.5,
 192.77,
 162.72,
 153.59
 ],
 "NET Worth": [
+570.47,
 553.22,
 399.92,
 319.36
 ],
 "Profit After Tax": [
+16.61,
 95.59,
 80.67,
 93.97
 ],
 "Reserves and Surplus": [
+521.62,
 504.58,
 367.25,
 286.58
 ],
 "Total Borrowing": [
+443.84,
 443.06,
 354.82,
 260.08
 ],
 "Total Income": [
+334.83,
 1212.44,
 959.67,
 766.61
@@ -78161,25 +78176,36 @@ null,
 "id": 3186,
 "ipo_industry": "119",
 "issue_category": "Mainline",
+"issue_close_date": "December 4, 2026",
+"issue_open_date": "December 2, 2026",
+"issue_price_lower": 105,
+"issue_price_upper": 111,
 "issue_process_type": "BB",
-"issue_size_fresh_in_shares": 0,
-"issue_size_in_amt": "10000000000.00",
-"issue_size_in_shares": 0,
-"issue_size_ofs_in_shares": 0,
+"issue_size_fresh_in_shares": 45045045,
+"issue_size_in_amt": "7998762372.00",
+"issue_size_in_shares": 72072072,
+"issue_size_ofs_in_shares": 27027027,
 "kpi_as_of_date": "2026-03-31",
 "kpi_debt_equity": "0.81",
-"kpi_ebitda": "16.56%",
-"kpi_eps": "4.24",
+"kpi_ebitda": "15.90%",
+"kpi_eps": "3.91",
+"kpi_eps_post": "2.30",
 "kpi_pat_margin": "8.21%",
 "kpi_roce": "16.19%",
-"kpi_roe": "20.06%",
 "kpi_ronw": "17.28%",
 "latest_fy_dt": "March 31, 2026",
 "listing_day_closing_price": "$NaN",
-"market_cap": "To be declared",
+"market_cap": "₹3,211.56 Cr",
+"market_cap_pre": "2711.56",
+"market_lot_size": 135,
 "nav": "22.65",
+"pe_ratio": 28.39,
+"post_pe_ratio": 48.26,
+"price_to_book_value": "4.90",
+"promoter_shareholding_post_issue": "75.09%",
 "promoter_shareholding_pre_issue": "100.00%",
 "prospectus_drhp": "https://nsearchives.nseindia.com/corporate/Registration_02072026083806_DRHP.pdf",
+"prospectus_rhp": "https://www.swarababy.com/wp-content/uploads/2026/11/Project-Dream-Red-Herring-Prospectus-Filing-Version.pdf",
 "shares_offered_anchor_investor": 0,
 "shares_offered_big_nii": 0,
 "shares_offered_emp": 0,
@@ -78195,7 +78221,7 @@ null,
 "shares_offered_rii_percentage_temp": "Not less than 35% of the Net Offer",
 "shares_offered_small_nii": 0,
 "shares_offered_total": 0,
-"total_shareholding_post_issue": 0,
+"total_shareholding_post_issue": 289329792,
 "total_shareholding_pre_issue": 244284747
 },
 "319": {
@@ -78809,15 +78835,20 @@ null,
 }
 },
 "id": 3247,
+"il_bse_script_code": 545032,
+"il_ipo_listing_date": "November 27, 2026",
+"il_isin": "INE03K401026",
+"il_nse_script_symbol": "MAHACOAL",
 "ipo_industry": "104",
 "issue_category": "Mainline",
 "issue_close_date": "November 23, 2026",
 "issue_open_date": "November 19, 2026",
+"issue_price_final": 136,
 "issue_price_lower": 129,
 "issue_price_upper": 136,
 "issue_process_type": "BB",
 "issue_size_fresh_in_shares": 0,
-"issue_size_in_amt": "89811185910.00",
+"issue_size_in_amt": "89975191592.49",
 "issue_size_in_shares": 661836300,
 "issue_size_ofs_in_shares": 661836300,
 "kpi_as_of_date": "2026-03-31",
